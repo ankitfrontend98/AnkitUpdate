@@ -1,0 +1,6 @@
+.custom-table-background ::v-deep thead {
+    /* background: #F2F4F7 !important; */
+    background: var(--v-theme-primary);
+    /* background: red; */
+    border-bottom: 1px solid #EAECF0 !important;
+  }
