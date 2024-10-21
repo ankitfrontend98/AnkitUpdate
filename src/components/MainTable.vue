@@ -23,6 +23,7 @@ const token2 = ref([]);
 const token3 = ref([]);
 const selectedToken1 = ref([]);
 const selectedToken2 = ref([]);
+
 const tvlMinPrice = ref(0);
 const tvlMaxPrice = ref(0);
 
@@ -57,25 +58,21 @@ const sortedToken1 = computed(() => {
   console.log(token1);
 });
 
-//   const sortedToken1 = computed(() => {
-//     if (searchToken1.value) {
-//       // Search the token based on the 'title' key
-//       return token1.value.filter((token) => 
-//         token.title.toLowerCase().includes(searchToken1.value.toLowerCase())
-//       );
-//     }
-//     // Sort the tokens by 'title' key
-//     return token1.value.sort((a, b) => 
-//       a.title.toLowerCase().localeCompare(b.title.toLowerCase())
-//     );
-// });
-
 const sortedToken2 = computed(() => {
   if(searchToken2.value) {
     return token2.value.filter((tokenName) => tokenName.toLowerCase().includes(searchToken2.value.toLocaleLowerCase()));
   }
   return token2.value.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 });
+
+// Function to filter data by selected period
+const filterDataByPeriod = () => {
+  const selectedPeriod = parseInt(seletedDuration.value, 10);  // Convert the selected duration to a number
+  filteredItems.value = items.value.filter(item => {
+    // Assuming `item.period` exists and represents the duration in days
+    return item.period <= selectedPeriod;
+  });
+};
 
 const filterArrayData = computed(() => {
     let filterData = items.value.map((element) => {
@@ -117,23 +114,24 @@ const filterArrayData = computed(() => {
     }
 
     if(tvlMinPrice.value !== 0) {
-      filterData = filterData.filter((element) => element.Liquidity >= tvlMinPrice.value);
+      filterData = filterData.filter((element) => element.vol_tvl >= tvlMinPrice.value);
     }
 
     if(tvlMaxPrice.value !== 0) {
-      filterData = filterData.filter((element) => element.Liquidity <= tvlMaxPrice.value);
+      filterData = filterData.filter((element) => element.vol_tvl <= tvlMaxPrice.value);
     }
-    
-    if(tempAprMinPrice.value !== 0) {
-      filterData = filterData.filter(item => {
-        const apr = item.apr || 0; // Use 0 if apr is null
-        return apr >= tempAprMinPrice.value && apr <= tempAprMaxPrice.value;
-      });
+
+    if(aprMinPrice.value !== 0) {
+      filterData = filterData.filter((element) => element.apr <= aprMinPrice.value);
     }
 
     if(aprMaxPrice.value !== 0) {
-      filterData = filterData.filter((element) => element.Liquidity <= aprMaxPrice.value);
+      filterData = filterData.filter((element) => element.apr <= aprMaxPrice.value);
     }
+    
+      // Period filtering based on selected duration
+    const selectedPeriod = parseInt(seletedDuration.value, 10) * 3; // Assuming 3 samples per day like in the new code example
+    filterData = filterData.slice(0, selectedPeriod); // Limit data to selected period
 
     if(selected.value.length > 0){
       const notFav = [];
@@ -147,13 +145,29 @@ const filterArrayData = computed(() => {
       });
       filterData = [...fav, ...notFav];
     }
-    // Apply period filter
-    // const selectedPeriod = parseInt(seletedDuration.value, 10);
-    // filterData = filterData.filter(item => item.period <= selectedPeriod);
-    console.log('Filtered data:', filterData);
+    console.log('kualdeep', filterData);
+    
     return filterData;
 });
 
+// Function to get the best correlation value from 7d, 30d, 90d, 180d fields
+const getBestCorrelation = (item) => {
+const correlations = [
+  item.Correlation7d,
+  item.Correlation30d,
+  item.Correlation90d,
+  item.Correlation180d
+];
+
+// Find the first non-null, non-undefined correlation value
+const bestCorrelation = correlations.find(correlation => correlation !== null && correlation !== undefined);
+
+// Return the formatted correlation or 'N/A' if none is found
+return bestCorrelation !== undefined ? formatCorrelation(bestCorrelation) : 'N/A';
+};
+const formatCorrelation = (correlation) => {
+return Math.round(Math.abs(correlation) * 100) + ' %';
+};
 
 const likesAllChains = computed(() => {
   return allChainItems.length === seletedChains.value.length
@@ -187,13 +201,9 @@ const fetchData = async () => {
     items.value.forEach((element) => {
       let baseToken = element.BaseToken.substring(0,10);
       if(!token1.value.includes(baseToken)) {
-        // token1.value.push({
-        //   title: baseToken,
-        //   baseTokenIcon: (element.baseTokenIcon != '')?element.baseTokenIcon:'src/assets/logo-light.png'
-        // });
+
         token1.value.push(baseToken);
       }
-      //console.log(token1);
       let baseTokenCategories = element.baseTokenCategories;
       let categories = Array.isArray(baseTokenCategories)
         ? baseTokenCategories
@@ -217,14 +227,6 @@ const fetchData = async () => {
   }
 };
 
-// Filter items based on selected duration
-const filterDataByPeriod = () => {
-  const selectedPeriod = parseInt(seletedDuration.value, 10);
-  filteredItems.value = items.value.filter((item) => {
-    return item.period <= selectedPeriod;
-  });
-};
-
 const applyTvlFilter = () => {
   menu.value = false;
   tvlMinPrice.value = tempTvlMinPrice.value;
@@ -233,6 +235,8 @@ const applyTvlFilter = () => {
 
 const applyAprFilter = () => {
   menu1.value = false;
+  aprMinPrice.value = tempAprMinPrice.value;
+  aprMaxPrice.value = tempAprMaxPrice.value;
 }
 
 const resetFilter = () => {
@@ -287,27 +291,21 @@ const protocolIcon = (value) => {
   return `../assets/images/protocols/${value}.png`;
 }
 
-// const updateOptions = (value) => {
-//   console.log('update updateOptions', value);
-// }
-
 watch(selected, async (newValue) => {
   localStorage.setItem("favItems", newValue);
 });
 
-// watch(searchToken1, async (newValue) => {
-//   console.log('newValue', newValue);
-//   sortedToken1.value = sortedToken1.value.filter((tokenName) => tokenName.includes(newValue));
-// });
-
 const updateSort = (value) => {
   console.log('update value', value);
 }
+watch(items, () => {
+  filterDataByPeriod();  // Automatically apply period filter once items are fetched
+});
 
-// Watch for changes in selected duration and apply filters
-watch([seletedDuration, selectedCategories, selected], () => {
-  // You can call a function to update the filtered data
-  filterArrayData.value; // This will trigger the computed property to recalculate
+
+// Watch for changes in selected duration or other filters
+watch(seletedDuration, () => {
+  filterArrayData.value; // Recalculate when duration or filters change
 });
 
 onMounted(() => {
@@ -370,6 +368,7 @@ onMounted(() => {
             </v-select>
           </div>
         </div>
+
         <div class="d-flex flex-column mr-3">
           <div class="text-customText">Protocol</div>
           <div>
@@ -416,6 +415,7 @@ onMounted(() => {
           </v-select>
           </div>
         </div>
+
         <div class="d-flex flex-column mr-3">
           <div class="text-customText">Category</div>
           <div>
@@ -462,6 +462,7 @@ onMounted(() => {
           </v-select>
           </div>
         </div>
+
         <div class="d-flex flex-column mr-3">
           <div class="text-customText">Period</div>
             <div>
@@ -469,17 +470,18 @@ onMounted(() => {
                 v-model="seletedDuration"
                 class="select-box2 width-adjust"
                 :class="[darkMode ? 'select-box2-dark': 'select-box2-light']"
-                label="Select period"
+                label="Select Period"
                 :items="dataPeriod"
                 item-title="label"
                 item-value="value"
                 :hide-details="true"
                 variant="plain"
                 density="compact"
-                @change="filterDataByPeriod"
+
               />
             </div>
         </div>
+
         <div class="d-flex flex-column mr-3">
           <div class="text-customText">Token 1</div>
             <div>               
@@ -524,6 +526,7 @@ onMounted(() => {
               </v-select>
             </div>
         </div>
+        
         <div class="d-flex flex-column mr-3">
           <div class="text-customText">Token 2</div>
           <div>
@@ -669,11 +672,13 @@ onMounted(() => {
                 </v-card>
             </v-menu>
         </div>
+
         <div class="mt-6">
           <v-btn class="text-customText reset-filters" :class="[darkMode ? 'reset-filters-dark' : 'reset-filters-light']" @click="resetFilter">
             Reset
           </v-btn>
         </div>
+
       </div>
         <v-data-table
             v-model="selected"
@@ -694,9 +699,6 @@ onMounted(() => {
             </template>
             <template v-slot:item.ChainId="{ item }">
               <div class="text-capitalize">
-                <!-- <span class="text-customText">
-                  <img :src="item.quoteTokenIcon" alt="Quote Token Icon" class="token-icon">{{ item.ChainId != null ? item.ChainId : '' }}
-                </span> -->
                 <span class="text-customText">
                   <img :src="chainIcon(item.ChainId)" alt="Chain Icon" class="token-icon">
                   {{ item.ChainId != null ? item.ChainId : '' }}
@@ -705,9 +707,6 @@ onMounted(() => {
             </template>
             <template v-slot:item.DexId="{ item }">
               <div class="text-capitalize">
-                <!-- <span class="text-customText">
-                  <img :src="item.quoteTokenIcon" alt="Quote Token Icon" class="token-icon">{{ item.DexId != null ? item.DexId : '' }}
-                </span> -->
                 <span class="text-customText">
                   <img :src="protocolIcon(item.DexId)" alt="Protocol Icon" class="token-icon">
                   {{ item.DexId != null ? item.DexId : '' }}
@@ -718,8 +717,11 @@ onMounted(() => {
               <span class="text-customText">{{ (item.apr != null ? item.apr.toFixed(2) : 0.00)+'%' }}</span>
             </template>
 
-            <template v-slot:item.corr="{ item }">
+            <!-- <template v-slot:item.corr="{ item }">
               <span class="text-customText">{{ (item.corr != null ? item.corr.toFixed(2) : 0.00)+'%' }}</span>
+            </template> -->
+            <template v-slot:item.corr="{ item }">
+              <span class="text-customText">{{ getBestCorrelation(item) }}</span>
             </template>
 
             <template v-slot:item.Liquidity="{ item }">
