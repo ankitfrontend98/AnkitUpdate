@@ -747,7 +747,7 @@ onMounted(() => {
   </template>
 <style scoped>
     .width-adjust {
-      min-width: 200px !important;
+      min-width: 180px !important;
     }
     .router-link {
       text-decoration: none;
