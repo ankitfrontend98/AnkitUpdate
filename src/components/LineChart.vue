@@ -176,8 +176,12 @@ export default {
 </script>
 <style>
 .apexcharts-tooltip.apexcharts-theme-light {
-  background: #f3f3f3;
+  background: #f3f3f3a4;
   color: #232b4c;
+}
+
+.apexcharts-tooltip.apexcharts-theme-light {
+  background: #ffffffb0 !important;
 }
 
 .apexcharts-tooltip.apexcharts-theme-dark {
@@ -185,7 +189,7 @@ export default {
 }
 
 .apexcharts-tooltip.apexcharts-theme-dark {
-  background: #181a2988 !important;
+  background: #181a29af !important;
 }
 .apexcharts-tooltip::before { /* Or ::after, depending on your inspection */
    border-bottom-color: red !important; /* Change to your desired color */

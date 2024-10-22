@@ -6,6 +6,18 @@
         <v-icon v-if="!darkMode">mdi-arrow-left</v-icon>
         <router-link to="/" class="router-link">Back to all pools</router-link>
       </div>
+      <div>
+        <v-select
+          v-model="seletedDuration"
+          :items="dataPeriod"
+          item-title="label"
+          item-value="value"
+          :class="[darkMode ? 'select-box-dark': 'select-box-light', 'select-box-detail']"
+          :hide-details="true"
+          variant="compact"
+          density="plain"
+        />
+      </div>
     </div>
     <div class="mt-4">
       <v-card :class="[darkMode ? 'dark-token-details' : 'token-detail']">
@@ -56,19 +68,12 @@
               {{ poolDetailsPrice.priceUsd ? poolDetailsPrice.priceUsd : '' }}
             </div>
           </div>
-          <div>
-            <v-select
-              v-model="seletedDuration"
-              :items="dataPeriod"
-              item-title="label"
-              item-value="value"
-              :class="[darkMode ? 'select-box-dark': 'select-box-light', 'select-box-detail']"
-              :hide-details="true"
-              variant="plain"
-              density="compact"
-            />
+          <div class="d-flex flex-column">
+            <div class="label-color">Price Quote</div>
+            <div class="label-font text-h5 text-textItemColor">
+              {{ poolDetailsPeriods.length ?  poolDetailsPeriods[0].priceNative : '' }}
+            </div>
           </div>
-
         </div>
         <v-skeleton-loader
           v-if="loading"
@@ -210,12 +215,12 @@
     <div class="mt-4">
       <v-card :class="[darkMode ? 'dark-token-details' : 'token-detail']">
         <div class="d-flex justify-space-between pa-6 align-center"  v-if="!loading">
-          <div class="d-flex flex-column">
+          <!-- <div class="d-flex flex-column">
             <div class="label-color">Price Quote</div>
             <div class="label-font text-h5 text-textItemColor">
               {{ poolDetailsPeriods.length ?  poolDetailsPeriods[0].priceNative : '' }}
             </div>
-          </div>
+          </div> -->
           <div class="d-flex flex-column">
             <div class="label-color">Avg APR% est.</div>
             <div class="label-font text-h5 text-textItemColor">
@@ -241,6 +246,12 @@
             </div>
           </div> -->
           <div class="d-flex flex-column">
+            <div class="label-color">Correlation</div>
+            <div class="label-font text-h5 text-textItemColor">
+              {{ poolDetailsPeriods.length > 0 ? correlationEstimator.value + '%' : '' }}
+            </div>
+          </div>
+          <div class="d-flex flex-column">
             <div class="label-color">Avg Volatility</div>
             <div class="label-font text-h5 text-textItemColor">
               {{ poolDetailsPeriods.length > 0 ? (weeklyVolatility !==0 ? (weeklyVolatility.toFixed(2) + '%') : weeklyVolatility) : ''  }}
@@ -258,7 +269,7 @@
               {{ poolDetailsPeriods.length > 0 ? formatMoney(weeklyFees) : ''  }}
             </div>
           </div>
-          <!-- <div class="d-flex flex-column">
+          <div class="d-flex flex-column">
             <div class="label-color">Dex screener</div>
             <div v-if="poolDetailsPeriods.length > 0">
               <a
@@ -270,7 +281,7 @@
                 Open
               </a>
             </div>
-          </div> -->
+          </div>
         </div>
         <v-skeleton-loader
           v-if="loading"
@@ -298,14 +309,13 @@
       <div class="mt-1">
         <v-select
           v-model="seletedDuration"
-          label="Select Duration"
           :items="dataPeriod"
           item-title="label"
           item-value="value"
           :class="[darkMode ? 'select-box-dark': 'select-box-light', 'select-box-detail']"
-          variant="plain"
+          variant="compact"
           :hide-details="true"
-          density="compact"
+          density="plain"
           @update:modelValue="dateChange"
         ></v-select>
       </div>
@@ -572,59 +582,61 @@ const { formatDateTime } = useDateFormat();
 const correlation1 = 0;
 /** Methods */
 const setValues = () => {
-    let minPrice=0;
-    let maxPrice=0;
-    let counter=0;
-    let nativePriceArray=[];
-    let standardDev=0;
-    let meanValue=0;
-    weeklyAvgLiquidity.value = 0;
-    weeklyAvgAPR.value = 0;
-    weeklyVolume.value = 0;
-    weeklyFees.value = 0;
-    filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
-        if (counter === 0) {
-            minPrice = element.priceNative;
-            maxPrice = element.priceNative;
-        }
-        else {
-            if (element.priceNative < minPrice) {
-                minPrice = element.priceNative;
-            }
-            if (element.priceNative > maxPrice) {
-                maxPrice = element.priceNative;
-            }
-        }
-        
-        weeklyAvgLiquidity.value += element.Liquidity;
-        weeklyVolume.value += element.Volume/3;
-        weeklyFees.value += element.fees;
-        if (typeof(element.priceNative) !== "undefined" ) {
-            nativePriceArray.push(Number.parseFloat(element.priceNative));
-        }
-        counter++;
-    });
-    myFeeTier.value = poolDetailsPeriods.value[0].feeTier;
-    
-    if(myFeeTier.value !== 0) {
-        myFeeDelta.value = myFeeTier.value*2/100;
+  let minPrice = 0;
+  let maxPrice = 0;
+  let counter = 0;
+  let nativePriceArray = [];
+  let standardDev = 0;
+  let meanValue = 0;
+
+  weeklyAvgLiquidity.value = 0;
+  weeklyAvgAPR.value = 0;
+  weeklyVolume.value = 0;
+  weeklyFees.value = 0;
+
+  filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
+    if (counter === 0) {
+      minPrice = element.priceNative;
+      maxPrice = element.priceNative;
     } else {
-        myFeeDelta.value = 200;
+      if (element.priceNative < minPrice) minPrice = element.priceNative;
+      if (element.priceNative > maxPrice) maxPrice = element.priceNative;
     }
-    weeklyAvgAPR.value = (weeklyVolume.value * poolDetailsPeriods.value[0].feeTier * 365) / (10000 * weeklyAvgLiquidity.value);
-    weeklyAvgLiquidity.value /= counter;
-    absoluteVolatility.value = (100 *  maxPrice / minPrice) - 100;
-    mySigma.value = standardDev = getStandardDeviation(nativePriceArray);
-    myMeanPrice.value = meanValue = getMean(nativePriceArray);
-    weeklyVolatility.value = meanValue !== 0 ? ( (standardDev * 100) / meanValue) : "N/A";
-    initializeRanges(1, 'aggressive');
-    correlationEstimator.value = correlationEstimator1(poolDetailsPeriods.value, seletedDuration.value);
-    console.log(correlationEstimator.value);
+
+    weeklyAvgLiquidity.value += element.Liquidity;
+    weeklyVolume.value += element.Volume / 3;
+    weeklyFees.value += element.fees;
+    if (typeof element.priceNative !== 'undefined') {
+      nativePriceArray.push(Number.parseFloat(element.priceNative));
+    }
+    counter++;
+  });
+
+  // Set fee tier and delta
+  myFeeTier.value = poolDetailsPeriods.value[0].feeTier;
+  myFeeDelta.value = myFeeTier.value !== 0 ? (myFeeTier.value * 2) / 100 : 200;
+
+  // Calculate weekly averages
+  weeklyAvgAPR.value = (weeklyVolume.value * poolDetailsPeriods.value[0].feeTier * 365) / (10000 * weeklyAvgLiquidity.value);
+  weeklyAvgLiquidity.value /= counter;
+
+  // Calculate volatility and other stats
+  absoluteVolatility.value = (100 * maxPrice) / minPrice - 100;
+  mySigma.value = standardDev = getStandardDeviation(nativePriceArray);
+  myMeanPrice.value = meanValue = getMean(nativePriceArray);
+  weeklyVolatility.value = meanValue !== 0 ? (standardDev * 100) / meanValue : 'N/A';
+
+  // Calculate correlation
+  correlationEstimator.value = correlationEstimator(poolDetailsPeriods.value, seletedDuration.value);
+
+  initializeRanges(1, 'aggressive');
 };
-const correlationEstimator = async(data,days ) => {
+
+
+const correlationEstimator = (data, days) => {
   // Check if the input data is valid
   if (!Array.isArray(data) || data.length === 0 || days <= 0) {
-      throw new Error("Invalid data or number of days");
+    throw new Error("Invalid data or number of days");
   }
 
   // Calculate the total number of samples based on days and samples per day
@@ -635,9 +647,9 @@ const correlationEstimator = async(data,days ) => {
   const token2Values = [];
 
   for (let i = 0; i < Math.min(data.length, numSamples); i++) {
-      const sample = data[i];
-      token1Values.push(Number(sample.priceUsd)); // Assuming token1USD is the USD value for Token1
-      token2Values.push(Number(sample.priceUsd/sample.priceNative)); // Assuming token1InToken2 is the price of Token1 in terms of Token2
+    const sample = data[i];
+    token1Values.push(Number(sample.priceUsd)); // Assuming token1USD is the USD value for Token1
+    token2Values.push(Number(sample.priceUsd / sample.priceNative)); // Assuming token1InToken2 is the price of Token1 in terms of Token2
   }
 
   // Calculate means
@@ -650,83 +662,39 @@ const correlationEstimator = async(data,days ) => {
   let denominatorToken2 = 0;
 
   for (let i = 0; i < token1Values.length; i++) {
-      const diffToken1 = token1Values[i] - meanToken1;
-      const diffToken2 = token2Values[i] - meanToken2;
+    const diffToken1 = token1Values[i] - meanToken1;
+    const diffToken2 = token2Values[i] - meanToken2;
 
-      numerator += diffToken1 * diffToken2;
-      denominatorToken1 += diffToken1 ** 2;
-      denominatorToken2 += diffToken2 ** 2;
+    numerator += diffToken1 * diffToken2;
+    denominatorToken1 += diffToken1 ** 2;
+    denominatorToken2 += diffToken2 ** 2;
   }
-
 
   // Edge case for two stable tokens
   if (denominatorToken1 === 0 || denominatorToken2 === 0 || numerator === 0) {
-      return 1;
+    return '100.0 %';  // Return 100% if the correlation is perfect or no variation
   }
 
-  // Calculate the correlation coefficient
-  const correlation = numerator / Math.sqrt(denominatorToken1 * denominatorToken2);
-  return correlation;
+  // Calculate the correlation coefficient and convert to percentage
+  const correlation = (numerator / Math.sqrt(denominatorToken1 * denominatorToken2)) * 100;
+
+  // Round to one decimal place and return formatted string
+  return `${correlation.toFixed(1)}`;
 };
-const correlationEstimator1 = (data,days ) => {
-  // Check if the input data is valid
-  if (!Array.isArray(data) || data.length === 0 || days <= 0) {
-      throw new Error("Invalid data or number of days");
-  }
-
-  // Calculate the total number of samples based on days and samples per day
-  const numSamples = days * 3; // 3 samples per day
-
-  // Extract values for Token1 and Token2
-  const token1Values = [];
-  const token2Values = [];
-
-  for (let i = 0; i < Math.min(data.length, numSamples); i++) {
-      const sample = data[i];
-      token1Values.push(Number(sample.priceUsd)); // Assuming token1USD is the USD value for Token1
-      token2Values.push(Number(sample.priceUsd/sample.priceNative)); // Assuming token1InToken2 is the price of Token1 in terms of Token2
-  }
-
-  // Calculate means
-  const meanToken1 = token1Values.reduce((sum, value) => sum + value, 0) / token1Values.length;
-  const meanToken2 = token2Values.reduce((sum, value) => sum + value, 0) / token2Values.length;
-
-  // Calculate the numerator and denominator for the correlation coefficient
-  let numerator = 0;
-  let denominatorToken1 = 0;
-  let denominatorToken2 = 0;
-
-  for (let i = 0; i < token1Values.length; i++) {
-      const diffToken1 = token1Values[i] - meanToken1;
-      const diffToken2 = token2Values[i] - meanToken2;
-
-      numerator += diffToken1 * diffToken2;
-      denominatorToken1 += diffToken1 ** 2;
-      denominatorToken2 += diffToken2 ** 2;
-  }
 
 
-  // Edge case for two stable tokens
-  if (denominatorToken1 === 0 || denominatorToken2 === 0 || numerator === 0) {
-      return 1;
-  }
-
-  // Calculate the correlation coefficient
-  const correlation = numerator / Math.sqrt(denominatorToken1 * denominatorToken2);
-  return correlation;
-};
 const fetchData = async () => {
   loading.value = true;
   try {
     const { data } = await apiClient.get(`api/message/${id}`);
     poolDetailsPeriods.value = data.output.periodData;
     poolDetailsPrice.value = data.output.price;
-    correlationEstimator.value = await correlationEstimator(poolDetailsPeriods.value, seletedDuration.value);
+
+    // Call setValues after data is fetched
     setValues();
   } catch (error) {
     console.error('Error fetching data:', error);
-  }
-  finally {
+  } finally {
     loading.value = false;
   }
 };

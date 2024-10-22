@@ -1,5 +1,9 @@
 export const DATA_PERIOD = [
   {
+      label:"All",
+      value:"all",
+  },
+  {
       label:"1 Day",
       value:"1",
   },
@@ -94,7 +98,7 @@ export const DETAIL_TABLE_HEADER = [
   key: 'date',
   },
   { title: 'APR', key: 'apr' },
-  { title: 'Correlation', key: 'corr' },
+  // { title: 'Correlation', key: 'corr' },
   { title: 'Liquidity', key: 'liquidity' },
   { title: 'Volume', key: 'volume' },
   { title: 'Fees', key: 'fees' },

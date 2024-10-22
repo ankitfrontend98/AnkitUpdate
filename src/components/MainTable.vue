@@ -8,7 +8,7 @@ import { ALL_CHAINS, ALL_PROTOCOL, MAIN_TABLE_HEADER,ALL_CATEGORIES, DATA_PERIOD
 
 const theme = useTheme();
 const dataPeriod = DATA_PERIOD;
-const seletedDuration = ref('30');
+const seletedDuration = ref('all');
 
 const items = ref([]);
 const menu = ref(false);
@@ -114,11 +114,11 @@ const filterArrayData = computed(() => {
     }
 
     if(tvlMinPrice.value !== 0) {
-      filterData = filterData.filter((element) => element.vol_tvl >= tvlMinPrice.value);
+      filterData = filterData.filter((element) => element.Liquidity >= tvlMinPrice.value);
     }
 
     if(tvlMaxPrice.value !== 0) {
-      filterData = filterData.filter((element) => element.vol_tvl <= tvlMaxPrice.value);
+      filterData = filterData.filter((element) => element.Liquidity <= tvlMaxPrice.value);
     }
 
     if(aprMinPrice.value !== 0) {
@@ -128,10 +128,16 @@ const filterArrayData = computed(() => {
     if(aprMaxPrice.value !== 0) {
       filterData = filterData.filter((element) => element.apr <= aprMaxPrice.value);
     }
+
+      // Only apply period filter if a duration is explicitly selected
+    if (seletedDuration.value !== 'all') { // Assuming 'all' means no filter
+      const selectedPeriod = parseInt(seletedDuration.value, 10) * 3; // Adjust based on your data
+      filterData = filterData.slice(0, selectedPeriod); // Apply the filter
+    }
     
       // Period filtering based on selected duration
-    const selectedPeriod = parseInt(seletedDuration.value, 10) * 3; // Assuming 3 samples per day like in the new code example
-    filterData = filterData.slice(0, selectedPeriod); // Limit data to selected period
+    // const selectedPeriod = parseInt(seletedDuration.value, 10) * 3; // Assuming 3 samples per day like in the new code example
+    // filterData = filterData.slice(0, selectedPeriod); // Limit data to selected period
 
     if(selected.value.length > 0){
       const notFav = [];
@@ -145,7 +151,7 @@ const filterArrayData = computed(() => {
       });
       filterData = [...fav, ...notFav];
     }
-    console.log('kualdeep', filterData);
+    // console.log(filterData);
     
     return filterData;
 });
@@ -243,7 +249,7 @@ const resetFilter = () => {
   seletedChains.value = [];
   selectedProtocol.value = [];
   selectedCategories.value = [];
-  seletedDuration.value = '30';
+  seletedDuration.value = 'all';
   selectedToken1.value = [];
   selectedToken2.value = [];
   tempTvlMinPrice.value = tvlMinPrice.value = 0;
@@ -304,9 +310,9 @@ watch(items, () => {
 
 
 // Watch for changes in selected duration or other filters
-watch(seletedDuration, () => {
-  filterArrayData.value; // Recalculate when duration or filters change
-});
+// watch(seletedDuration, () => {
+//   filterArrayData.value; // Recalculate when duration or filters change
+// });
 
 onMounted(() => {
   fetchData();
