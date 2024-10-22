@@ -582,62 +582,85 @@ const { formatDateTime } = useDateFormat();
 const correlation1 = 0;
 /** Methods */
 const setValues = () => {
-  let minPrice = 0;
-  let maxPrice = 0;
-  let counter = 0;
-  let nativePriceArray = [];
-  let standardDev = 0;
-  let meanValue = 0;
-
-  weeklyAvgLiquidity.value = 0;
-  weeklyAvgAPR.value = 0;
-  weeklyVolume.value = 0;
-  weeklyFees.value = 0;
-
-  filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
-    if (counter === 0) {
-      minPrice = element.priceNative;
-      maxPrice = element.priceNative;
+    let minPrice=0;
+    let maxPrice=0;
+    let counter=0;
+    let nativePriceArray=[];
+    let standardDev=0;
+    let meanValue=0;
+    weeklyAvgLiquidity.value = 0;
+    weeklyAvgAPR.value = 0;
+    weeklyVolume.value = 0;
+    weeklyFees.value = 0;
+    filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
+        if (counter === 0) {
+            minPrice = element.priceNative;
+            maxPrice = element.priceNative;
+        }
+        else {
+            if (element.priceNative < minPrice) {
+                minPrice = element.priceNative;
+            }
+            if (element.priceNative > maxPrice) {
+                maxPrice = element.priceNative;
+            }
+        }
+        
+        weeklyAvgLiquidity.value += element.Liquidity;
+        weeklyVolume.value += element.Volume/3;
+        weeklyFees.value += element.fees;
+        if (typeof(element.priceNative) !== "undefined" ) {
+            nativePriceArray.push(Number.parseFloat(element.priceNative));
+        }
+        counter++;
+    });
+    myFeeTier.value = poolDetailsPeriods.value[0].feeTier;
+    
+    if(myFeeTier.value !== 0) {
+        myFeeDelta.value = myFeeTier.value*2/100;
     } else {
-      if (element.priceNative < minPrice) minPrice = element.priceNative;
-      if (element.priceNative > maxPrice) maxPrice = element.priceNative;
+        myFeeDelta.value = 200;
     }
+    weeklyAvgAPR.value = (weeklyVolume.value * poolDetailsPeriods.value[0].feeTier * 365) / (10000 * weeklyAvgLiquidity.value);
+    weeklyAvgLiquidity.value /= counter;
+    absoluteVolatility.value = (100 *  maxPrice / minPrice) - 100;
+    mySigma.value = standardDev = getStandardDeviation(nativePriceArray);
+    myMeanPrice.value = meanValue = getMean(nativePriceArray);
+    weeklyVolatility.value = meanValue !== 0 ? ( (standardDev * 100) / meanValue) : "N/A";
+    initializeRanges(1, 'aggressive');
+    // correlationEstimator.value = correlationEstimator1(poolDetailsPeriods.value, seletedDuration.value);
+    correlationEstimator.value = (correlationEstimator1(poolDetailsPeriods.value, seletedDuration.value) * 100).toFixed(2);
 
-    weeklyAvgLiquidity.value += element.Liquidity;
-    weeklyVolume.value += element.Volume / 3;
-    weeklyFees.value += element.fees;
-    if (typeof element.priceNative !== 'undefined') {
-      nativePriceArray.push(Number.parseFloat(element.priceNative));
-    }
-    counter++;
-  });
-
-  // Set fee tier and delta
-  myFeeTier.value = poolDetailsPeriods.value[0].feeTier;
-  myFeeDelta.value = myFeeTier.value !== 0 ? (myFeeTier.value * 2) / 100 : 200;
-
-  // Calculate weekly averages
-  weeklyAvgAPR.value = (weeklyVolume.value * poolDetailsPeriods.value[0].feeTier * 365) / (10000 * weeklyAvgLiquidity.value);
-  weeklyAvgLiquidity.value /= counter;
-
-  // Calculate volatility and other stats
-  absoluteVolatility.value = (100 * maxPrice) / minPrice - 100;
-  mySigma.value = standardDev = getStandardDeviation(nativePriceArray);
-  myMeanPrice.value = meanValue = getMean(nativePriceArray);
-  weeklyVolatility.value = meanValue !== 0 ? (standardDev * 100) / meanValue : 'N/A';
-
-  // Calculate correlation
-  correlationEstimator.value = correlationEstimator(poolDetailsPeriods.value, seletedDuration.value);
-
-  initializeRanges(1, 'aggressive');
+    console.log(correlationEstimator.value);
 };
-
-
-const correlationEstimator = (data, days) => {
+const correlationEstimator = async(data,days ) => {
   // Check if the input data is valid
   if (!Array.isArray(data) || data.length === 0 || days <= 0) {
-    throw new Error("Invalid data or number of days");
+      throw new Error("Invalid data or number of days");
   }
+
+  const getBestCorrelation = (item) => {
+    const correlations = [
+      item.Correlation7d,
+      item.Correlation30d,
+      item.Correlation90d,
+      item.Correlation180d
+    ];
+
+    // Filter out null or undefined values
+    const validCorrelations = correlations.filter(correlation => correlation !== null && correlation !== undefined);
+
+    // Find the highest correlation value
+    const bestCorrelation = validCorrelations.length > 0 ? Math.max(...validCorrelations) : null;
+
+    // Return the formatted correlation or 'N/A' if none is found
+    return bestCorrelation !== null ? formatCorrelation(bestCorrelation) : 'N/A';
+  };
+
+  const formatCorrelation = (correlation) => {
+    return (correlation * 100).toFixed(2) + ' %';
+  };
+
 
   // Calculate the total number of samples based on days and samples per day
   const numSamples = days * 3; // 3 samples per day
@@ -647,9 +670,9 @@ const correlationEstimator = (data, days) => {
   const token2Values = [];
 
   for (let i = 0; i < Math.min(data.length, numSamples); i++) {
-    const sample = data[i];
-    token1Values.push(Number(sample.priceUsd)); // Assuming token1USD is the USD value for Token1
-    token2Values.push(Number(sample.priceUsd / sample.priceNative)); // Assuming token1InToken2 is the price of Token1 in terms of Token2
+      const sample = data[i];
+      token1Values.push(Number(sample.priceUsd)); // Assuming token1USD is the USD value for Token1
+      token2Values.push(Number(sample.priceUsd/sample.priceNative)); // Assuming token1InToken2 is the price of Token1 in terms of Token2
   }
 
   // Calculate means
@@ -662,39 +685,87 @@ const correlationEstimator = (data, days) => {
   let denominatorToken2 = 0;
 
   for (let i = 0; i < token1Values.length; i++) {
-    const diffToken1 = token1Values[i] - meanToken1;
-    const diffToken2 = token2Values[i] - meanToken2;
+      const diffToken1 = token1Values[i] - meanToken1;
+      const diffToken2 = token2Values[i] - meanToken2;
 
-    numerator += diffToken1 * diffToken2;
-    denominatorToken1 += diffToken1 ** 2;
-    denominatorToken2 += diffToken2 ** 2;
+      numerator += diffToken1 * diffToken2;
+      denominatorToken1 += diffToken1 ** 2;
+      denominatorToken2 += diffToken2 ** 2;
   }
+
 
   // Edge case for two stable tokens
   if (denominatorToken1 === 0 || denominatorToken2 === 0 || numerator === 0) {
-    return '100.0 %';  // Return 100% if the correlation is perfect or no variation
+      return 1;
   }
 
-  // Calculate the correlation coefficient and convert to percentage
-  const correlation = (numerator / Math.sqrt(denominatorToken1 * denominatorToken2)) * 100;
+  // Calculate the correlation coefficient
+  // const correlation = numerator / Math.sqrt(denominatorToken1 * denominatorToken2);
+  // return correlation;
 
-  // Round to one decimal place and return formatted string
-  return `${correlation.toFixed(1)}`;
+  const correlation = numerator / Math.sqrt(denominatorToken1 * denominatorToken2);
+  return correlation * 100;  // Convert correlation to percentage
+
 };
+const correlationEstimator1 = (data,days ) => {
+  // Check if the input data is valid
+  if (!Array.isArray(data) || data.length === 0 || days <= 0) {
+      throw new Error("Invalid data or number of days");
+  }
+
+  // Calculate the total number of samples based on days and samples per day
+  const numSamples = days * 3; // 3 samples per day
+
+  // Extract values for Token1 and Token2
+  const token1Values = [];
+  const token2Values = [];
+
+  for (let i = 0; i < Math.min(data.length, numSamples); i++) {
+      const sample = data[i];
+      token1Values.push(Number(sample.priceUsd)); // Assuming token1USD is the USD value for Token1
+      token2Values.push(Number(sample.priceUsd/sample.priceNative)); // Assuming token1InToken2 is the price of Token1 in terms of Token2
+  }
+
+  // Calculate means
+  const meanToken1 = token1Values.reduce((sum, value) => sum + value, 0) / token1Values.length;
+  const meanToken2 = token2Values.reduce((sum, value) => sum + value, 0) / token2Values.length;
+
+  // Calculate the numerator and denominator for the correlation coefficient
+  let numerator = 0;
+  let denominatorToken1 = 0;
+  let denominatorToken2 = 0;
+
+  for (let i = 0; i < token1Values.length; i++) {
+      const diffToken1 = token1Values[i] - meanToken1;
+      const diffToken2 = token2Values[i] - meanToken2;
+
+      numerator += diffToken1 * diffToken2;
+      denominatorToken1 += diffToken1 ** 2;
+      denominatorToken2 += diffToken2 ** 2;
+  }
 
 
+  // Edge case for two stable tokens
+  if (denominatorToken1 === 0 || denominatorToken2 === 0 || numerator === 0) {
+      return 1;
+  }
+
+  // Calculate the correlation coefficient
+  const correlation = numerator / Math.sqrt(denominatorToken1 * denominatorToken2);
+  return correlation;
+};
 const fetchData = async () => {
   loading.value = true;
   try {
     const { data } = await apiClient.get(`api/message/${id}`);
     poolDetailsPeriods.value = data.output.periodData;
     poolDetailsPrice.value = data.output.price;
-
-    // Call setValues after data is fetched
+    correlationEstimator.value = await correlationEstimator(poolDetailsPeriods.value, seletedDuration.value);
     setValues();
   } catch (error) {
     console.error('Error fetching data:', error);
-  } finally {
+  }
+  finally {
     loading.value = false;
   }
 };
