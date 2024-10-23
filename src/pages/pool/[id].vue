@@ -222,12 +222,6 @@
             </div>
           </div> -->
           <div class="d-flex flex-column">
-            <div class="label-color">Avg APR% est.</div>
-            <div class="label-font text-h5 text-textItemColor">
-              {{  (weeklyAvgAPR.toFixed(3) != null ) ? weeklyAvgAPR.toFixed(2) + '%' : 0.00 + '%' }}
-            </div>
-          </div>
-          <div class="d-flex flex-column">
             <div class="label-color">Avg Liquidity</div>
             <div class="label-font text-h5 text-textItemColor">
               {{ poolDetailsPeriods.length > 0 ? formatMoney(weeklyAvgLiquidity) : ''  }}
@@ -237,6 +231,24 @@
             <div class="label-color">Period Volume</div>
             <div class="label-font text-h5 text-textItemColor">
               {{ poolDetailsPeriods.length > 0 ? formatMoney(weeklyVolume) : ''  }}
+            </div>
+          </div>
+          <div class="d-flex flex-column">
+            <div class="label-color">Weekly Fees</div>
+            <div class="label-font text-h5 text-textItemColor">
+              {{ poolDetailsPeriods.length > 0 ? formatMoney(weeklyFees) : ''  }}
+            </div>
+          </div>
+          <div class="d-flex flex-column">
+            <div class="label-color">Avg Volatility</div>
+            <div class="label-font text-h5 text-textItemColor">
+              {{ poolDetailsPeriods.length > 0 ? (weeklyVolatility !==0 ? (weeklyVolatility.toFixed(2) + '%') : weeklyVolatility) : ''  }}
+            </div>
+          </div>
+          <div class="d-flex flex-column">
+            <div class="label-color">Abs Volatility</div>
+            <div class="label-font text-h5 text-textItemColor">
+              {{ poolDetailsPeriods.length > 0 ? (absoluteVolatility !==0 ? (absoluteVolatility.toFixed(2) + '%') : weeklyVolatility  ) : ''  }}
             </div>
           </div>
           <!-- <div class="d-flex flex-column">
@@ -252,21 +264,9 @@
             </div>
           </div>
           <div class="d-flex flex-column">
-            <div class="label-color">Avg Volatility</div>
+            <div class="label-color">Avg APR% est.</div>
             <div class="label-font text-h5 text-textItemColor">
-              {{ poolDetailsPeriods.length > 0 ? (weeklyVolatility !==0 ? (weeklyVolatility.toFixed(2) + '%') : weeklyVolatility) : ''  }}
-            </div>
-          </div>
-          <div class="d-flex flex-column">
-            <div class="label-color">Abs Volatility</div>
-            <div class="label-font text-h5 text-textItemColor">
-              {{ poolDetailsPeriods.length > 0 ? (absoluteVolatility !==0 ? (absoluteVolatility.toFixed(2) + '%') : weeklyVolatility  ) : ''  }}
-            </div>
-          </div>
-          <div class="d-flex flex-column">
-            <div class="label-color">Weekly Fees</div>
-            <div class="label-font text-h5 text-textItemColor">
-              {{ poolDetailsPeriods.length > 0 ? formatMoney(weeklyFees) : ''  }}
+              {{  (weeklyAvgAPR.toFixed(3) != null ) ? weeklyAvgAPR.toFixed(2) + '%' : 0.00 + '%' }}
             </div>
           </div>
           <div class="d-flex flex-column">
@@ -524,14 +524,14 @@ import apiClient from '@/utils/axios';
 import { getMean, getStandardDeviation, formatNumber } from '@/utils/common';
 import { formatMoney } from '@/utils/formatMoney.js';
 import { useDateFormat } from '@/utils/composables/useDateFormat';
-import { DATA_PERIOD, MONTH_NAMES } from '@/constant/index.js';
+import {DATA_PERIOD_GRAPH, MONTH_NAMES } from '@/constant/index.js';
 import millify from "millify";
 
 const theme = useTheme();
 const activeTab = ref(0)
 const liquidityValue = ref(1000);
 const seletedDuration = ref('7');
-const dataPeriod = DATA_PERIOD;
+const dataPeriod = DATA_PERIOD_GRAPH;
 const tabs = [{
     title : 'All Transactions',
     value: '0'

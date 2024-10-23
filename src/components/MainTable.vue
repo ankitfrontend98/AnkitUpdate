@@ -121,12 +121,11 @@ const filterArrayData = computed(() => {
       filterData = filterData.filter((element) => element.Liquidity <= tvlMaxPrice.value);
     }
 
-    if(aprMinPrice.value !== 0) {
-      filterData = filterData.filter((element) => element.apr <= aprMinPrice.value);
-    }
-
-    if(aprMaxPrice.value !== 0) {
-      filterData = filterData.filter((element) => element.apr <= aprMaxPrice.value);
+    if(aprMinPrice.value !== 0 || aprMaxPrice.value !== 0) {
+      filterData = filterData.filter((element) => {
+        return (aprMinPrice.value === 0 || element.apr >= aprMinPrice.value) && 
+              (aprMaxPrice.value === 0 || element.apr <= aprMaxPrice.value);
+      });
     }
 
       // Only apply period filter if a duration is explicitly selected

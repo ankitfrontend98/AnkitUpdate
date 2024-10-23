@@ -25,6 +25,49 @@ export const DATA_PERIOD = [
   },
 ];
 
+export const DATA_PERIOD_GRAPH = [
+{
+    label:"1 Day",
+    value:"1",
+},
+{
+    label:"2 Days",
+    value:"2",
+},
+{
+    label:"3 Days",
+    value:"3",
+},
+{
+    label:"1 Week",
+    value:"7",
+},
+{
+    label:"2 Weeks",
+    value:"14",
+},
+{
+    label:"3 Weeks",
+    value:"21",
+},
+{
+    label:"1 Month",
+    value:"30",
+},
+{
+    label:"2 Months",
+    value:"60",
+},
+{
+    label:"3 Months",
+    value:"90",
+},
+{
+    label:"6 Months",
+    value:"180",
+},
+];
+
 export const ALL_CHAINS = [
 {
   text: 'Arbitrum',
