@@ -107,6 +107,14 @@ export const ALL_CHAINS = [
 {
   text: 'ZYSync',
   value: 'zysync'
+},
+{
+  text: 'Cetus',
+  value: 'cetus'
+},
+{
+  text: 'Sui',
+  value: 'sui'
 }];
 
 export const ALL_PROTOCOL = [

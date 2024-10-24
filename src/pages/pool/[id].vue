@@ -480,29 +480,219 @@
                     </v-btn>
                   </div>
                 </div>
-              </v-card>
-            </v-col>
-            <v-col>
-              <v-card class="result-ui custom-card-class d-flex flex-column" :class="[darkMode ? 'result-ui-dark' : 'result-ui-light']">
-                <div class="text-left result-text" :class="[darkMode ? 'result-text-dark' : 'result-text-light']">Back Test Results</div>
+                <hr>
+                <div class="text-left result-text" :class="[darkMode ? 'result-text-dark' : 'result-text-light']">
+                  Back Test Results
+                </div>
                 <div class="d-flex flex-column">
                   <v-card class="pa-5 mb-4 " elevation="0" :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
-                    <div class="d-flex justify-space-between align-center">
-                      <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">{{ formatMoney(estimatedFees) }}</div>
-                      <div class="result-text-right">Generated Fees (est)</div>
-                    </div>
+                    <v-row cols="3">
+                      <v-col>
+                        <div>
+                          <div class="result-text-right">Generated Fees (est)</div>
+                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">{{ formatMoney(estimatedFees) }}</div>
+                        </div>
+                      </v-col>
+                      <v-col>
+                        <div>
+                          <div class="result-text-right">Time In Range (%)</div>
+                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">{{ inRangePercentaje.toFixed(2) + ' %' }}</div>
+                        </div>
+                      </v-col>
+                      <v-col>
+                        <div>
+                          <div class="result-text-right">Estimated APR (%)</div>
+                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">{{ estimatedAPR.toFixed(2) + ' %' }}</div>
+                        </div>
+                      </v-col>
+                    </v-row>
                   </v-card>
-                  <v-card class="pa-5 mb-4" elevation="0"  :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
-                    <div class="d-flex justify-space-between align-center">
-                      <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">{{ inRangePercentaje.toFixed(2) + ' %' }}</div>
-                      <div class="result-text-right">Time In Range (%)</div>
+                </div>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-tabs-window-item>
+        <v-tabs-window-item key="2" value="2">
+          <v-row>
+            <v-col cols="8">
+              <v-card class="d-flex flex-column " :class="[darkMode ? 'calculator-ui-dark' : 'calculator-ui']">
+                <div class="d-flex justify-space-between">
+                  <!-- <div :class="[darkMode ? 'calc-heading-dark' : 'calc-heading-light']">
+                    <h4>APR CALCULATOR</h4>
+                  </div> -->
+                  <div class="d-flex flex-column mr-6">
+                    <div class="calc-other-text" :class="[darkMode ? 'calc-other-text-dark' : 'calc-other-text-light']">Future Price:</div>
+                    <div class="highlight">{{ displayPrice }} {{ invertedPrices ? poolDetailsPeriods[0].BaseToken  : 
+                                      poolDetailsPeriods[0].QuoteToken  }}</div>
+                  </div>
+                  <div class="action mr-6">
+                    <v-btn
+                      class="text-none"
+                      :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                      min-width="92"    
+                      variant="outlined"
+                      rounded
+                      @click="handleInvertPrices"
+                    >
+                    <span class="mt-2 mr-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" v-if="!darkMode">
+                        <path d="M10.0001 17.0833C13.9121 17.0833 17.0834 13.912 17.0834 10C17.0834 7.6454 15.9345 5.55912 14.1667 4.27118M10.8334 18.6667L9.16675 17L10.8334 15.3333M10.0001 2.91668C6.08806 2.91668 2.91675 6.08799 2.91675 10C2.91675 12.3546 4.06564 14.4409 5.83341 15.7288M9.16675 4.66668L10.8334 3.00001L9.16675 1.33334" stroke="#344054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" v-else>
+                        <path d="M10.0001 17.0833C13.9121 17.0833 17.0834 13.912 17.0834 10C17.0834 7.6454 15.9345 5.55912 14.1667 4.27118M10.8334 18.6667L9.16675 17L10.8334 15.3333M10.0001 2.91668C6.08806 2.91668 2.91675 6.08799 2.91675 10C2.91675 12.3546 4.06564 14.4409 5.83341 15.7288M9.16675 4.66668L10.8334 3.00001L9.16675 1.33334" stroke="#FCFCFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </span>
+                      Invert Price
+                    </v-btn>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div class="d-flex flex-column flex-gap">
+                    <div class="d-flex flex-column mr-6">
+                      <label class="calculator-label" :class="[darkMode ? 'label-dark' : 'label-light']">Liquidity</label>
+                      <v-text-field
+                        v-model="liquidityValue"
+                        class="text-field-width"
+                        :class="[darkMode ? 'text-field-dark' : 'text-field-light']"
+                        type="input"
+                        :hide-details="true"
+                        density="compact"
+                        variant="plain"
+                      >
+                        <template v-slot:append-inner>
+                          USD
+                        </template>
+                      </v-text-field>
                     </div>
-                  </v-card>
-                  <v-card class="pa-5 mb-2" elevation="0" :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
-                    <div class="d-flex justify-space-between align-center">
-                      <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">{{ estimatedAPR.toFixed(2) + ' %' }}</div>
-                      <div class="result-text-right">Estimated APR (%)</div>
+                    <div class="d-flex flex-column mr-2">
+                      <div class="calc-other-text">Capital Preservation Indicator</div>
+                      <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{ myGMValue }}</v-chip>
                     </div>
+                  </div>
+                  <div class="d-flex flex-column flex-gap">
+                    <div class="d-flex flex-column mr-6">
+                      <div class="label-height">
+                        <label class="calculator-label">Min Value: </label>
+                        <span class="highlight ml-1">{{ lowerPercentageRange.toFixed(2) + '%' }}</span>
+                      </div>
+                      <v-text-field
+                        v-model="myMinRange"
+                        class="text-field-width"
+                        :class="[darkMode ? 'text-field-dark' : 'text-field-light']"
+                        type="input"
+                        variant="plain"
+                        density="compact"
+                        :hide-details="true"
+                        prepend-inner-icon="mdi-minus"
+                        append-inner-icon="mdi-plus"
+                        @click:prepend-inner="handlePrependInner('min')"
+                        @click:append-inner="handleAppendInner('min')"
+                      ></v-text-field>
+                    </div>
+                    <div class="d-flex flex-column mr-4 ml-1 flex-grow-1">
+                      <div class="calc-other-text">Composition</div>
+                      <div class="d-flex">
+                        <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{ poolDetailsPeriods[0].BaseToken }}: </span>
+                        <span class="highlight ml-1">   {{ xPercentage.toFixed(2) }} %</span>
+                      </div>
+                      <div class="composition-token">{{ xTokens }} tokens</div>
+                    </div>
+                  </div>
+                  <div class="d-flex flex-column flex-gap">
+                    <div class="d-flex flex-column mr-6">
+                      <div class="label-height">
+                        <label class="calculator-label">Max Value: </label>
+                        <span class="highlight ml-1">{{ higherPercentageRange.toFixed(2) + '%' }}</span>
+                      </div>
+                      <v-text-field
+                        v-model="myMaxRange"
+                        class="text-field-width"
+                        :class="[darkMode ? 'text-field-dark' : 'text-field-light']"
+                        type="input"
+                        :hide-details="true"
+                        density="compact"
+                        variant="plain"
+                        prepend-inner-icon="mdi-minus"
+                        append-inner-icon="mdi-plus"
+                        @click:prepend-inner="handlePrependInner('max')"
+                        @click:append-inner="handleAppendInner('max')"
+                      >
+                      </v-text-field>
+                    </div>
+                    <div class="d-flex flex-column mr-10 mt-6">
+                      <div>
+                        <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{ poolDetailsPeriods[0].QuoteToken }}</span>: 
+                        <span class="highlight">
+                          {{ yPercentage.toFixed(2) }} %
+                        </span></div>
+                      <div class="y-tokens">{{ yTokens }} tokens</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-space-between mb-5 mr-10 align-center">
+                  <div class="d-flex">
+                    <v-btn
+                      class="text-none mr-4"
+                      :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                      min-width="92"
+                      variant="outlined"
+                      rounded
+                      @click="initializeRanges('','aggressive')"
+                    >
+                      Narrow Range
+                    </v-btn>
+
+                    <v-btn
+                      class="text-none"
+                      :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                      min-width="92"
+                      variant="outlined"
+                      rounded
+                      @click="initializeRanges('','conservative')"
+                    >
+                      Wide range
+                    </v-btn>
+                  </div>
+                  <div class="d-flex">
+                    <v-btn
+                      class="text-none ml-4 run-text"
+                      color="medium-emphasis"
+                      min-width="92"
+                      colour="#FF0000"
+                      rounded
+                      @click="backTester"
+                    >
+                      Run Back Test
+                      <v-icon class="ml-2 gap-cls">mdi-arrow-right</v-icon>
+                    </v-btn>
+                  </div>
+                </div>
+                <hr>
+                <div class="text-left result-text" :class="[darkMode ? 'result-text-dark' : 'result-text-light']">
+                Back Test Results
+                </div>
+                <div class="d-flex flex-column">
+                  <v-card class="pa-5 mb-4 " elevation="0" :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
+                    <v-row cols="3">
+                      <v-col>
+                        <div>
+                          <div class="result-text-right">Generated Fees (est)</div>
+                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">{{ formatMoney(estimatedFees) }}</div>
+                        </div>
+                      </v-col>
+                      <v-col>
+                        <div>
+                          <div class="result-text-right">Time In Range (%)</div>
+                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">{{ inRangePercentaje.toFixed(2) + ' %' }}</div>
+                        </div>
+                      </v-col>
+                      <v-col>
+                        <div>
+                          <div class="result-text-right">Estimated APR (%)</div>
+                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">{{ estimatedAPR.toFixed(2) + ' %' }}</div>
+                        </div>
+                      </v-col>
+                    </v-row>
                   </v-card>
                 </div>
               </v-card>
@@ -538,6 +728,9 @@ const tabs = [{
 }, {
     title: 'APR Calculator',
     value: '1'
+}, {
+    title: 'Future Calculator',
+    value: '2'
 }];
 // Access the current route
 const route = useRoute()
@@ -1230,7 +1423,7 @@ onMounted(fetchData);
   border: 1px solid rgba(255, 255, 255, 0.17);
   background: #FFF;
   padding: 31px 26px 11px;
-  gap: 30px;
+  gap: 26px;
   box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
 }
 
@@ -1240,7 +1433,7 @@ onMounted(fetchData);
   background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(21px);
   padding: 31px 26px 11px;
-  gap: 30px;
+  gap: 26px;
 }
 
 .result-ui {
@@ -1644,10 +1837,11 @@ gap: 28px !important;
   height: 29px !important;
 }
 .token-icon {
-width: 20px; /* Adjust size as needed */
-height: 20px; /* Adjust size as needed */
+width: 30px; /* Adjust size as needed */
+height: 30px; /* Adjust size as needed */
 vertical-align: middle; /* Aligns the image with the text */
 margin-right: 5px; /* Adds spacing between the image and text */
+border-radius: 50% !important;
 }
 @media (min-width: 1280px) {
     .v-container {

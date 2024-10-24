@@ -598,7 +598,7 @@ onMounted(() => {
                     <div class="d-flex flex-column">
                         <v-text-field
                             v-model="tempAprMinPrice"
-                            label="Min"
+                            label="Min (%)"
                             variant="outlined"
                             class="pt-10 px-10"
                             :hide-details="true"
@@ -606,7 +606,7 @@ onMounted(() => {
                         ></v-text-field>
                         <v-text-field
                             v-model="tempAprMaxPrice"
-                            label="Max"
+                            label="Max (%)"
                             variant="outlined"
                             class="px-10 pt-5 pb-5"
                             :hide-details="true"
@@ -926,6 +926,7 @@ onMounted(() => {
     height: 20px; /* Adjust size as needed */
     vertical-align: middle; /* Aligns the image with the text */
     margin-right: 5px; /* Adds spacing between the image and text */
+    border-radius: 50% !important;
   }
   @media (min-width: 1280px) {
       .v-container {
