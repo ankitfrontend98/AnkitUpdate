@@ -8,13 +8,11 @@
 import { useAuth0 } from '@auth0/auth0-vue';
 import { onMounted } from 'vue';
 import { inject } from 'vue';
-
-// Inject the snackbar state in script setup
 const notify = inject('notify');
 const { loginWithRedirect } = useAuth0();
 
 onMounted(() => {
-  notify('This is a notification using <script setup>!', {
+  notify('Loading...', {
     color: 'info',
     timeout: 4000,
   })
