@@ -11,14 +11,14 @@ let authToken = '';
 export function setAuthToken(token) {
   authToken = token;
 }
-apiClient.interceptors.request.use(
-  (config) => {
-    if (authToken) {
-      config.headers.Authorization = `Bearer ${authToken}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+// apiClient.interceptors.request.use(
+//   (config) => {
+//     if (authToken) {
+//       config.headers.Authorization = `Bearer ${authToken}`;
+//     }
+//     return config;
+//   },
+//   (error) => Promise.reject(error)
+// );
 
 export default apiClient;
