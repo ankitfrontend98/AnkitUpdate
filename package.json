@@ -16,7 +16,8 @@
     "roboto-fontface": "*",
     "vue": "^3.4.0",
     "vue3-apexcharts": "^1.5.3",
-    "vuetify": "^3.5.0"
+    "vuetify": "^3.5.0",
+    "@auth0/auth0-vue": "^2.3.3"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
