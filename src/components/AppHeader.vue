@@ -26,7 +26,7 @@
               </template>
               <v-card min-width="300">
                 <v-list>
-                  <v-list-item :prepend-avatar="user?.picture" :subtitle="user?.email" :title="user?.nickname">
+                  <v-list-item :prepend-avatar="user?.picture" :subtitle="user?.email" :title="user?.name">
                   </v-list-item>
                 </v-list>
                 <v-divider></v-divider>
@@ -54,6 +54,7 @@ const { logout, user } = useAuth0();
 const theme = useTheme();
 // const emit = defineEmits(['updateTheme'])
 let isDarkMode = ref(false);
+const menu = ref(false);
 isDarkMode.value = localStorage.getItem('theme') === 'dark';
 
 watch(isDarkMode, (newVal) => {
