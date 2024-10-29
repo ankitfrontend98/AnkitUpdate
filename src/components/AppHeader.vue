@@ -69,10 +69,7 @@ watch(isDarkMode, (newVal) => {
 
 
 function handleLogout() {
-  logout({ logoutParams: { returnTo: window.location.origin } });
-  // logout({
-  //   returnTo: import.meta.env.VITE_BASE_LOCATION + '/login',
-  // })
+  logout({ logoutParams: { returnTo: `${window.location.origin}/login` } });
 }
 </script>
 
