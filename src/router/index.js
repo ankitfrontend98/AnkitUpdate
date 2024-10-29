@@ -13,9 +13,7 @@ router.beforeEach(async (to, from, next) => {
     await new Promise(resolve => setTimeout(resolve, 10));
   }
   if (to.query.error === 'access_denied') {
-    logout({
-      returnTo: `${window.location.origin}/login`
-    });
+    logout({ logoutParams: { returnTo: `${window.location.origin}/login` } });
     return;
   }
   if (!isAuthenticated.value) {
