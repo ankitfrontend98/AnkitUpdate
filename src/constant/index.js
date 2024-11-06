@@ -126,6 +126,7 @@ export const ALL_PROTOCOL = [
 { text: 'Trader joe', value: 'trader joe' },
 { text: 'Uniswap', value: 'uniswap' },
 { text: 'Velodrome', value: 'velodrome' },
+{ text: 'Quickswap', value: 'quickswap' },
 ];
 
 export const MAIN_TABLE_HEADER = [

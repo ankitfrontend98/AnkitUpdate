@@ -163,9 +163,10 @@ export default {
             background: this.darkMode ? '#181a29' : '' // Custom background color
           },
           fixed: {
+            enabled: true,
             position: 'topRight',
             offsetX: -150,
-            offsetY: -150,
+            offsetY: 0,
           }
         },
         

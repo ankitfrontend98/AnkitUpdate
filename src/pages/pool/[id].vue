@@ -164,53 +164,53 @@
         </div>
       </v-card>
     </div>
-      <div class="d-flex mt-6 justify-space-between">
-          <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'bar-line-chart']">
-            <div class="pt-4 pb-4">
-              <v-skeleton-loader 
-                  v-if="loading"
-                  :loading="true"
-                  class="my-7 mx-2"
-                  width="97%"
-                  height="300"
-              />
-              <bar-chart
-                  v-else
-                  :dark-mode="darkMode"
-                  :key="`${seletedDuration-darkMode}`"
-                  :series-name="['Daily Liquidity', 'Daily Volume']"
-                  :labels="dailyVolumeBarData.chartLabels"
-                  :data-values="[dailyVolumeBarData.chartDataLiquidity, dailyVolumeBarData.chartDataVolume]"
-              />
-            </div>
-          </v-card>
-          <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'bar-line-chart']">
-            <div class="pt-4 pb-4">
-              <v-skeleton-loader 
-                  v-if="loading"
-                  :loading="true"
-                  class="my-7 mx-2"
-                  width="97%"
-                  height="300"
-              />
-              <line-chart
+    <div class="d-flex mt-6 justify-space-between">
+        <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'bar-line-chart']">
+          <div class="pt-4 pb-4">
+            <v-skeleton-loader 
+                v-if="loading"
+                :loading="true"
+                class="my-7 mx-2"
+                width="97%"
+                height="300"
+            />
+            <bar-chart
                 v-else
                 :dark-mode="darkMode"
-                :chart-width="570"
                 :key="`${seletedDuration-darkMode}`"
-                series-name="Daily APR"
-                :labels="dailyAprData.chartLabels"
-                :data-values="dailyAprData.chartDataAPR"
-                :map-colors="{
-                    stroke: darkMode ? '#DCC271': '#25356F',
-                    gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
-                    offset:  darkMode ? '#DCC271' : '#2C61B0',
-                    offsetColor: darkMode ? 'rgba(0, 0, 0, 0.00) 95.71%)' : 'rgba(183, 201, 228, 0.34)'
-                }"
-              />
-            </div>
-          </v-card>
-      </div>
+                :series-name="['Daily Liquidity', 'Daily Volume']"
+                :labels="dailyVolumeBarData.chartLabels"
+                :data-values="[dailyVolumeBarData.chartDataLiquidity, dailyVolumeBarData.chartDataVolume]"
+            />
+          </div>
+        </v-card>
+        <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'bar-line-chart']">
+          <div class="pt-4 pb-4">
+            <v-skeleton-loader 
+                v-if="loading"
+                :loading="true"
+                class="my-7 mx-2"
+                width="97%"
+                height="300"
+            />
+            <line-chart
+              v-else
+              :dark-mode="darkMode"
+              :chart-width="570"
+              :key="`${seletedDuration-darkMode}`"
+              series-name="Daily APR"
+              :labels="dailyAprData.chartLabels"
+              :data-values="dailyAprData.chartDataAPR"
+              :map-colors="{
+                  stroke: darkMode ? '#DCC271': '#25356F',
+                  gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
+                  offset:  darkMode ? '#DCC271' : '#2C61B0',
+                  offsetColor: darkMode ? 'rgba(0, 0, 0, 0.00) 95.71%)' : 'rgba(183, 201, 228, 0.34)'
+              }"
+            />
+          </div>
+        </v-card>
+    </div>
 
     <div class="mt-4">
       <v-card :class="[darkMode ? 'dark-token-details' : 'token-detail']">
@@ -277,6 +277,7 @@
                 class=""
                 :href="`https://dexscreener.com/${poolDetailsPeriods[0].ChainId}/${poolDetailsPeriods[0].pairAddress}`"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 Open
               </a>
@@ -325,9 +326,12 @@
         <v-tabs-window-item key="0" value="0">
           <details-table :key="seletedDuration" :items="detailsTable" :dark-mode="darkMode" class="w-100"/>
         </v-tabs-window-item>
+
+        <!-- Kuladeep -->
+
         <v-tabs-window-item key="1" value="1">
           <v-row>
-            <v-col cols="8">
+            <v-col cols="6">
               <v-card class="d-flex flex-column " :class="[darkMode ? 'calculator-ui-dark' : 'calculator-ui']">
                 <div class="d-flex justify-space-between">
                   <!-- <div :class="[darkMode ? 'calc-heading-dark' : 'calc-heading-light']">
@@ -335,9 +339,10 @@
                   </div> -->
                   <div class="d-flex flex-column mr-6">
                     <div class="calc-other-text" :class="[darkMode ? 'calc-other-text-dark' : 'calc-other-text-light']">Current Price:</div>
-                    <div class="highlight">{{ displayPrice }} {{ invertedPrices ? poolDetailsPeriods[0].BaseToken  : 
-                                      poolDetailsPeriods[0].QuoteToken  }}</div>
+                    <div class="highlight">{{ displayPrice }} {{ invertedPrices ? poolDetailsPeriods[0].BaseToken  :  poolDetailsPeriods[0].QuoteToken  }}</div>
                   </div>
+
+                  <!-- Invert Price -->
                   <div class="action mr-6">
                     <v-btn
                       class="text-none"
@@ -359,30 +364,45 @@
                     </v-btn>
                   </div>
                 </div>
+                  
                 <div class="d-flex">
-                  <div class="d-flex flex-column flex-gap">
-                    <div class="d-flex flex-column mr-6">
-                      <label class="calculator-label" :class="[darkMode ? 'label-dark' : 'label-light']">Liquidity</label>
-                      <v-text-field
-                        v-model="liquidityValue"
-                        class="text-field-width"
-                        :class="[darkMode ? 'text-field-dark' : 'text-field-light']"
-                        type="input"
-                        :hide-details="true"
-                        density="compact"
-                        variant="plain"
-                      >
-                        <template v-slot:append-inner>
-                          USD
-                        </template>
-                      </v-text-field>
-                    </div>
-                    <div class="d-flex flex-column mr-2">
-                      <div class="calc-other-text">Capital Preservation Indicator</div>
-                      <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{ myGMValue }}</v-chip>
-                    </div>
-                  </div>
-                  <div class="d-flex flex-column flex-gap">
+                  <v-row cols="3">
+                    <v-col>
+                      <div class="d-flex flex-column flex-gap">
+                        <div class="d-flex flex-row mr-6">
+                          <label class="calculator-label" :class="[darkMode ? 'label-dark' : 'label-light']">Supply</label>
+                          <v-text-field
+                            v-model="liquidityValue"
+                            class="text-field-width"
+                            :class="[darkMode ? 'text-field-dark' : 'text-field-light']"
+                            type="input"
+                            :hide-details="true"
+                            density="compact"
+                            variant="plain"
+                          >
+                            <template v-slot:append-inner>
+                              USD
+                            </template>
+                          </v-text-field>
+                          <h4 class="highlight ml-1">{{ poolDetailsPeriods[0].QuoteToken }}</h4>
+                        </div>
+                      </div>
+                    </v-col>
+                    <v-col>
+                      <div class="d-flex flex-row align-items-center">
+                        <div class="result-text-right">Approx:</div>
+                        <div class="result-number ml-1" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
+                          {{ '$' + liquidityValue}}
+                        </div>
+                      </div>
+                    </v-col>
+                  </v-row>
+                </div>
+
+
+                <div class="d-flex">
+                  <!-- Min Value Input -->
+                  <div class="d-flex flex-column flex-gap" style="flex: 1;">
                     <div class="d-flex flex-column mr-6">
                       <div class="label-height">
                         <label class="calculator-label">Min Value: </label>
@@ -394,7 +414,7 @@
                         :class="[darkMode ? 'text-field-dark' : 'text-field-light']"
                         type="input"
                         variant="plain"
-                        density="compact"
+                        density="default"
                         :hide-details="true"
                         prepend-inner-icon="mdi-minus"
                         append-inner-icon="mdi-plus"
@@ -402,17 +422,11 @@
                         @click:append-inner="handleAppendInner('min')"
                       ></v-text-field>
                     </div>
-                    <div class="d-flex flex-column mr-4 ml-1 flex-grow-1">
-                      <div class="calc-other-text">Composition</div>
-                      <div class="d-flex">
-                        <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{ poolDetailsPeriods[0].BaseToken }}: </span>
-                        <span class="highlight ml-1">   {{ xPercentage.toFixed(2) }} %</span>
-                      </div>
-                      <div class="composition-token">{{ xTokens }} tokens</div>
-                    </div>
                   </div>
-                  <div class="d-flex flex-column flex-gap">
-                    <div class="d-flex flex-column mr-6">
+
+                  <!-- Max Value Input -->
+                  <div class="d-flex flex-column flex-gap" style="flex: 1;">
+                    <div class="d-flex flex-column">
                       <div class="label-height">
                         <label class="calculator-label">Max Value: </label>
                         <span class="highlight ml-1">{{ higherPercentageRange.toFixed(2) + '%' }}</span>
@@ -423,67 +437,138 @@
                         :class="[darkMode ? 'text-field-dark' : 'text-field-light']"
                         type="input"
                         :hide-details="true"
-                        density="compact"
+                        density="default"
                         variant="plain"
                         prepend-inner-icon="mdi-minus"
                         append-inner-icon="mdi-plus"
                         @click:prepend-inner="handlePrependInner('max')"
                         @click:append-inner="handleAppendInner('max')"
-                      >
-                      </v-text-field>
-                    </div>
-                    <div class="d-flex flex-column mr-10 mt-6">
-                      <div>
-                        <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{ poolDetailsPeriods[0].QuoteToken }}</span>: 
-                        <span class="highlight">
-                          {{ yPercentage.toFixed(2) }} %
-                        </span></div>
-                      <div class="y-tokens">{{ yTokens }} tokens</div>
+                      ></v-text-field>
                     </div>
                   </div>
                 </div>
-                <div class="d-flex justify-space-between mb-5 mr-10 align-center">
-                  <div class="d-flex">
-                    <v-btn
-                      class="text-none mr-4"
-                      :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                      min-width="92"
-                      variant="outlined"
-                      rounded
-                      @click="initializeRanges('','aggressive')"
-                    >
-                      Narrow Range
-                    </v-btn>
 
-                    <v-btn
-                      class="text-none"
-                      :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                      min-width="92"
-                      variant="outlined"
-                      rounded
-                      @click="initializeRanges('','conservative')"
-                    >
-                      Wide range
-                    </v-btn>
-                  </div>
-                  <div class="d-flex">
+                <div class="d-flex flex-column">
+                    <v-row>
+                      <!-- First Column -->
+                      <v-col cols="6">
+                        <div class="d-flex flex-column mr-2">
+                          <div class="calc-other-text">Capital Preservation Indicator</div>
+                          <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{ myGMValue }}</v-chip>
+                        </div>
+                        
+                        <!-- Narror & Wide Range -->
+                        <div class="d-flex flex-wrap justify-content-between mt-4">
+                          <div class="d-flex mb-2">
+                            <v-btn
+                              class="text-none mr-2"
+                              :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                              min-width="92"
+                              variant="outlined"
+                              rounded
+                              @click="initializeRanges('narrow')"
+                            >
+                              Narrow
+                            </v-btn>
+                            <v-btn
+                              class="text-none"
+                              :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                              min-width="92"
+                              variant="outlined"
+                              rounded
+                              @click="initializeRanges('market')"
+                            >
+                              Market
+                            </v-btn>
+                          </div>
+                          <div class="d-flex">
+                            <v-btn
+                              class="text-none mr-2"
+                              :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                              min-width="92"
+                              variant="outlined"
+                              rounded
+                              @click="initializeRanges('wide-short')"
+                            >
+                              Wide Short
+                            </v-btn>
+                            <v-btn
+                              class="text-none"
+                              :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                              min-width="92"
+                              variant="outlined"
+                              rounded
+                              @click="initializeRanges('wide-long')"
+                            >
+                              Wide Long
+                            </v-btn>
+                          </div>
+                        </div>
+
+                      </v-col>
+
+                      <!-- Second Column capital & composition -->
+                      <v-col cols="4">
+                        <div class="calc-other-text">Composition</div>
+                        <v-card class="pa-5 mb-4 " elevation="0" :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
+                          <div class="d-flex flex-column">
+                            <div class="d-flex flex-column">
+                                <div class="d-flex">
+                                  <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{ poolDetailsPeriods[0].BaseToken }}: </span>
+                                  <span class="highlight ml-1">   {{ xPercentage.toFixed(2) }} %</span>
+                                </div>
+                              <div class="composition-token">{{ xTokens }} tokens</div>
+                            </div>
+                            <div>
+                              <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{ poolDetailsPeriods[0].QuoteToken }}</span>: 
+                              <span class="highlight">
+                                {{ yPercentage.toFixed(2) }} %
+                              </span>
+                            </div>
+                            <div class="y-tokens">{{ yTokens }} tokens</div>
+                          </div>
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                </div>
+
+                <!-- Run Test -->
+                <v-row class="justify-space-between mb-5 mr-10 align-center">
+                  <!-- First Column: Range Slider and Text Below -->
+                  <v-col cols="4">
+
+                  <!-- Range Slider -->
+                  <v-range-slider
+                    v-model="daysForFees"
+                    :min="0"
+                    :max="365"
+                    color="#BFAC62"
+                    class="mt-4"
+                  ></v-range-slider>
+                  <div class="text-caption mt-2">Days to include for fees: {{ daysForFees }}</div>
+                  </v-col>
+
+                  <!-- Second Column: Run Back Test Button -->
+                  <v-col cols="6" class="d-flex justify-start">
                     <v-btn
                       class="text-none ml-4 run-text"
                       color="medium-emphasis"
                       min-width="92"
-                      colour="#FF0000"
                       rounded
-                      @click="backTester"
+                      @click="megaTest('current')"
                     >
                       Run Back Test
                       <v-icon class="ml-2 gap-cls">mdi-arrow-right</v-icon>
                     </v-btn>
-                  </div>
-                </div>
+                  </v-col>
+                </v-row>
+
                 <hr>
                 <div class="text-left result-text" :class="[darkMode ? 'result-text-dark' : 'result-text-light']">
                   Back Test Results
                 </div>
+
+                <!-- Bottom Box -->
                 <div class="d-flex flex-column">
                   <v-card class="pa-5 mb-4 " elevation="0" :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
                     <v-row cols="3">
@@ -510,11 +595,95 @@
                 </div>
               </v-card>
             </v-col>
+            <!-- SplineChart Component for Liquidity Back Test -->
+            <v-col cols="6">
+              <v-card :class="[darkMode ? 'custom-card-dark-class' : '', '']"> 
+                <div class="pt-4 pb-4">
+                  <v-skeleton-loader 
+                    v-if="loading"
+                    :loading="true"
+                    class="my-7 mx-2"
+                    width="98%"
+                    height="100px"
+                  />
+                  <spline-chart
+                    v-else
+                    :dark-mode="darkMode"
+                    :key="liquidityChartRender"
+                    :show-exponential-digit="true"
+                    :labels="liquididtyChartLabels"
+                    :series-name="'Liquidity'"
+                    :data-values="liquidityDatasets"
+                    :map-colors="{
+                      stroke: darkMode ? '#DCC271': '#25356F',
+                      gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
+                      offset:  darkMode ? '#DCC271' : '#2C61B0',
+                      offsetColor: darkMode ? 'rgba(0, 0, 0, 0.00) 95.71%)' : 'rgba(183, 201, 228, 0.34)'
+                    }"
+                  />
+                </div>
+              </v-card>
+              <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'mt-4']"> 
+                <div class="pt-4 pb-4">
+                  <v-skeleton-loader 
+                    v-if="loading"
+                    :loading="true"
+                    class="my-7 mx-2"
+                    width="98%"
+                    height="100px"
+                  />
+                  <spline-chart
+                    v-else
+                    :dark-mode="darkMode"
+                    :key="tokenDistributionChartRender"
+                    :show-exponential-digit="true"
+                    :labels="tokenDistributionChartLabels"
+                    :series-name="'Tokens Distribution'"
+                    :data-values="tokenDistributionDatasets"
+                    :map-colors="{
+                      stroke: darkMode ? '#DCC271': '#25356F',
+                      gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
+                      offset:  darkMode ? '#DCC271' : '#2C61B0',
+                      offsetColor: darkMode ? 'rgba(0, 0, 0, 0.00) 95.71%)' : 'rgba(183, 201, 228, 0.34)'
+                    }"
+                  />
+                </div>
+              </v-card>
+              <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'mt-4']"> 
+                <div class="pt-4 pb-4">
+                  <v-skeleton-loader 
+                    v-if="loading"
+                    :loading="true"
+                    class="my-7 mx-2"
+                    width="98%"
+                    height="100px"
+                  />
+                  <spline-chart
+                    v-else
+                    :dark-mode="darkMode"
+                    :key="backTesterChartRender"
+                    :show-exponential-digit="true"
+                    :labels="backTesterChartLabels"
+                    :series-name="'Back Testing Results'"
+                    :data-values="backTesterDatasets"
+                    :map-colors="{
+                      stroke: darkMode ? '#DCC271': '#25356F',
+                      gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
+                      offset:  darkMode ? '#DCC271' : '#2C61B0',
+                      offsetColor: darkMode ? 'rgba(0, 0, 0, 0.00) 95.71%)' : 'rgba(183, 201, 228, 0.34)'
+                    }"
+                  />
+                </div>
+              </v-card>
+            </v-col>
           </v-row>
         </v-tabs-window-item>
+
+        <!-- Kuladeep -->
+         
         <v-tabs-window-item key="2" value="2">
           <v-row>
-            <v-col cols="8">
+            <v-col cols="6">
               <v-card class="d-flex flex-column " :class="[darkMode ? 'calculator-ui-dark' : 'calculator-ui']">
                 <div class="d-flex justify-space-between">
                   <!-- <div :class="[darkMode ? 'calc-heading-dark' : 'calc-heading-light']">
@@ -546,30 +715,9 @@
                     </v-btn>
                   </div>
                 </div>
-                <div class="d-flex">
-                  <div class="d-flex flex-column flex-gap">
-                    <div class="d-flex flex-column mr-6">
-                      <label class="calculator-label" :class="[darkMode ? 'label-dark' : 'label-light']">Liquidity</label>
-                      <v-text-field
-                        v-model="liquidityValue"
-                        class="text-field-width"
-                        :class="[darkMode ? 'text-field-dark' : 'text-field-light']"
-                        type="input"
-                        :hide-details="true"
-                        density="compact"
-                        variant="plain"
-                      >
-                        <template v-slot:append-inner>
-                          USD
-                        </template>
-                      </v-text-field>
-                    </div>
-                    <div class="d-flex flex-column mr-2">
-                      <div class="calc-other-text">Capital Preservation Indicator</div>
-                      <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{ myGMValue }}</v-chip>
-                    </div>
-                  </div>
-                  <div class="d-flex flex-column flex-gap">
+                <div class="d-flex justify-space-between mr-4 align-center">
+                  <!-- Min Value Input -->
+                  <div class="d-flex flex-column flex-gap" style="flex: 1;">
                     <div class="d-flex flex-column mr-6">
                       <div class="label-height">
                         <label class="calculator-label">Min Value: </label>
@@ -579,9 +727,8 @@
                         v-model="myMinRange"
                         class="text-field-width"
                         :class="[darkMode ? 'text-field-dark' : 'text-field-light']"
-                        type="input"
                         variant="plain"
-                        density="compact"
+                        density="default"
                         :hide-details="true"
                         prepend-inner-icon="mdi-minus"
                         append-inner-icon="mdi-plus"
@@ -589,17 +736,11 @@
                         @click:append-inner="handleAppendInner('min')"
                       ></v-text-field>
                     </div>
-                    <div class="d-flex flex-column mr-4 ml-1 flex-grow-1">
-                      <div class="calc-other-text">Composition</div>
-                      <div class="d-flex">
-                        <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{ poolDetailsPeriods[0].BaseToken }}: </span>
-                        <span class="highlight ml-1">   {{ xPercentage.toFixed(2) }} %</span>
-                      </div>
-                      <div class="composition-token">{{ xTokens }} tokens</div>
-                    </div>
                   </div>
-                  <div class="d-flex flex-column flex-gap">
-                    <div class="d-flex flex-column mr-6">
+
+                  <!-- Max Value Input -->
+                  <div class="d-flex flex-column flex-gap" style="flex: 1;">
+                    <div class="d-flex flex-column">
                       <div class="label-height">
                         <label class="calculator-label">Max Value: </label>
                         <span class="highlight ml-1">{{ higherPercentageRange.toFixed(2) + '%' }}</span>
@@ -608,68 +749,103 @@
                         v-model="myMaxRange"
                         class="text-field-width"
                         :class="[darkMode ? 'text-field-dark' : 'text-field-light']"
-                        type="input"
                         :hide-details="true"
-                        density="compact"
+                        density="default"
                         variant="plain"
                         prepend-inner-icon="mdi-minus"
                         append-inner-icon="mdi-plus"
                         @click:prepend-inner="handlePrependInner('max')"
                         @click:append-inner="handleAppendInner('max')"
-                      >
-                      </v-text-field>
-                    </div>
-                    <div class="d-flex flex-column mr-10 mt-6">
-                      <div>
-                        <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{ poolDetailsPeriods[0].QuoteToken }}</span>: 
-                        <span class="highlight">
-                          {{ yPercentage.toFixed(2) }} %
-                        </span></div>
-                      <div class="y-tokens">{{ yTokens }} tokens</div>
+                      ></v-text-field>
                     </div>
                   </div>
                 </div>
-                <div class="d-flex justify-space-between mb-5 mr-10 align-center">
-                  <div class="d-flex">
-                    <v-btn
-                      class="text-none mr-4"
-                      :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                      min-width="92"
-                      variant="outlined"
-                      rounded
-                      @click="initializeRanges('','aggressive')"
-                    >
-                      Narrow Range
-                    </v-btn>
 
-                    <v-btn
-                      class="text-none"
-                      :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                      min-width="92"
-                      variant="outlined"
-                      rounded
-                      @click="initializeRanges('','conservative')"
-                    >
-                      Wide range
-                    </v-btn>
-                  </div>
-                  <div class="d-flex">
+                <div class="d-flex flex-column">
+                    <v-row>
+                      <!-- First Column -->
+                      <v-col cols="6">
+                        <div class="d-flex flex-column mr-2">
+                          <div class="calc-other-text">Capital Preservation Indicator</div>
+                          <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{ myGMValue }}</v-chip>
+                        </div>
+                        <div class="d-flex justify-space-between mt-5 mr-10 align-center">
+                          <div class="d-flex">
+                            <v-btn
+                              class="text-none mr-4"
+                              :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                              min-width="92"
+                              variant="outlined"
+                              rounded
+                              @click="initializeRanges('','narrow')"
+                            >
+                              Narrow Range
+                            </v-btn>
+
+                            <v-btn
+                              class="text-none"
+                              :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                              min-width="92"
+                              variant="outlined"
+                              rounded
+                              @click="initializeRanges('','conservative')"
+                            >
+                              Wide range
+                            </v-btn>
+                          </div>
+                        </div>
+                      </v-col>
+
+                      <!-- Second Column -->
+                      <v-col cols="4">
+                        <div class="calc-other-text">Composition</div>
+                        <v-card class="pa-5 mb-4 " elevation="0" :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
+                          <div class="d-flex flex-column">
+                            <div class="d-flex flex-column">
+                                <div class="d-flex">
+                                  <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{ poolDetailsPeriods[0].BaseToken }}: </span>
+                                  <span class="highlight ml-1">   {{ xPercentage.toFixed(2) }} %</span>
+                                </div>
+                              <div class="composition-token">{{ xTokens }} tokens</div>
+                            </div>
+                            <div>
+                              <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{ poolDetailsPeriods[0].QuoteToken }}</span>: 
+                              <span class="highlight">
+                                {{ yPercentage.toFixed(2) }} %
+                              </span>
+                            </div>
+                            <div class="y-tokens">{{ yTokens }} tokens</div>
+                          </div>
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                </div>
+
+                <v-row class="justify-space-between mb-5 mr-10 align-center">
+                  <!-- First Column: Range Slider and Text Below -->
+                  <v-col cols="4">
+                    <v-range-slider v-model="daysForFees" :min="0" :max="365" color="#BFAC62"></v-range-slider>
+                    <div class="text-caption mt-2">Day to include for fees: {{ daysForFees }}</div>
+                  </v-col>
+
+                  <!-- Second Column: Run Back Test Button -->
+                  <v-col cols="6" class="d-flex justify-start">
                     <v-btn
                       class="text-none ml-4 run-text"
                       color="medium-emphasis"
                       min-width="92"
-                      colour="#FF0000"
                       rounded
-                      @click="backTester"
+                      @click="backTester('future')"
                     >
                       Run Back Test
                       <v-icon class="ml-2 gap-cls">mdi-arrow-right</v-icon>
                     </v-btn>
-                  </div>
-                </div>
+                  </v-col>
+                </v-row>
+
                 <hr>
                 <div class="text-left result-text" :class="[darkMode ? 'result-text-dark' : 'result-text-light']">
-                Back Test Results
+                  Back Test Results
                 </div>
                 <div class="d-flex flex-column">
                   <v-card class="pa-5 mb-4 " elevation="0" :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
@@ -707,6 +883,7 @@
 import { useTheme } from 'vuetify';
 import BarChart from '@/components/BarChart.vue';
 import LineChart from '@/components/LineChart.vue';
+import SplineChart from '@/components/SplineChart.vue';
 import DetailsTable from '@/components/DetailsTable.vue';
 import { ref, onMounted, computed, watch, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
@@ -769,6 +946,22 @@ const loading = ref(false);
 const inRangePercentaje = ref(0);
 const estimatedFees = ref(0);
 const estimatedAPR = ref(0);
+const daysForFees = ref(0);
+
+// New
+const backTesterLiquidityArray = ref([]);
+const liquidityArray = ref([])
+const feeSelectedDays = ref(30)
+const liquidityDatasets = ref([])
+const liquididtyChartLabels = ref([])
+const liquidityChartRender = ref(0)
+const tokenDistributionDatasets = ref([])
+const tokenDistributionChartLabels = ref([])
+const tokenDistributionChartRender = ref(0)
+const backTesterDatasets = ref([])
+const backTesterChartLabels = ref([])
+const backTesterChartRender = ref(0)
+
 
 const { formatDateTime } = useDateFormat();
 
@@ -820,7 +1013,7 @@ const setValues = () => {
     mySigma.value = standardDev = getStandardDeviation(nativePriceArray);
     myMeanPrice.value = meanValue = getMean(nativePriceArray);
     weeklyVolatility.value = meanValue !== 0 ? ( (standardDev * 100) / meanValue) : "N/A";
-    initializeRanges(1, 'aggressive');
+    initializeRanges(1, 'narrow');
     // correlationEstimator.value = correlationEstimator1(poolDetailsPeriods.value, seletedDuration.value);
     correlationEstimator.value = (correlationEstimator1(poolDetailsPeriods.value, seletedDuration.value) * 100).toFixed(2);
 
@@ -963,112 +1156,69 @@ const fetchData = async () => {
   }
 };
 
-const initializeRanges = (volMultiplier, mode) => {
-  if (mode==='aggressive') {
-      myMinRange.value = formatNumber(Number.parseFloat(poolDetailsPrice.value.priceNative)-Number.parseFloat(mySigma.value)*1.5);
-      myMaxRange.value = formatNumber(Number.parseFloat(poolDetailsPrice.value.priceNative)+Number.parseFloat(mySigma.value)*1.5);
-      // console.log(`sigma: ${mySigma.value} - min: ${myMinRange.value} - max: ${myMaxRange.value} - current: ${poolDetailsPrice.value.priceNative}`);
-  } else {
-      if (poolDetailsPrice.value.priceNative >= myMeanPrice.value) {
-          myMinRange.value = formatNumber(Number.parseFloat(myMeanPrice.value) - Number.parseFloat(mySigma.value)*1.5);
-          myMaxRange.value = formatNumber(Number.parseFloat(poolDetailsPrice.value.priceNative )+Number.parseFloat(mySigma.value)*2.5);
-          // console.log(`sigma: ${mySigma.value} - min: ${myMinRange.value} - max: ${myMaxRange.value} - current: ${poolDetailsPrice.value.priceNative}`);
-      }
-      else {
-          myMinRange.value = formatNumber(Number.parseFloat(poolDetailsPrice.value.priceNative)-Number.parseFloat(mySigma.value)*2.5);
-          myMaxRange.value = formatNumber(Number.parseFloat(myMeanPrice.value)+Number.parseFloat(mySigma.value)*1.5);
-          // console.log(`sigma: ${mySigma.value} - min: ${myMinRange.value} - max: ${myMaxRange.value} - current: ${poolDetailsPrice.value.priceNative}`);
-      }
+const initializeRanges = (mode) => {
+  let highMultiplier = 0;
+  let lowMultiplier = 0;
+
+  if (mode === 'narrow') {
+    highMultiplier = 0.75;
+    lowMultiplier = 0.75;
+  } else if (mode === 'market') {
+    highMultiplier = 2.5;
+    lowMultiplier = 1.5;
+  } else if (mode === 'wide-short') {
+    highMultiplier = 1.5;
+    lowMultiplier = 3.5;
+  } else if (mode === 'wide-long') {
+    highMultiplier = 3.5;
+    lowMultiplier = 1.5;
   }
 
-  if (invertedPrices.value) {
-      myMinRange.value = 1 / myMaxRange.value;
-      myMaxRange.value = 1 / myMinRange.value;
-  }
-
+  myMinRange.value = Number.parseFloat(poolDetailsPrice.value.priceNative) - Number.parseFloat(mySigma.value) * lowMultiplier;
+  myMaxRange.value = Number.parseFloat(poolDetailsPrice.value.priceNative) + Number.parseFloat(mySigma.value) * highMultiplier;
 
   findClosestTik('min');
   findClosestTik('max');
   calculateTokensRatio();
-}
+};
 
 const findClosestTik = (which) => {
-  let price=0;
-  if (which==='min') {
-      price = myMinRange.value;
-  } else {
-      price = myMaxRange.value;
-  }
-
-  let pe = ((Math.log(price) / Math.log(tikFactor.value)) / myFeeDelta.value);
-  let closestTik = Math.round(pe);
-  if (which === 'min') {
-      myMinRange.value = formatNumber(setPriceFromtik(closestTik));
-  } else {
-    console.log('setPriceFromtik(closestTik) myMaxRange', setPriceFromtik(closestTik));
-
-      myMaxRange.value = formatNumber(setPriceFromtik(closestTik));
-  }
-
+  let price = which === 'min' ? myMinRange.value : myMaxRange.value;
+  let closestTik = Math.round((Math.log(price) / Math.log(tikFactor.value)) / myFeeDelta.value);
+  which === 'min' ? (myMinRange.value = setPriceFromtik(closestTik)) : (myMaxRange.value = setPriceFromtik(closestTik));
   return closestTik;
-}
+};
 
-const setPriceFromtik = (tikNumber) => {
-  let price=0;
-  price = Math.pow(tikFactor.value, myFeeDelta.value * tikNumber);
-  return price;
-}
+const setPriceFromtik = (tikNumber) => Math.pow(tikFactor.value, myFeeDelta.value * tikNumber);
 
 const calculateTokensRatio = () => {
-  let x=1;
-  let Lx = x *  (Math.sqrt(poolDetailsPrice.value.priceNative)* Math.sqrt(myMaxRange.value))/
-              (Math.sqrt(myMaxRange.value) - Math.sqrt(poolDetailsPrice.value.priceNative) );
-  // console.log('Lx', Lx);
-            
+  let x = 1;
+  let Lx = (x * Math.sqrt(poolDetailsPrice.value.priceNative) * Math.sqrt(myMaxRange.value)) / (Math.sqrt(myMaxRange.value) - Math.sqrt(poolDetailsPrice.value.priceNative));
   let y = Lx * (Math.sqrt(poolDetailsPrice.value.priceNative) - Math.sqrt(myMinRange.value));
-  // console.log('y', y);
-
-  xPercentage.value = 100 * Number.parseFloat(poolDetailsPrice.value.priceNative) / (Number.parseFloat(poolDetailsPrice.value.priceNative) + Number.parseFloat(y));
-
-  yPercentage.value = 100 * Number.parseFloat(y) / (Number.parseFloat(poolDetailsPrice.value.priceNative) + Number.parseFloat(y));
-
-  console.log('yPercentage', yPercentage.value);
-
-  console.log('yPercentage', yPercentage.value);
-
+  xPercentage.value = (100 * Number.parseFloat(poolDetailsPrice.value.priceNative)) / (Number.parseFloat(poolDetailsPrice.value.priceNative) + Number.parseFloat(y));
+  yPercentage.value = (100 * Number.parseFloat(y)) / (Number.parseFloat(poolDetailsPrice.value.priceNative) + Number.parseFloat(y));
   if (invertedPrices.value) {
-      let aux1 = Number.parseFloat(xPercentage.value);
-      let aux2 = Number.parseFloat(yPercentage.value);
-      xPercentage.value = Number.parseFloat(aux2);
-      yPercentage.value = Number.parseFloat(aux1);
+    [xPercentage.value, yPercentage.value] = [yPercentage.value, xPercentage.value];
   }
   let MaxX = Number.parseFloat(liquidityValue.value) / Number.parseFloat(poolDetailsPrice.value.priceUsd);
   let MaxY = Number.parseFloat(MaxX) * Number.parseFloat(poolDetailsPrice.value.priceNative);
-
-  // console.log('MaxX', MaxX);
-
-  let ActualX = Number.parseFloat(MaxX) * Number.parseFloat(xPercentage.value) / 100.0;
-  let ActualY = Number.parseFloat(MaxY) * Number.parseFloat(yPercentage.value) / 100.0;
-
-  xTokens.value = formatNumber(Number.parseFloat(ActualX));
-  yTokens.value = formatNumber(Number.parseFloat(ActualY));
-}
-
-const handleTabClick = (value) => {
-  if(value == 1) {
-    initializeRanges('', 'aggressive');
-  }
-}
+  xTokens.value = Number.parseFloat(MaxX) * (xPercentage.value / 100.0);
+  yTokens.value = Number.parseFloat(MaxY) * (yPercentage.value / 100.0);
+};
 
 const handleInvertPrices = () => {
   invertedPrices.value = !invertedPrices.value;
-  let aux1 = myMinRange.value;
-  let aux2 = myMaxRange.value;
-  myMaxRange.value = formatNumber(1/aux1);
-  myMinRange.value = formatNumber(1/aux2);
+  [myMinRange.value, myMaxRange.value] = [1 / myMaxRange.value, 1 / myMinRange.value];
   poolDetailsPrice.value.priceNative = 1 / poolDetailsPrice.value.priceNative;
   calculateTokensRatio();
+};
+
+const handleTabClick = (value) => {
+  if(value == 1) {
+    initializeRanges('', 'narrow');
+  }
 }
+
 
 const handleAppendInner = (type) => {
   shiftTik(type,1);
@@ -1091,18 +1241,37 @@ const shiftTik = (which, step) => {
   calculateTokensRatio();
 }
 
-const backTester = () => {
+const backTester = (which) => {
   let totalPeriods = 0;
   let inRangePeriods = 0;
   let totalFees = 0;
   let periodFee = 0;
-  let actualMinRange = myMinRange.value;
-  let actualMaxRange = myMaxRange.value;
+  let actualMinRange = 0;
+  let actualMaxRange = 0;
+  // let actualMinRange = myMinRange.value;
+  // let actualMaxRange = myMaxRange.value;
 
-  if (invertedPrices.value) {
+  // if (invertedPrices.value) {
+  //     actualMinRange = 1 / myMaxRange.value;
+  //     actualMaxRange = 1 / myMinRange.value;
+  // }
+
+  if (which==='current') {
+    actualMinRange=myMinRange.value;
+    actualMaxRange=myMaxRange.value;
+    if (invertedPrices.value) {
       actualMinRange = 1 / myMaxRange.value;
       actualMaxRange = 1 / myMinRange.value;
+    }
+  } else if (which==='future') {
+    // actualMinRange=this.myFutureMinRange;
+    // actualMaxRange=this.myFutureMaxRange;
+    // if (this.invertedPricesFlag) {
+    //   actualMinRange=1/this.myFutureMaxRange;
+    //   actualMaxRange=1/this.myFutureMinRange;
+    // }
   }
+
   let stdDevs = Number.parseFloat(actualMaxRange-actualMinRange) / Number.parseFloat(mySigma.value);
   let FeesWeight = 1;
   if (stdDevs <= 2) {
@@ -1166,8 +1335,24 @@ const backTester = () => {
       const average = sum / period;
       averages.push(average);
   }
+
+  // New code
+  const reversedArray = filteredPoolDetailsBasedOnPeriod.value.slice().reverse();
+  const initialPrice = reversedArray[0].priceNative;
+  // Initial tokens (for hold 50/50)
+  let xHold= Number.parseFloat(500/initialPrice);
+  let yHold= 500;
+  let lHold = xHold * initialPrice + yHold;
+  // Let's clean the Back Tester liquidity array
+  backTesterLiquidityArray.value.length=0;
+  xHold=xHold*liquidityValue.value/1000;
+  yHold=yHold*liquidityValue.value/1000;
+
+
   filteredPoolDetailsBasedOnPeriod.value.forEach(element => {
       totalPeriods++;
+      // Let's get the calculated liquidity value at this point
+      let liqObject=calculateAssetBalances(actualMinRange, actualMaxRange, initialPrice, element.priceNative ,true, which);
 
       if (Number.parseFloat(element.priceNative) >= Number.parseFloat(actualMinRange) &&
                           Number.parseFloat(element.priceNative) <= Number.parseFloat(actualMaxRange)) {
@@ -1178,11 +1363,415 @@ const backTester = () => {
           periodFee = 0;
       }
       totalFees += periodFee;
+
+      liqObject.HoldLiquidity=xHold*element.priceNative+yHold;
+      liqObject.TotalValue=liqObject.Liquidity+totalFees;
+      liqObject.periodFee=periodFee;
+      liqObject.dateTime=element.dateTime;
+      backTesterLiquidityArray.value.push(liqObject);
   });
-  inRangePercentaje.value = inRangePeriods*100 / totalPeriods;
-  estimatedFees.value = totalFees;
-  estimatedAPR.value = estimatedFees.value * 100 * (365/(totalPeriods/3))*(1/liquidityValue.value);
+  if (which==='current') {
+    inRangePercentaje.value = inRangePeriods*100 / totalPeriods;
+    estimatedFees.value = totalFees;
+    estimatedAPR.value = estimatedFees.value * 100 * (365/(totalPeriods/3))*(1/liquidityValue.value);
+    showBackTestChart();
+    console.log("check resp : ", which, inRangePercentaje.value, estimatedFees.value, estimatedAPR.value)
+  }
+};
+const megaTest = () => {
+            backTester('current');
+
+            calculateAssetBalances(myMinRange.value,myMaxRange.value,poolDetailsPrice.value.priceNative);
+        }
+
+const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = 'current') => {
+
+  //console.log(`Entered calculateAssetBalances with a=${a} b=${b} p0=${p0} pTarget=${pTarget} single=${single} which=${which}`);
+
+  let actualLiquidity = 0;
+
+  if (which === 'current') {
+    actualLiquidity = liquidityValue.value;
+    //console.log(`Current liquidity: ${actualLiquidity}`);
+  } else {
+    // actualLiquidity = this.myFutureLiquidity;
+    //console.log(`Future liquidity: ${actualLiquidity}`);
+  }
+
+  // Aux functions
+
+  function get_liquidity_0(x, sa, sb) {
+    return x * sa * sb / (sb - sa);
+  }
+
+  function get_liquidity_1(y, sa, sb) {
+    return y / (sb - sa);
+  }
+
+  function get_liquidity(x, y, sp, sa, sb) {
+
+    if (sp <= sa) {
+      return get_liquidity_0(x, sa, sb);
+    } else if (sp < sb) {
+      let liquidity_0 = get_liquidity_0(x, sp, sb);
+      let liquidity_1 = get_liquidity_1(y, sa, sp);
+      return Math.min(liquidity_0, liquidity_1);
+    } else {
+      return get_liquidity_1(y, sa, sb);
+    }
+  }
+
+  // Simulating calculate_x function
+  function calculate_x(L, sp, sa, sb) {
+    let sc = Math.max(Math.min(sp, sb), sa);
+    return L * (sb - sc) / (sc * sb);
+  }
+
+  // Simulating calculate_y function
+  function calculate_y(L, sp, sa, sb) {
+    let sc = Math.max(Math.min(sp, sb), sa);
+    return L * (sc - sa);
+  }
+
+  // We need to use current price to estimate the initial x and y values
+  // then depending on the range the values of x and y will change between Pa and Pb
+  // X will be 100% when the price P < Pa and X will be 0% when the price P > Pb
+  // Y will be 0% when the price P < Pa and Y will be 100% when the price P > Pb
+
+  // console.log("Example 3: Using the position created in Example 2, what are asset balances at 2500 USDC per ETH?");
+  //let a = 3000;
+  //let b = 4000;
+  let p = Math.sqrt(a * b);
+  let x = 500 / p0;
+  let y = 500;
+
+  let x0Pct = 0;
+  let y0Pct = 0;
+
+  a = Number(a);
+  b = Number(b);
+  p0 = Number(p0);
+
+  if (p0 < a) {
+    // X will be 100% and Y will be 0%
+    x = 1000 / p0;
+    y = 0;
+    p = p0;
+    x0Pct = 100;
+    y0Pct = 0;
+
+  } else if (a <= p0 && p0 <= b) {
+    // We start with the composition for the Geometric mean
+    // X will be 50% and Y will be 50%
+    p = Math.sqrt(a * b);
+    x = 500 / p;
+    y = 500;
+
+    //console.log(`Initial composition: x=${x.toFixed(5)} y=${y.toFixed(2)} for P=${p.toFixed(2)}`);
+
+    let sp = Math.sqrt(p);
+    let sa = Math.sqrt(a);
+    let sb = Math.sqrt(b);
+
+    let sp1 = Math.sqrt(p0);
+    let L = get_liquidity(x, y, sp, sa, sb);
+
+    let x1 = calculate_x(L, sp1, sa, sb);
+    let y1 = calculate_y(L, sp1, sa, sb);
+    //  console.log(`Amount of ETH x=${x1.toFixed(5)} amount of USDC y=${y1.toFixed(2)} for P1=${p1.toFixed(2)}`);
+
+    let p1 = p0;
+
+    let LatP1 = x1 * p1 + y1;
+    //  console.log(`Total liquidity ${LatP1.toFixed(2)}`);
+
+    // Let's get the percentage of x1 and y1 with respect to the total liquidity
+    let xPercentage = 100 * x1 * p1 / LatP1;
+    let yPercentage = 100 - xPercentage;
+
+    x0Pct = xPercentage;
+    y0Pct = yPercentage;
+
+    //console.log(`xPercentage: ${xPercentage} - yPercentage: ${yPercentage}`);
+
+    let yy1 = yPercentage * 1000 / 100;
+    let xx1 = (1000 - yy1) / p1;
+
+    //console.log(`xx1: ${xx1} - yy1: ${yy1}`);
+
+    x = xx1;
+    y = yy1;
+    p = p0;
+
+  } else {
+    // X will be 0% and Y will be 100%
+    x = 0;
+    y = 1000;
+    p = p0;
+    x0Pct = 0;
+    y0Pct = 100;
+
+  }
+
+  let xHold = 500 / p0;
+  let yHold = 500;
+
+  let xHoldInitial = 1000 * x0Pct / (p0 * 100);
+  let yHoldInitial = 1000 * y0Pct / 100;
+
+  //console.log(`xHoldInitial: ${xHoldInitial} - yHoldInitial: ${yHoldInitial}`);
+
+  let sp = Math.sqrt(p);
+  let sa = Math.sqrt(a);
+  let sb = Math.sqrt(b);
+
+  // Calculate initial liquidity
+  let L = get_liquidity(x, y, sp, sa, sb);
+  //console.log(`Amount of L x=${L.toFixed(2)}`);
+
+  xHold = xHold * actualLiquidity / 1000;
+  yHold = yHold * actualLiquidity / 1000;
+
+  xHoldInitial = xHoldInitial * actualLiquidity / 1000;
+  yHoldInitial = yHoldInitial * actualLiquidity / 1000;
+
+  // Draw the liquidity
+  if (!single) {
+
+    // Let/s divide the value of L by 1000
+
+    if (which !== 'current') {
+      // this.liquidityArrayFuture.length = 0;
+    } else {
+      liquidityArray.value.length = 0;
+    }
+
+    // Iterate over range similar to Python's range(3000, 4200, 25)
+    for (let p1 = a * 0.75; p1 < b * 1.25; p1 += (b - a) / 50) {
+      let sp1 = Math.sqrt(p1);
+
+      let x1 = calculate_x(L, sp1, sa, sb);
+      let y1 = calculate_y(L, sp1, sa, sb);
+      //  console.log(`Amount of ETH x=${x1.toFixed(5)} amount of USDC y=${y1.toFixed(2)} for P1=${p1.toFixed(2)}`);
+
+      // Let's get the actual x1 and y1 values
+      // related to myLiquidty
+
+      x1 = x1 * actualLiquidity / 1000;
+      y1 = y1 * actualLiquidity / 1000;
+
+      let LatP1 = x1 * p1 + y1;
+      //  console.log(`Total liquidity ${LatP1.toFixed(2)}`);
+
+      // Let's get the percentage of x1 and y1 with respect to the total liquidity
+      let xPercentage = 100 * x1 * p1 / LatP1;
+      let yPercentage = 100 - xPercentage;
+
+      //  console.log(`xPercentage: ${xPercentage} - yPercentage: ${yPercentage}`);
+
+      let LiquidityHold = xHold * p1 + yHold;
+      let LiquidityHoldInitial = xHoldInitial * p1 + yHoldInitial;
+
+      // Use only the int part of LatP1
+
+      // If we have an estimated APR from the backtester
+      // and the number of days to be used is greater than 0
+      // we will calculate the liquidity at each price point plus fees
+      // as a new property for the array
+
+      let atPeriodFee = 0;
+
+      if (estimatedAPR.value > 0 && feeSelectedDays.value > 0) {
+        atPeriodFee = actualLiquidity * Number(feeSelectedDays.value) * Number.parseFloat(estimatedAPR.value) / (100 * 365);
+
+      } else {
+        atPeriodFee = 0;
+      }
+
+      var element = {
+        "Price": p1,
+        "Quantity": Number.parseFloat(LatP1),
+        "QuantityWithFees": Number.parseFloat(LatP1 + atPeriodFee),
+        "xPct": xPercentage,
+        "yPct": yPercentage,
+        "LiquidityHold": LiquidityHold,
+        "LiquidityHoldInitial": LiquidityHoldInitial,
+        "xQty": x1,
+        "yQty": y1
+      };
+
+      //  console.log(element);
+      //quantity.push(element);
+
+      if (which !== 'current') {
+        // this.liquidityArrayFuture.push(element);
+      } else {
+        liquidityArray.value.push(element);
+      }
+
+    }
+
+    showLiquidityChart();
+    showTokensDistributionChart();
+
+    // console.log(JSON.stringify(this.liquidityArray));
+
+  } else {
+
+    // We are only interested in a single point
+
+    let p1 = pTarget;
+    let sp1 = Math.sqrt(pTarget);
+
+    let x1 = calculate_x(L, sp1, sa, sb);
+    let y1 = calculate_y(L, sp1, sa, sb);
+
+    x1 = x1 * actualLiquidity / 1000;
+    y1 = y1 * actualLiquidity / 1000;
+
+    //console.log(`<<<<<`);
+    //console.log(`Amount of ETH x=${x1} amount of USDC y=${y1} for P1=${p1}`);
+    //console.log(`>>>>>`);
+
+    let LatP1 = x1 * p1 + y1;
+    //  console.log(`Total liquidity ${LatP1.toFixed(2)}`);
+
+    // Let's get the percentage of x1 and y1 with respect to the total liquidity
+    let xPercentage = 100 * x1 * p1 / LatP1;
+    let yPercentage = 100 - xPercentage;
+
+    //console.log(`Single Calculation----`);
+    //console.log(`xPercentage: ${xPercentage} - yPercentage: ${yPercentage}`);
+    //console.log(`A: ${a} - B: ${b} - P0: ${p0} - P1: ${pTarget} - X: ${x1} - Y: ${y1} - L: ${LatP1}`);
+
+    // Let's return the values
+    return {
+      xQty: x1,
+      yQty: y1,
+      Liquidity: LatP1,
+      XPct: xPercentage,
+      YPct: yPercentage
+    };
+  }
 }
+
+const showLiquidityChart = () => {
+  let chartLabels = [];
+  let chartDataPricesUSD = [];
+  let chartHoldLiquidity = [];
+  let chartHoldLiquidityInitial = [];
+  let chartLiquidityFees = [];
+  let ix = 0;
+
+  liquidityArray.value.forEach((element) => {
+    ix++;
+    if (ix % 1 == 0) {
+      if (element.Price != undefined) {
+        chartLabels.push(element.Price);
+        chartDataPricesUSD.push(element.Quantity);
+        chartHoldLiquidity.push(element.LiquidityHold);
+        chartHoldLiquidityInitial.push(element.LiquidityHoldInitial);
+        chartLiquidityFees.push(element.QuantityWithFees);
+      }
+    }
+  });
+
+  liquidityDatasets.value = [
+    {
+      name: 'Liquidity',
+      data: chartDataPricesUSD
+    },
+    {
+        name: 'Hold Pool',
+        data: chartHoldLiquidityInitial,
+      },
+      {
+        name: 'Liquidity with Fees',
+        data: chartLiquidityFees,
+      }
+  ]
+
+  liquididtyChartLabels.value = chartLabels
+  liquidityChartRender.value++
+  console.log("liquidity chart data", liquidityDatasets.value, liquididtyChartLabels.value)
+}  
+
+const showTokensDistributionChart = () =>{
+  let chartLabels = [];
+  let chartTokenX = [];
+  let chartTokenY = [];
+  let chartTokenXQty = [];
+  let chartTokenYQty = [];
+
+  let ix = 0;
+
+  liquidityArray.value.forEach(element => {
+    ix++;
+    if (ix % 1 == 0) {
+      if (element.Price != undefined) {
+        chartLabels.push(element.Price);
+        chartTokenX.push(element.xPct.toFixed(2));
+        chartTokenY.push(element.yPct.toFixed(2));
+        chartTokenXQty.push(element.xQty);
+        chartTokenYQty.push(element.yQty);
+      }
+    }
+  });
+
+  tokenDistributionDatasets.value = [
+    {
+      name: `${poolDetailsPeriods.value[0].BaseToken}Qty`,
+      data: chartTokenXQty
+    },
+    {
+      name: `${poolDetailsPeriods.value[0].QuoteToken}Qty`,
+      data: chartTokenYQty
+    },
+  ]
+
+  tokenDistributionChartLabels.value = chartLabels
+  tokenDistributionChartRender.value++
+  console.log(" tokenDistribution chart labels new", tokenDistributionDatasets.value, tokenDistributionChartLabels.value)
+}
+
+const showBackTestChart = () =>{
+  // Bar chart with liquidity and volume
+  let chartLabels = [];
+  let dailyLiquidity = [];
+  let totalLiquidity = [];
+  let holdLiquidityData = [];
+  let ix = 0;
+
+  //console.log(`Records to skip is: ${this.recordsToSkipChart}`);
+
+  backTesterLiquidityArray.value.forEach(element =>{
+
+    chartLabels.push(element.dateTime.substring(0, 8));
+    dailyLiquidity.push(element.Liquidity);
+    totalLiquidity.push(element.TotalValue);
+    holdLiquidityData.push(element.HoldLiquidity);
+
+  });
+  backTesterDatasets.value =  [{
+      name: 'Pool Value',
+        data: dailyLiquidity
+      },
+      {
+        name: 'Pool plus Fees',
+        data: totalLiquidity
+      },
+      {
+        name: 'Hold',
+        data: holdLiquidityData
+      }]
+
+  backTesterChartLabels.value = chartLabels
+  backTesterChartRender.value++
+  console.log(" Back Testing Results chart labels new", backTesterDatasets.value, backTesterChartLabels.value)
+
+}
+
+
 
 
 /** Computed */
@@ -1362,6 +1951,7 @@ const protocolIcon = (value) => {
 onMounted(fetchData);
 </script>
 <style scoped>
+
 .select-box-light {
   width: 150px !important;
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
@@ -1385,8 +1975,9 @@ onMounted(fetchData);
 }
 
 .text-field-width {
-  width: 210px !important;
+  width: 250px !important;
   border-radius: 10px;
+  margin-top: -0.5rem;
 }
 
 .text-field-dark {
@@ -1557,12 +2148,14 @@ line-height: normal;
 border-radius: 8px;
 border: 1px solid rgba(178, 178, 178, 0.20);
 background: var(--Gray-25, #FCFCFD);
+/* margin: 2rem 0rem 2rem 0rem; */
 }
 
 .result-card-dark {
 border-radius: 8px;
 border: 1px solid rgba(178, 178, 178, 0.20);
 background: #1B1F32;
+/* margin: 2rem 0rem 2rem 0rem; */
 }
 
 .result-text {
@@ -1747,11 +2340,12 @@ text-transform: capitalize;
 }
 .result-number {
 font-family: Poppins;
-font-size: 25px;
+font-size: 20px;
 font-style: normal;
 font-weight: 600;
 line-height: normal;
 text-transform: capitalize;
+margin-top: -0.1rem;
 }
 .result-number-dark {
 color: #EAECF0;
@@ -1819,15 +2413,16 @@ gap: 28px !important;
   /* width:100px !important; */
 }
 .anchor-link {
-  color: white;
-  text-decoration: none;
-  font-weight: 600;
+  color: #213aaa;
+  font-weight: 700;
+  font-size: larger;
   font-family: Poppins;
 }
 .anchor-link-light {
-  color: #1F243A;
+  color: #213aaa;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: larger;
   font-family: Poppins;
 }
 .flex-gap {
