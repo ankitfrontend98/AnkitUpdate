@@ -4,10 +4,6 @@ export const DATA_PERIOD = [
       value:"all",
   },
   {
-      label:"1 Day",
-      value:"1",
-  },
-  {
       label:"1 Week",
       value:"7",
   },
