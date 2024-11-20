@@ -7,16 +7,9 @@
         <router-link to="/" class="router-link">Back to all pools</router-link>
       </div>
       <div>
-        <v-select
-          v-model="seletedDuration"
-          :items="dataPeriod"
-          item-title="label"
-          item-value="value"
-          :class="[darkMode ? 'select-box-dark': 'select-box-light', 'select-box-detail']"
-          :hide-details="true"
-          variant="compact"
-          density="plain"
-        />
+        <v-select v-model="seletedDuration" :items="dataPeriod" item-title="label" item-value="value"
+          :class="[darkMode ? 'select-box-dark' : 'select-box-light', 'select-box-detail']" :hide-details="true"
+          variant="compact" density="plain" />
       </div>
     </div>
     <div class="mt-4">
@@ -42,24 +35,26 @@
           </div>
           <div class="d-flex flex-column">
             <div class="label-color">Chain</div>
-              <div class="text-capitalize label-font text-h5 text-textItemColor">
-                <span class="text-customText">
-                  <img v-if="poolDetailsPeriods.length > 0 && poolDetailsPeriods[0].ChainId"  :src="chainIcon(poolDetailsPeriods[0].ChainId)" alt="Quote Token Icon" class="token-icon">
-                  {{ poolDetailsPeriods.length > 0 ? poolDetailsPeriods[0].ChainId : '' }}
-                </span>
-              </div>
+            <div class="text-capitalize label-font text-h5 text-textItemColor">
+              <span class="text-customText">
+                <img v-if="poolDetailsPeriods.length > 0 && poolDetailsPeriods[0].ChainId"
+                  :src="chainIcon(poolDetailsPeriods[0].ChainId)" alt="Quote Token Icon" class="token-icon">
+                {{ poolDetailsPeriods.length > 0 ? poolDetailsPeriods[0].ChainId : '' }}
+              </span>
             </div>
-            <div class="d-flex flex-column">
-              <div class="label-color">Protocol</div>
-              <div class="text-capitalize label-font text-h5 text-textItemColor">
-                <span class="text-customText">
-                  <!-- Check if the array length is greater than 0 and if the image exists -->
-                  <img v-if="poolDetailsPeriods.length > 0 && poolDetailsPeriods[0].baseTokenIcon"  :src="protocolIcon(poolDetailsPeriods[0].DexId)" alt="Quote Token Icon" class="token-icon">
-                  <!-- Display DexId if the array length is greater than 0 -->
-                  {{ poolDetailsPeriods.length > 0 ? poolDetailsPeriods[0].DexId : '' }}
-                </span>
-              </div>
+          </div>
+          <div class="d-flex flex-column">
+            <div class="label-color">Protocol</div>
+            <div class="text-capitalize label-font text-h5 text-textItemColor">
+              <span class="text-customText">
+                <!-- Check if the array length is greater than 0 and if the image exists -->
+                <img v-if="poolDetailsPeriods.length > 0 && poolDetailsPeriods[0].baseTokenIcon"
+                  :src="protocolIcon(poolDetailsPeriods[0].DexId)" alt="Quote Token Icon" class="token-icon">
+                <!-- Display DexId if the array length is greater than 0 -->
+                {{ poolDetailsPeriods.length > 0 ? poolDetailsPeriods[0].DexId : '' }}
+              </span>
             </div>
+          </div>
           <div class="d-flex flex-column">
             <div class="label-color">Price (USD)</div>
             <div class="label-font text-h5 text-textItemColor">
@@ -69,150 +64,81 @@
           <div class="d-flex flex-column">
             <div class="label-color">Price Quote</div>
             <div class="label-font text-h5 text-textItemColor">
-              {{ poolDetailsPeriods.length ?  poolDetailsPeriods[0].priceNative : '' }}
+              {{ poolDetailsPeriods.length ? poolDetailsPeriods[0].priceNative : '' }}
             </div>
           </div>
         </div>
-        <v-skeleton-loader
-          v-if="loading"
-          :loading="true"
-          class="my-4 mx-4"
-          width="97%"
-          height="100px"
-        />
+        <v-skeleton-loader v-if="loading" :loading="true" class="my-4 mx-4" width="97%" height="100px" />
       </v-card>
     </div>
     <div class="d-flex mt-4">
-      <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'card-space']"> 
+      <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'card-space']">
         <div class="pt-4 pb-4">
-          <v-skeleton-loader 
-            v-if="loading"
-            :loading="true"
-            class="my-7 mx-2"
-            width="98%"
-            height="100px"
-          />
-          <line-chart
-            v-else
-            :dark-mode="darkMode"
-            :key="`${seletedDuration-darkMode}`"
-            :labels="dailyPriceUsdChart.chartLabels"
-            :show-exponential-digit="true"
-            :series-name="'Daily Price(Base/USD)'"
-            :data-values="dailyPriceUsdChart.chartDataPricesUSD"
-            :map-colors="{
-              stroke: darkMode ? '#DCC271': '#25356F',
+          <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
+          <line-chart v-else :dark-mode="darkMode" :key="`${seletedDuration - darkMode}`"
+            :labels="dailyPriceUsdChart.chartLabels" :show-exponential-digit="true"
+            :series-name="'Daily Price(Base/USD)'" :data-values="dailyPriceUsdChart.chartDataPricesUSD" :map-colors="{
+              stroke: darkMode ? '#DCC271' : '#25356F',
               gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
-              offset:  darkMode ? '#DCC271' : '#2C61B0',
+              offset: darkMode ? '#DCC271' : '#2C61B0',
               offsetColor: darkMode ? 'rgba(0, 0, 0, 0.00) 95.71%)' : 'rgba(183, 201, 228, 0.34)'
-            }"
-          />
+            }" />
         </div>
       </v-card>
       <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'card-space']">
         <div class="pt-4 pb-4">
-          <v-skeleton-loader
-            v-if="loading"
-            :loading="true"
-            class="my-7 mx-2"
-            width="98%"
-            height="100px"
-          />
-          <line-chart
-            v-else
-            :dark-mode="darkMode"
-            :key="`${seletedDuration-darkMode}`"
-            :labels="dailyPriceBaseQuote.chartLabels"
-            :show-exponential-digit="true"
-            :series-name="'Daily Price (Base/Quote)'"
-            :data-values="dailyPriceBaseQuote.chartDataQuotePrices"
+          <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
+          <line-chart v-else :dark-mode="darkMode" :key="`${seletedDuration - darkMode}`"
+            :labels="dailyPriceBaseQuote.chartLabels" :show-exponential-digit="true"
+            :series-name="'Daily Price (Base/Quote)'" :data-values="dailyPriceBaseQuote.chartDataQuotePrices"
             :map-colors="{
-              stroke: darkMode ? '#DCC271': '#25356F',
+              stroke: darkMode ? '#DCC271' : '#25356F',
               gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
-              offset:  darkMode ? '#DCC271' : '#2C61B0',
+              offset: darkMode ? '#DCC271' : '#2C61B0',
               offsetColor: darkMode ? 'rgba(0, 0, 0, 0.00) 95.71%)' : 'rgba(183, 201, 228, 0.34)'
-            }"
-          />
+            }" />
         </div>
       </v-card>
       <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'card-space']">
         <div class="pt-4 pb-4">
-          <v-skeleton-loader
-            v-if="loading"
-            :loading="true"
-            class="my-7 mx-2"
-            width="98%"
-            height="100px"
-          />
-          <line-chart
-            v-else
-            :dark-mode="darkMode"
-            :key="`${seletedDuration-darkMode}`"
-            :series-name="'Daily Price (Quote/Base)'"
-            :show-exponential-digit="true"
-            :map-colors="{
+          <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
+          <line-chart v-else :dark-mode="darkMode" :key="`${seletedDuration - darkMode}`"
+            :series-name="'Daily Price (Quote/Base)'" :show-exponential-digit="true" :map-colors="{
               stroke: darkMode ? '#F4F4F5' : '#BFAC62',
-              gradientToColors: darkMode ? '#F4F4F5': '#BFAC62',
-              offset: darkMode ? '#F4F4F5': '#BFAC62',
+              gradientToColors: darkMode ? '#F4F4F5' : '#BFAC62',
+              offset: darkMode ? '#F4F4F5' : '#BFAC62',
               offsetColor: darkMode ? 'rgba(0, 0, 0, 0.00) 95.71%)' : 'rgba(226, 217, 183, 0.46)'
-            }"
-            :labels="dailyPriceQuoteBase.chartLabels"
-            :data-values="dailyPriceQuoteBase.chartDataRelativePrices"
-          />
+            }" :labels="dailyPriceQuoteBase.chartLabels" :data-values="dailyPriceQuoteBase.chartDataRelativePrices" />
         </div>
       </v-card>
     </div>
     <div class="d-flex mt-6 justify-space-between">
-        <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'bar-line-chart']">
-          <div class="pt-4 pb-4">
-            <v-skeleton-loader 
-                v-if="loading"
-                :loading="true"
-                class="my-7 mx-2"
-                width="97%"
-                height="300"
-            />
-            <bar-chart
-                v-else
-                :dark-mode="darkMode"
-                :key="`${seletedDuration-darkMode}`"
-                :series-name="['Daily Liquidity', 'Daily Volume']"
-                :labels="dailyVolumeBarData.chartLabels"
-                :data-values="[dailyVolumeBarData.chartDataLiquidity, dailyVolumeBarData.chartDataVolume]"
-            />
-          </div>
-        </v-card>
-        <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'bar-line-chart']">
-          <div class="pt-4 pb-4">
-            <v-skeleton-loader 
-                v-if="loading"
-                :loading="true"
-                class="my-7 mx-2"
-                width="97%"
-                height="300"
-            />
-            <line-chart
-              v-else
-              :dark-mode="darkMode"
-              :chart-width="570"
-              :key="`${seletedDuration-darkMode}`"
-              series-name="Daily APR"
-              :labels="dailyAprData.chartLabels"
-              :data-values="dailyAprData.chartDataAPR"
-              :map-colors="{
-                  stroke: darkMode ? '#DCC271': '#25356F',
-                  gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
-                  offset:  darkMode ? '#DCC271' : '#2C61B0',
-                  offsetColor: darkMode ? 'rgba(0, 0, 0, 0.00) 95.71%)' : 'rgba(183, 201, 228, 0.34)'
-              }"
-            />
-          </div>
-        </v-card>
+      <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'bar-line-chart']">
+        <div class="pt-4 pb-4">
+          <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="97%" height="300" />
+          <bar-chart v-else :dark-mode="darkMode" :key="`${seletedDuration - darkMode}`"
+            :series-name="['Daily Liquidity', 'Daily Volume']" :labels="dailyVolumeBarData.chartLabels"
+            :data-values="[dailyVolumeBarData.chartDataLiquidity, dailyVolumeBarData.chartDataVolume]" />
+        </div>
+      </v-card>
+      <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'bar-line-chart']">
+        <div class="pt-4 pb-4">
+          <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="97%" height="300" />
+          <line-chart v-else :dark-mode="darkMode" :chart-width="570" :key="`${seletedDuration - darkMode}`"
+            series-name="Daily APR" :labels="dailyAprData.chartLabels" :data-values="dailyAprData.chartDataAPR"
+            :map-colors="{
+              stroke: darkMode ? '#DCC271' : '#25356F',
+              gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
+              offset: darkMode ? '#DCC271' : '#2C61B0',
+              offsetColor: darkMode ? 'rgba(0, 0, 0, 0.00) 95.71%)' : 'rgba(183, 201, 228, 0.34)'
+            }" />
+        </div>
+      </v-card>
     </div>
 
     <div class="mt-4">
       <v-card :class="[darkMode ? 'dark-token-details' : 'token-detail']">
-        <div class="d-flex justify-space-between pa-6 align-center"  v-if="!loading">
+        <div class="d-flex justify-space-between pa-6 align-center" v-if="!loading">
           <!-- <div class="d-flex flex-column">
             <div class="label-color">Price Quote</div>
             <div class="label-font text-h5 text-textItemColor">
@@ -222,31 +148,33 @@
           <div class="d-flex flex-column">
             <div class="label-color">Avg Liquidity</div>
             <div class="label-font text-h5 text-textItemColor">
-              {{ poolDetailsPeriods.length > 0 ? formatMoney(weeklyAvgLiquidity) : ''  }}
+              {{ poolDetailsPeriods.length > 0 ? formatMoney(weeklyAvgLiquidity) : '' }}
             </div>
           </div>
           <div class="d-flex flex-column">
             <div class="label-color">Period Volume</div>
             <div class="label-font text-h5 text-textItemColor">
-              {{ poolDetailsPeriods.length > 0 ? formatMoney(weeklyVolume) : ''  }}
+              {{ poolDetailsPeriods.length > 0 ? formatMoney(weeklyVolume) : '' }}
             </div>
           </div>
           <div class="d-flex flex-column">
             <div class="label-color">Weekly Fees</div>
             <div class="label-font text-h5 text-textItemColor">
-              {{ poolDetailsPeriods.length > 0 ? formatMoney(weeklyFees) : ''  }}
+              {{ poolDetailsPeriods.length > 0 ? formatMoney(weeklyFees) : '' }}
             </div>
           </div>
           <div class="d-flex flex-column">
             <div class="label-color">Avg Volatility</div>
             <div class="label-font text-h5 text-textItemColor">
-              {{ poolDetailsPeriods.length > 0 ? (weeklyVolatility !==0 ? (weeklyVolatility.toFixed(2) + '%') : weeklyVolatility) : ''  }}
+              {{ poolDetailsPeriods.length > 0 ? (weeklyVolatility !== 0 ? (weeklyVolatility.toFixed(2) + '%') :
+                weeklyVolatility) : '' }}
             </div>
           </div>
           <div class="d-flex flex-column">
             <div class="label-color">Abs Volatility</div>
             <div class="label-font text-h5 text-textItemColor">
-              {{ poolDetailsPeriods.length > 0 ? (absoluteVolatility !==0 ? (absoluteVolatility.toFixed(2) + '%') : weeklyVolatility  ) : ''  }}
+              {{ poolDetailsPeriods.length > 0 ? (absoluteVolatility !== 0 ? (absoluteVolatility.toFixed(2) + '%') :
+                weeklyVolatility) : '' }}
             </div>
           </div>
           <!-- <div class="d-flex flex-column">
@@ -264,65 +192,42 @@
           <div class="d-flex flex-column">
             <div class="label-color">Avg APR% est.</div>
             <div class="label-font text-h5 text-textItemColor">
-              {{  (weeklyAvgAPR.toFixed(3) != null ) ? weeklyAvgAPR.toFixed(2) + '%' : 0.00 + '%' }}
+              {{ (weeklyAvgAPR.toFixed(3) != null) ? weeklyAvgAPR.toFixed(2) + '%' : 0.00 + '%' }}
             </div>
           </div>
           <div class="d-flex flex-column">
             <div class="label-color">Dex screener</div>
             <div v-if="poolDetailsPeriods.length > 0">
-              <a
-                :class="[darkMode ? 'anchor-link' : 'anchor-link-light']"
-                class=""
+              <a :class="[darkMode ? 'anchor-link' : 'anchor-link-light']" class=""
                 :href="`https://dexscreener.com/${poolDetailsPeriods[0].ChainId}/${poolDetailsPeriods[0].pairAddress}`"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+                target="_blank" rel="noopener noreferrer">
                 Open
               </a>
             </div>
           </div>
         </div>
-        <v-skeleton-loader
-          v-if="loading"
-          :loading="true"
-          class="my-4 mx-4"
-          width="97%"
-          height="100px"
-        />
+        <v-skeleton-loader v-if="loading" :loading="true" class="my-4 mx-4" width="97%" height="100px" />
       </v-card>
     </div>
 
     <div class="d-flex justify-space-between mt-4">
       <div>
-        <v-tabs v-model="activeTab" :class="[darkMode ? 'tab-background-dark' : 'tab-background-light']" selected-class="active-tab">
-          <v-tab
-            v-for="tab in tabs"
-            :key="tab.value"
-            :value="tab.value"
-            selected-class=""
-            @click="handleTabClick(tab.value)"
-            >{{ tab.title }}</v-tab
-          >
+        <v-tabs v-model="activeTab" :class="[darkMode ? 'tab-background-dark' : 'tab-background-light']"
+          selected-class="active-tab">
+          <v-tab v-for="tab in tabs" :key="tab.value" :value="tab.value" selected-class=""
+            @click="handleTabClick(tab.value)">{{ tab.title }}</v-tab>
         </v-tabs>
       </div>
       <div class="mt-1">
-        <v-select
-          v-model="seletedDuration"
-          :items="dataPeriod"
-          item-title="label"
-          item-value="value"
-          :class="[darkMode ? 'select-box-dark': 'select-box-light', 'select-box-detail']"
-          variant="compact"
-          :hide-details="true"
-          density="plain"
-          @update:modelValue="dateChange"
-        ></v-select>
+        <v-select v-model="seletedDuration" :items="dataPeriod" item-title="label" item-value="value"
+          :class="[darkMode ? 'select-box-dark' : 'select-box-light', 'select-box-detail']" variant="compact"
+          :hide-details="true" density="plain" @update:modelValue="dateChange"></v-select>
       </div>
     </div>
     <div class="mt-4 mb-10">
       <v-tabs-window v-model="activeTab">
         <v-tabs-window-item key="0" value="0">
-          <details-table :key="seletedDuration" :items="detailsTable" :dark-mode="darkMode" class="w-100"/>
+          <details-table :key="seletedDuration" :items="detailsTable" :dark-mode="darkMode" class="w-100" />
         </v-tabs-window-item>
 
         <!-- Kuladeep -->
@@ -336,49 +241,45 @@
                     <h4>APR CALCULATOR</h4>
                   </div> -->
                   <div class="d-flex flex-column mr-6">
-                    <div class="calc-other-text" :class="[darkMode ? 'calc-other-text-dark' : 'calc-other-text-light']">Current Price:</div>
-                    <div class="highlight">{{ displayPrice }} {{ invertedPrices ? poolDetailsPeriods[0].BaseToken  :  poolDetailsPeriods[0].QuoteToken  }}</div>
+                    <div class="calc-other-text" :class="[darkMode ? 'calc-other-text-dark' : 'calc-other-text-light']">
+                      Current Price:</div>
+                    <div class="highlight">{{ displayPrice }} {{ invertedPrices ? poolDetailsPeriods[0].BaseToken :
+                      poolDetailsPeriods[0].QuoteToken }}</div>
                   </div>
 
                   <!-- Invert Price -->
                   <div class="action mr-6">
-                    <v-btn
-                      class="text-none"
-                      :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                      min-width="92"    
-                      variant="outlined"
-                      rounded
-                      @click="handleInvertPrices"
-                    >
-                    <span class="mt-2 mr-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" v-if="!darkMode">
-                        <path d="M10.0001 17.0833C13.9121 17.0833 17.0834 13.912 17.0834 10C17.0834 7.6454 15.9345 5.55912 14.1667 4.27118M10.8334 18.6667L9.16675 17L10.8334 15.3333M10.0001 2.91668C6.08806 2.91668 2.91675 6.08799 2.91675 10C2.91675 12.3546 4.06564 14.4409 5.83341 15.7288M9.16675 4.66668L10.8334 3.00001L9.16675 1.33334" stroke="#344054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" v-else>
-                        <path d="M10.0001 17.0833C13.9121 17.0833 17.0834 13.912 17.0834 10C17.0834 7.6454 15.9345 5.55912 14.1667 4.27118M10.8334 18.6667L9.16675 17L10.8334 15.3333M10.0001 2.91668C6.08806 2.91668 2.91675 6.08799 2.91675 10C2.91675 12.3546 4.06564 14.4409 5.83341 15.7288M9.16675 4.66668L10.8334 3.00001L9.16675 1.33334" stroke="#FCFCFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </span>
+                    <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                      min-width="92" variant="outlined" rounded @click="handleInvertPrices">
+                      <span class="mt-2 mr-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                          v-if="!darkMode">
+                          <path
+                            d="M10.0001 17.0833C13.9121 17.0833 17.0834 13.912 17.0834 10C17.0834 7.6454 15.9345 5.55912 14.1667 4.27118M10.8334 18.6667L9.16675 17L10.8334 15.3333M10.0001 2.91668C6.08806 2.91668 2.91675 6.08799 2.91675 10C2.91675 12.3546 4.06564 14.4409 5.83341 15.7288M9.16675 4.66668L10.8334 3.00001L9.16675 1.33334"
+                            stroke="#344054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                          v-else>
+                          <path
+                            d="M10.0001 17.0833C13.9121 17.0833 17.0834 13.912 17.0834 10C17.0834 7.6454 15.9345 5.55912 14.1667 4.27118M10.8334 18.6667L9.16675 17L10.8334 15.3333M10.0001 2.91668C6.08806 2.91668 2.91675 6.08799 2.91675 10C2.91675 12.3546 4.06564 14.4409 5.83341 15.7288M9.16675 4.66668L10.8334 3.00001L9.16675 1.33334"
+                            stroke="#FCFCFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                      </span>
                       Invert Price
                     </v-btn>
                   </div>
                 </div>
-                  
+
                 <div class="d-flex">
                   <v-row cols="3">
                     <v-col>
                       <div class="d-flex flex-column flex-gap">
                         <div class="d-flex flex-row mr-6">
-                          <label class="calculator-label" :class="[darkMode ? 'label-dark' : 'label-light']">Supply</label>
-                          <v-text-field
-                            v-model="liquidityValue"
-                            class="text-field-width"
-                            :class="[darkMode ? 'text-field-dark' : 'text-field-light']"
-                            type="input"
-                            :hide-details="true"
-                            density="compact"
-                            variant="plain"
-                            @change="refreshTokensDistribution"
-                          >
+                          <label class="calculator-label"
+                            :class="[darkMode ? 'label-dark' : 'label-light']">Supply</label>
+                          <v-text-field v-model="liquidityValue" class="text-field-width"
+                            :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input"
+                            :hide-details="true" density="compact" variant="plain" @change="refreshTokensDistribution">
                             <template v-slot:append-inner>
                               USD
                             </template>
@@ -390,8 +291,9 @@
                     <v-col>
                       <div class="d-flex flex-row align-items-center">
                         <div class="result-text-right">Approx:</div>
-                        <div class="result-number ml-1" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
-                          {{ '$' + liquidityValue}}
+                        <div class="result-number ml-1"
+                          :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
+                          {{ '$' + liquidityValue }}
                         </div>
                       </div>
                     </v-col>
@@ -407,19 +309,11 @@
                         <label class="calculator-label">Min Value: </label>
                         <span class="highlight ml-1">{{ lowerPercentageRange.toFixed(2) + '%' }}</span>
                       </div>
-                      <v-text-field
-                        v-model="myMinRange"
-                        class="text-field-width"
-                        :class="[darkMode ? 'text-field-dark' : 'text-field-light']"
-                        type="input"
-                        variant="plain"
-                        density="default"
-                        :hide-details="true"
-                        prepend-inner-icon="mdi-minus"
-                        append-inner-icon="mdi-plus"
-                        @click:prepend-inner="handlePrependInner('min')"
-                        @click:append-inner="handleAppendInner('min')"
-                      ></v-text-field>
+                      <v-text-field v-model="myMinRange" class="text-field-width"
+                        :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input" variant="plain"
+                        density="default" :hide-details="true" prepend-inner-icon="mdi-minus"
+                        append-inner-icon="mdi-plus" @click:prepend-inner="handlePrependInner('min')"
+                        @click:append-inner="handleAppendInner('min')"></v-text-field>
                     </div>
                   </div>
 
@@ -430,105 +324,77 @@
                         <label class="calculator-label">Max Value: </label>
                         <span class="highlight ml-1">{{ higherPercentageRange.toFixed(2) + '%' }}</span>
                       </div>
-                      <v-text-field
-                        v-model="myMaxRange"
-                        class="text-field-width"
-                        :class="[darkMode ? 'text-field-dark' : 'text-field-light']"
-                        type="input"
-                        :hide-details="true"
-                        density="default"
-                        variant="plain"
-                        prepend-inner-icon="mdi-minus"
-                        append-inner-icon="mdi-plus"
+                      <v-text-field v-model="myMaxRange" class="text-field-width"
+                        :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input" :hide-details="true"
+                        density="default" variant="plain" prepend-inner-icon="mdi-minus" append-inner-icon="mdi-plus"
                         @click:prepend-inner="handlePrependInner('max')"
-                        @click:append-inner="handleAppendInner('max')"
-                      ></v-text-field>
+                        @click:append-inner="handleAppendInner('max')"></v-text-field>
                     </div>
                   </div>
                 </div>
 
                 <div class="d-flex flex-column">
-                    <v-row>
-                      <!-- First Column -->
-                      <v-col cols="6">
-                        <div class="d-flex flex-column mr-2">
-                          <div class="calc-other-text">Capital Preservation Indicator</div>
-                          <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{ myGMValue }}</v-chip>
-                        </div>
-                        
-                        <!-- Narror & Wide Range -->
-                        <div class="d-flex flex-wrap justify-content-between mt-4">
-                          <div class="d-flex mb-2">
-                            <v-btn
-                              class="text-none mr-2"
-                              :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                              min-width="92"
-                              variant="outlined"
-                              rounded
-                              @click="initializeRanges('narrow')"
-                            >
-                              Narrow
-                            </v-btn>
-                            <v-btn
-                              class="text-none"
-                              :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                              min-width="92"
-                              variant="outlined"
-                              rounded
-                              @click="initializeRanges('market')"
-                            >
-                              Market
-                            </v-btn>
-                          </div>
-                          <div class="d-flex">
-                            <v-btn
-                              class="text-none mr-2"
-                              :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                              min-width="92"
-                              variant="outlined"
-                              rounded
-                              @click="initializeRanges('wide-short')"
-                            >
-                              Wide Short
-                            </v-btn>
-                            <v-btn
-                              class="text-none"
-                              :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                              min-width="92"
-                              variant="outlined"
-                              rounded
-                              @click="initializeRanges('wide-long')"
-                            >
-                              Wide Long
-                            </v-btn>
-                          </div>
-                        </div>
+                  <v-row>
+                    <!-- First Column -->
+                    <v-col cols="6">
+                      <div class="d-flex flex-column mr-2">
+                        <div class="calc-other-text">Capital Preservation Indicator</div>
+                        <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{ myGMValue
+                          }}</v-chip>
+                      </div>
 
-                      </v-col>
+                      <!-- Narror & Wide Range -->
+                      <div class="d-flex flex-wrap justify-content-between mt-4">
+                        <div class="d-flex mb-2">
+                          <v-btn class="text-none mr-2" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                            min-width="92" variant="outlined" rounded @click="initializeRanges('narrow')">
+                            Narrow
+                          </v-btn>
+                          <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                            min-width="92" variant="outlined" rounded @click="initializeRanges('market')">
+                            Market
+                          </v-btn>
+                        </div>
+                        <div class="d-flex">
+                          <v-btn class="text-none mr-2" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                            min-width="92" variant="outlined" rounded @click="initializeRanges('wide-short')">
+                            Wide Short
+                          </v-btn>
+                          <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                            min-width="92" variant="outlined" rounded @click="initializeRanges('wide-long')">
+                            Wide Long
+                          </v-btn>
+                        </div>
+                      </div>
 
-                      <!-- Second Column capital & composition -->
-                      <v-col cols="4">
-                        <div class="calc-other-text">Composition</div>
-                        <v-card class="pa-5 mb-4 " elevation="0" :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
+                    </v-col>
+
+                    <!-- Second Column capital & composition -->
+                    <v-col cols="4">
+                      <div class="calc-other-text">Composition</div>
+                      <v-card class="pa-5 mb-4 " elevation="0"
+                        :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
+                        <div class="d-flex flex-column">
                           <div class="d-flex flex-column">
-                            <div class="d-flex flex-column">
-                                <div class="d-flex">
-                                  <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{ poolDetailsPeriods[0].BaseToken }}: </span>
-                                  <span class="highlight ml-1">   {{ xPercentage.toFixed(2) }} %</span>
-                                </div>
-                              <div class="composition-token">{{ xTokens }} tokens</div>
+                            <div class="d-flex">
+                              <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
+                                poolDetailsPeriods[0].BaseToken }}: </span>
+                              <span class="highlight ml-1"> {{ xPercentage.toFixed(2) }} %</span>
                             </div>
-                            <div>
-                              <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{ poolDetailsPeriods[0].QuoteToken }}</span>: 
-                              <span class="highlight">
-                                {{ yPercentage.toFixed(2) }} %
-                              </span>
-                            </div>
-                            <div class="y-tokens">{{ yTokens }} tokens</div>
+                            <div class="composition-token">{{ xTokens }} tokens</div>
                           </div>
-                        </v-card>
-                      </v-col>
-                    </v-row>
+                          <div>
+                            <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
+                              poolDetailsPeriods[0].QuoteToken }}</span>:
+                            <span class="highlight">
+                              {{ yPercentage.toFixed(2) }} %
+                            </span>
+                          </div>
+                          <div class="y-tokens">{{ yTokens }} tokens</div>
+                        </div>
+                      </v-card>
+                    </v-col>
+                  </v-row>
                 </div>
 
                 <!-- Run Test -->
@@ -536,26 +402,16 @@
                   <!-- First Column: Range Slider and Text Below -->
                   <v-col cols="4">
 
-                  <!-- Range Slider -->
-                  <v-range-slider
-                    v-model="daysForFees"
-                    :min="0"
-                    :max="365"
-                    color="#BFAC62"
-                    class="mt-4"
-                  ></v-range-slider>
-                  <div class="text-caption mt-2">Days to include for fees: {{ daysForFees }}</div>
+                    <!-- Range Slider -->
+                    <v-range-slider v-model="daysForFees" :min="0" :max="365" color="#BFAC62"
+                      class="mt-4"></v-range-slider>
+                    <div class="text-caption mt-2">Days to include for fees: {{ daysForFees }}</div>
                   </v-col>
 
                   <!-- Second Column: Run Back Test Button -->
                   <v-col cols="6" class="d-flex justify-start">
-                    <v-btn
-                      class="text-none ml-4 run-text"
-                      color="medium-emphasis"
-                      min-width="92"
-                      rounded
-                      @click="megaTest('current')"
-                    >
+                    <v-btn class="text-none ml-4 run-text" color="medium-emphasis" min-width="92" rounded
+                      @click="megaTest('current')">
                       Run Back Test
                       <v-icon class="ml-2 gap-cls">mdi-arrow-right</v-icon>
                     </v-btn>
@@ -569,24 +425,31 @@
 
                 <!-- Bottom Box -->
                 <div class="d-flex flex-column">
-                  <v-card class="pa-5 mb-4 " elevation="0" :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
+                  <v-card class="pa-5 mb-4 " elevation="0"
+                    :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
                     <v-row cols="3">
                       <v-col>
                         <div>
                           <div class="result-text-right">Generated Fees (est)</div>
-                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">{{ formatMoney(estimatedFees) }}</div>
+                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
+                            {{
+                              formatMoney(estimatedFees) }}</div>
                         </div>
                       </v-col>
                       <v-col>
                         <div>
                           <div class="result-text-right">Time In Range (%)</div>
-                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">{{ inRangePercentaje.toFixed(2) + ' %' }}</div>
+                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
+                            {{
+                              inRangePercentaje.toFixed(2) + ' %' }}</div>
                         </div>
                       </v-col>
                       <v-col>
                         <div>
                           <div class="result-text-right">Estimated APR (%)</div>
-                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">{{ estimatedAPR.toFixed(2) + ' %' }}</div>
+                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
+                            {{
+                              estimatedAPR.toFixed(2) + ' %' }}</div>
                         </div>
                       </v-col>
                     </v-row>
@@ -596,82 +459,43 @@
             </v-col>
             <!-- SplineChart Component for Liquidity Back Test -->
             <v-col cols="6">
-              <v-card :class="[darkMode ? 'custom-card-dark-class' : '', '']"> 
+              <v-card :class="[darkMode ? 'custom-card-dark-class' : '', '']">
                 <div class="pt-4 pb-4">
-                  <v-skeleton-loader 
-                    v-if="loading"
-                    :loading="true"
-                    class="my-7 mx-2"
-                    width="98%"
-                    height="100px"
-                  />
-                  <spline-chart
-                    v-else
-                    :dark-mode="darkMode"
-                    :key="liquidityChartRender"
-                    :show-exponential-digit="true"
-                    :labels="liquididtyChartLabels"
-                    :series-name="'Liquidity'"
-                    :data-values="liquidityDatasets"
+                  <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
+                  <spline-chart v-else :dark-mode="darkMode" :key="liquidityChartRender" :show-exponential-digit="true"
+                    :labels="liquididtyChartLabels" :series-name="'Liquidity'" :data-values="liquidityDatasets"
                     :map-colors="{
-                      stroke: darkMode ? '#DCC271': '#25356F',
+                      stroke: darkMode ? '#DCC271' : '#25356F',
                       gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
-                      offset:  darkMode ? '#DCC271' : '#2C61B0',
+                      offset: darkMode ? '#DCC271' : '#2C61B0',
                       offsetColor: darkMode ? 'rgba(0, 0, 0, 0.00) 95.71%)' : 'rgba(183, 201, 228, 0.34)'
-                    }"
-                  />
+                    }" />
                 </div>
               </v-card>
-              <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'mt-4']"> 
+              <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'mt-4']">
                 <div class="pt-4 pb-4">
-                  <v-skeleton-loader 
-                    v-if="loading"
-                    :loading="true"
-                    class="my-7 mx-2"
-                    width="98%"
-                    height="100px"
-                  />
-                  <spline-chart
-                    v-else
-                    :dark-mode="darkMode"
-                    :key="tokenDistributionChartRender"
-                    :show-exponential-digit="true"
-                    :labels="tokenDistributionChartLabels"
-                    :series-name="'Tokens Distribution'"
-                    :data-values="tokenDistributionDatasets"
-                    :map-colors="{
-                      stroke: darkMode ? '#DCC271': '#25356F',
+                  <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
+                  <spline-chart v-else :dark-mode="darkMode" :key="tokenDistributionChartRender"
+                    :show-exponential-digit="true" :labels="tokenDistributionChartLabels"
+                    :series-name="'Tokens Distribution'" :data-values="tokenDistributionDatasets" :map-colors="{
+                      stroke: darkMode ? '#DCC271' : '#25356F',
                       gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
-                      offset:  darkMode ? '#DCC271' : '#2C61B0',
+                      offset: darkMode ? '#DCC271' : '#2C61B0',
                       offsetColor: darkMode ? 'rgba(0, 0, 0, 0.00) 95.71%)' : 'rgba(183, 201, 228, 0.34)'
-                    }"
-                  />
+                    }" />
                 </div>
               </v-card>
-              <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'mt-4']"> 
+              <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'mt-4']">
                 <div class="pt-4 pb-4">
-                  <v-skeleton-loader 
-                    v-if="loading"
-                    :loading="true"
-                    class="my-7 mx-2"
-                    width="98%"
-                    height="100px"
-                  />
-                  <spline-chart
-                    v-else
-                    :dark-mode="darkMode"
-                    :key="backTesterChartRender"
-                    :show-exponential-digit="true"
-                    :labels="backTesterChartLabels"
-                    :series-name="'Back Testing Results'"
-                    :data-values="backTesterDatasets"
-                    :map-colors="{
-                      stroke: darkMode ? '#DCC271': '#25356F',
+                  <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
+                  <spline-chart v-else :dark-mode="darkMode" :key="backTesterChartRender" :show-exponential-digit="true"
+                    :labels="backTesterChartLabels" :series-name="'Back Testing Results'"
+                    :data-values="backTesterDatasets" :map-colors="{
+                      stroke: darkMode ? '#DCC271' : '#25356F',
                       gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
-                      offset:  darkMode ? '#DCC271' : '#2C61B0',
+                      offset: darkMode ? '#DCC271' : '#2C61B0',
                       offsetColor: darkMode ? 'rgba(0, 0, 0, 0.00) 95.71%)' : 'rgba(183, 201, 228, 0.34)'
-                    }"
-                  />
+                    }" />
                 </div>
               </v-card>
             </v-col>
@@ -679,7 +503,7 @@
         </v-tabs-window-item>
 
         <!-- Kuladeep -->
-         
+
         <v-tabs-window-item key="2" value="2">
           <v-row>
             <v-col cols="6">
@@ -689,27 +513,29 @@
                     <h4>APR CALCULATOR</h4>
                   </div> -->
                   <div class="d-flex flex-column mr-6">
-                    <div class="calc-other-text" :class="[darkMode ? 'calc-other-text-dark' : 'calc-other-text-light']">Future Price:</div>
-                    <div class="highlight">{{ displayPrice }} {{ invertedPrices ? poolDetailsPeriods[0].BaseToken  : 
-                                      poolDetailsPeriods[0].QuoteToken  }}</div>
+                    <div class="calc-other-text" :class="[darkMode ? 'calc-other-text-dark' : 'calc-other-text-light']">
+                      Future
+                      Price:</div>
+                    <div class="highlight">{{ displayPrice }} {{ invertedPrices ? poolDetailsPeriods[0].BaseToken :
+                      poolDetailsPeriods[0].QuoteToken }}</div>
                   </div>
                   <div class="action mr-6">
-                    <v-btn
-                      class="text-none"
-                      :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                      min-width="92"    
-                      variant="outlined"
-                      rounded
-                      @click="handleInvertPrices"
-                    >
-                    <span class="mt-2 mr-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" v-if="!darkMode">
-                        <path d="M10.0001 17.0833C13.9121 17.0833 17.0834 13.912 17.0834 10C17.0834 7.6454 15.9345 5.55912 14.1667 4.27118M10.8334 18.6667L9.16675 17L10.8334 15.3333M10.0001 2.91668C6.08806 2.91668 2.91675 6.08799 2.91675 10C2.91675 12.3546 4.06564 14.4409 5.83341 15.7288M9.16675 4.66668L10.8334 3.00001L9.16675 1.33334" stroke="#344054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" v-else>
-                        <path d="M10.0001 17.0833C13.9121 17.0833 17.0834 13.912 17.0834 10C17.0834 7.6454 15.9345 5.55912 14.1667 4.27118M10.8334 18.6667L9.16675 17L10.8334 15.3333M10.0001 2.91668C6.08806 2.91668 2.91675 6.08799 2.91675 10C2.91675 12.3546 4.06564 14.4409 5.83341 15.7288M9.16675 4.66668L10.8334 3.00001L9.16675 1.33334" stroke="#FCFCFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </span>
+                    <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                      min-width="92" variant="outlined" rounded @click="handleInvertPrices">
+                      <span class="mt-2 mr-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                          v-if="!darkMode">
+                          <path
+                            d="M10.0001 17.0833C13.9121 17.0833 17.0834 13.912 17.0834 10C17.0834 7.6454 15.9345 5.55912 14.1667 4.27118M10.8334 18.6667L9.16675 17L10.8334 15.3333M10.0001 2.91668C6.08806 2.91668 2.91675 6.08799 2.91675 10C2.91675 12.3546 4.06564 14.4409 5.83341 15.7288M9.16675 4.66668L10.8334 3.00001L9.16675 1.33334"
+                            stroke="#344054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                          v-else>
+                          <path
+                            d="M10.0001 17.0833C13.9121 17.0833 17.0834 13.912 17.0834 10C17.0834 7.6454 15.9345 5.55912 14.1667 4.27118M10.8334 18.6667L9.16675 17L10.8334 15.3333M10.0001 2.91668C6.08806 2.91668 2.91675 6.08799 2.91675 10C2.91675 12.3546 4.06564 14.4409 5.83341 15.7288M9.16675 4.66668L10.8334 3.00001L9.16675 1.33334"
+                            stroke="#FCFCFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                      </span>
                       Invert Price
                     </v-btn>
                   </div>
@@ -722,18 +548,11 @@
                         <label class="calculator-label">Min Value: </label>
                         <span class="highlight ml-1">{{ lowerPercentageRange.toFixed(2) + '%' }}</span>
                       </div>
-                      <v-text-field
-                        v-model="myMinRange"
-                        class="text-field-width"
-                        :class="[darkMode ? 'text-field-dark' : 'text-field-light']"
-                        variant="plain"
-                        density="default"
-                        :hide-details="true"
-                        prepend-inner-icon="mdi-minus"
-                        append-inner-icon="mdi-plus"
+                      <v-text-field v-model="myMinRange" class="text-field-width"
+                        :class="[darkMode ? 'text-field-dark' : 'text-field-light']" variant="plain" density="default"
+                        :hide-details="true" prepend-inner-icon="mdi-minus" append-inner-icon="mdi-plus"
                         @click:prepend-inner="handlePrependInner('min')"
-                        @click:append-inner="handleAppendInner('min')"
-                      ></v-text-field>
+                        @click:append-inner="handleAppendInner('min')"></v-text-field>
                     </div>
                   </div>
 
@@ -744,80 +563,65 @@
                         <label class="calculator-label">Max Value: </label>
                         <span class="highlight ml-1">{{ higherPercentageRange.toFixed(2) + '%' }}</span>
                       </div>
-                      <v-text-field
-                        v-model="myMaxRange"
-                        class="text-field-width"
-                        :class="[darkMode ? 'text-field-dark' : 'text-field-light']"
-                        :hide-details="true"
-                        density="default"
-                        variant="plain"
-                        prepend-inner-icon="mdi-minus"
-                        append-inner-icon="mdi-plus"
+                      <v-text-field v-model="myMaxRange" class="text-field-width"
+                        :class="[darkMode ? 'text-field-dark' : 'text-field-light']" :hide-details="true"
+                        density="default" variant="plain" prepend-inner-icon="mdi-minus" append-inner-icon="mdi-plus"
                         @click:prepend-inner="handlePrependInner('max')"
-                        @click:append-inner="handleAppendInner('max')"
-                      ></v-text-field>
+                        @click:append-inner="handleAppendInner('max')"></v-text-field>
                     </div>
                   </div>
                 </div>
 
                 <div class="d-flex flex-column">
-                    <v-row>
-                      <!-- First Column -->
-                      <v-col cols="6">
-                        <div class="d-flex flex-column mr-2">
-                          <div class="calc-other-text">Capital Preservation Indicator</div>
-                          <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{ myGMValue }}</v-chip>
-                        </div>
-                        <div class="d-flex justify-space-between mt-5 mr-10 align-center">
-                          <div class="d-flex">
-                            <v-btn
-                              class="text-none mr-4"
-                              :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                              min-width="92"
-                              variant="outlined"
-                              rounded
-                              @click="initializeRanges('','narrow')"
-                            >
-                              Narrow Range
-                            </v-btn>
+                  <v-row>
+                    <!-- First Column -->
+                    <v-col cols="6">
+                      <div class="d-flex flex-column mr-2">
+                        <div class="calc-other-text">Capital Preservation Indicator</div>
+                        <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{ myGMValue
+                          }}</v-chip>
+                      </div>
+                      <div class="d-flex justify-space-between mt-5 mr-10 align-center">
+                        <div class="d-flex">
+                          <v-btn class="text-none mr-4" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                            min-width="92" variant="outlined" rounded @click="initializeRanges1('', 'narrow')">
+                            Narrow Range
+                          </v-btn>
 
-                            <v-btn
-                              class="text-none"
-                              :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                              min-width="92"
-                              variant="outlined"
-                              rounded
-                              @click="initializeRanges('','conservative')"
-                            >
-                              Wide range
-                            </v-btn>
-                          </div>
+                          <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                            min-width="92" variant="outlined" rounded @click="initializeRanges1('', 'conservative')">
+                            Wide range
+                          </v-btn>
                         </div>
-                      </v-col>
+                      </div>
+                    </v-col>
 
-                      <!-- Second Column -->
-                      <v-col cols="4">
-                        <div class="calc-other-text">Composition</div>
-                        <v-card class="pa-5 mb-4 " elevation="0" :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
+                    <!-- Second Column -->
+                    <v-col cols="4">
+                      <div class="calc-other-text">Composition</div>
+                      <v-card class="pa-5 mb-4 " elevation="0"
+                        :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
+                        <div class="d-flex flex-column">
                           <div class="d-flex flex-column">
-                            <div class="d-flex flex-column">
-                                <div class="d-flex">
-                                  <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{ poolDetailsPeriods[0].BaseToken }}: </span>
-                                  <span class="highlight ml-1">   {{ xPercentage.toFixed(2) }} %</span>
-                                </div>
-                              <div class="composition-token">{{ xTokens }} tokens</div>
+                            <div class="d-flex">
+                              <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
+                                poolDetailsPeriods[0].BaseToken }}: </span>
+                              <span class="highlight ml-1"> {{ xPercentage.toFixed(2) }} %</span>
                             </div>
-                            <div>
-                              <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{ poolDetailsPeriods[0].QuoteToken }}</span>: 
-                              <span class="highlight">
-                                {{ yPercentage.toFixed(2) }} %
-                              </span>
-                            </div>
-                            <div class="y-tokens">{{ yTokens }} tokens</div>
+                            <div class="composition-token">{{ xTokens }} tokens</div>
                           </div>
-                        </v-card>
-                      </v-col>
-                    </v-row>
+                          <div>
+                            <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
+                              poolDetailsPeriods[0].QuoteToken }}</span>:
+                            <span class="highlight">
+                              {{ yPercentage.toFixed(2) }} %
+                            </span>
+                          </div>
+                          <div class="y-tokens">{{ yTokens }} tokens</div>
+                        </div>
+                      </v-card>
+                    </v-col>
+                  </v-row>
                 </div>
 
                 <v-row class="justify-space-between mb-5 mr-10 align-center">
@@ -829,13 +633,8 @@
 
                   <!-- Second Column: Run Back Test Button -->
                   <v-col cols="6" class="d-flex justify-start">
-                    <v-btn
-                      class="text-none ml-4 run-text"
-                      color="medium-emphasis"
-                      min-width="92"
-                      rounded
-                      @click="backTester('future')"
-                    >
+                    <v-btn class="text-none ml-4 run-text" color="medium-emphasis" min-width="92" rounded
+                      @click="backTester('future')">
                       Run Back Test
                       <v-icon class="ml-2 gap-cls">mdi-arrow-right</v-icon>
                     </v-btn>
@@ -847,24 +646,31 @@
                   Back Test Results
                 </div>
                 <div class="d-flex flex-column">
-                  <v-card class="pa-5 mb-4 " elevation="0" :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
+                  <v-card class="pa-5 mb-4 " elevation="0"
+                    :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
                     <v-row cols="3">
                       <v-col>
                         <div>
                           <div class="result-text-right">Generated Fees (est)</div>
-                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">{{ formatMoney(estimatedFees) }}</div>
+                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
+                            {{
+                              formatMoney(estimatedFees) }}</div>
                         </div>
                       </v-col>
                       <v-col>
                         <div>
                           <div class="result-text-right">Time In Range (%)</div>
-                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">{{ inRangePercentaje.toFixed(2) + ' %' }}</div>
+                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
+                            {{
+                              inRangePercentaje.toFixed(2) + ' %' }}</div>
                         </div>
                       </v-col>
                       <v-col>
                         <div>
                           <div class="result-text-right">Estimated APR (%)</div>
-                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">{{ estimatedAPR.toFixed(2) + ' %' }}</div>
+                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
+                            {{
+                              estimatedAPR.toFixed(2) + ' %' }}</div>
                         </div>
                       </v-col>
                     </v-row>
@@ -891,7 +697,7 @@ import apiClient from '@/utils/axios';
 import { getMean, getStandardDeviation, formatNumber } from '@/utils/common';
 import { formatMoney } from '@/utils/formatMoney.js';
 import { useDateFormat } from '@/utils/composables/useDateFormat';
-import {DATA_PERIOD_GRAPH, MONTH_NAMES } from '@/constant/index.js';
+import { DATA_PERIOD_GRAPH, MONTH_NAMES } from '@/constant/index.js';
 import millify from "millify";
 
 const theme = useTheme();
@@ -900,14 +706,14 @@ const liquidityValue = ref(1000);
 const seletedDuration = ref('7');
 const dataPeriod = DATA_PERIOD_GRAPH;
 const tabs = [{
-    title : 'All Transactions',
-    value: '0'
+  title: 'All Transactions',
+  value: '0'
 }, {
-    title: 'APR Calculator',
-    value: '1'
+  title: 'APR Calculator',
+  value: '1'
 }, {
-    title: 'Future Calculator',
-    value: '2'
+  title: 'Future Calculator',
+  value: '2'
 }];
 // Access the current route
 const route = useRoute()
@@ -930,7 +736,7 @@ const mySigma = ref(0);
 
 const myMinRange = ref(0);
 const myMaxRange = ref(0);
-const tikFactor =  ref(1.0001);
+const tikFactor = ref(1.0001);
 const invertedPrices = ref(false);
 
 var xPercentage = ref(0);
@@ -977,60 +783,60 @@ const { formatDateTime } = useDateFormat();
 const correlation1 = 0;
 /** Methods */
 const setValues = () => {
-    let minPrice=0;
-    let maxPrice=0;
-    let counter=0;
-    let nativePriceArray=[];
-    let standardDev=0;
-    let meanValue=0;
-    weeklyAvgLiquidity.value = 0;
-    weeklyAvgAPR.value = 0;
-    weeklyVolume.value = 0;
-    weeklyFees.value = 0;
-    filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
-        if (counter === 0) {
-            minPrice = element.priceNative;
-            maxPrice = element.priceNative;
-        }
-        else {
-            if (element.priceNative < minPrice) {
-                minPrice = element.priceNative;
-            }
-            if (element.priceNative > maxPrice) {
-                maxPrice = element.priceNative;
-            }
-        }
-        
-        weeklyAvgLiquidity.value += element.Liquidity;
-        weeklyVolume.value += element.Volume/3;
-        weeklyFees.value += element.fees;
-        if (typeof(element.priceNative) !== "undefined" ) {
-            nativePriceArray.push(Number.parseFloat(element.priceNative));
-        }
-        counter++;
-    });
-    myFeeTier.value = poolDetailsPeriods.value[0].feeTier;
-    
-    if(myFeeTier.value !== 0) {
-        myFeeDelta.value = myFeeTier.value*2/100;
-    } else {
-        myFeeDelta.value = 200;
+  let minPrice = 0;
+  let maxPrice = 0;
+  let counter = 0;
+  let nativePriceArray = [];
+  let standardDev = 0;
+  let meanValue = 0;
+  weeklyAvgLiquidity.value = 0;
+  weeklyAvgAPR.value = 0;
+  weeklyVolume.value = 0;
+  weeklyFees.value = 0;
+  filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
+    if (counter === 0) {
+      minPrice = element.priceNative;
+      maxPrice = element.priceNative;
     }
-    weeklyAvgAPR.value = (weeklyVolume.value * poolDetailsPeriods.value[0].feeTier * 365) / (10000 * weeklyAvgLiquidity.value);
-    weeklyAvgLiquidity.value /= counter;
-    absoluteVolatility.value = (100 *  maxPrice / minPrice) - 100;
-    mySigma.value = standardDev = getStandardDeviation(nativePriceArray);
-    myMeanPrice.value = meanValue = getMean(nativePriceArray);
-    weeklyVolatility.value = meanValue !== 0 ? ( (standardDev * 100) / meanValue) : "N/A";
-    initializeRanges(1, 'narrow');
-    correlationEstimator.value = (correlationEstimator1(poolDetailsPeriods.value, seletedDuration.value) * 100).toFixed(2);
+    else {
+      if (element.priceNative < minPrice) {
+        minPrice = element.priceNative;
+      }
+      if (element.priceNative > maxPrice) {
+        maxPrice = element.priceNative;
+      }
+    }
 
-    console.log(correlationEstimator.value);
+    weeklyAvgLiquidity.value += element.Liquidity;
+    weeklyVolume.value += element.Volume / 3;
+    weeklyFees.value += element.fees;
+    if (typeof (element.priceNative) !== "undefined") {
+      nativePriceArray.push(Number.parseFloat(element.priceNative));
+    }
+    counter++;
+  });
+  myFeeTier.value = poolDetailsPeriods.value[0].feeTier;
+
+  if (myFeeTier.value !== 0) {
+    myFeeDelta.value = myFeeTier.value * 2 / 100;
+  } else {
+    myFeeDelta.value = 200;
+  }
+  weeklyAvgAPR.value = (weeklyVolume.value * poolDetailsPeriods.value[0].feeTier * 365) / (10000 * weeklyAvgLiquidity.value);
+  weeklyAvgLiquidity.value /= counter;
+  absoluteVolatility.value = (100 * maxPrice / minPrice) - 100;
+  mySigma.value = standardDev = getStandardDeviation(nativePriceArray);
+  myMeanPrice.value = meanValue = getMean(nativePriceArray);
+  weeklyVolatility.value = meanValue !== 0 ? ((standardDev * 100) / meanValue) : "N/A";
+  initializeRanges(1, 'narrow');
+  correlationEstimator.value = (correlationEstimator1(poolDetailsPeriods.value, seletedDuration.value) * 100).toFixed(2);
+
+  console.log(correlationEstimator.value);
 };
-const correlationEstimator = async(data,days ) => {
+const correlationEstimator = async (data, days) => {
   // Check if the input data is valid
   if (!Array.isArray(data) || data.length === 0 || days <= 0) {
-      throw new Error("Invalid data or number of days");
+    throw new Error("Invalid data or number of days");
   }
 
   const getBestCorrelation = (item) => {
@@ -1064,9 +870,9 @@ const correlationEstimator = async(data,days ) => {
   const token2Values = [];
 
   for (let i = 0; i < Math.min(data.length, numSamples); i++) {
-      const sample = data[i];
-      token1Values.push(Number(sample.priceUsd)); // Assuming token1USD is the USD value for Token1
-      token2Values.push(Number(sample.priceUsd/sample.priceNative)); // Assuming token1InToken2 is the price of Token1 in terms of Token2
+    const sample = data[i];
+    token1Values.push(Number(sample.priceUsd)); // Assuming token1USD is the USD value for Token1
+    token2Values.push(Number(sample.priceUsd / sample.priceNative)); // Assuming token1InToken2 is the price of Token1 in terms of Token2
   }
 
   // Calculate means
@@ -1079,18 +885,18 @@ const correlationEstimator = async(data,days ) => {
   let denominatorToken2 = 0;
 
   for (let i = 0; i < token1Values.length; i++) {
-      const diffToken1 = token1Values[i] - meanToken1;
-      const diffToken2 = token2Values[i] - meanToken2;
+    const diffToken1 = token1Values[i] - meanToken1;
+    const diffToken2 = token2Values[i] - meanToken2;
 
-      numerator += diffToken1 * diffToken2;
-      denominatorToken1 += diffToken1 ** 2;
-      denominatorToken2 += diffToken2 ** 2;
+    numerator += diffToken1 * diffToken2;
+    denominatorToken1 += diffToken1 ** 2;
+    denominatorToken2 += diffToken2 ** 2;
   }
 
 
   // Edge case for two stable tokens
   if (denominatorToken1 === 0 || denominatorToken2 === 0 || numerator === 0) {
-      return 1;
+    return 1;
   }
 
   // Calculate the correlation coefficient
@@ -1102,10 +908,10 @@ const correlationEstimator = async(data,days ) => {
 
 };
 
-const correlationEstimator1 = (data,days ) => {
+const correlationEstimator1 = (data, days) => {
   // Check if the input data is valid
   if (!Array.isArray(data) || data.length === 0 || days <= 0) {
-      throw new Error("Invalid data or number of days");
+    throw new Error("Invalid data or number of days");
   }
 
   // Calculate the total number of samples based on days and samples per day
@@ -1116,9 +922,9 @@ const correlationEstimator1 = (data,days ) => {
   const token2Values = [];
 
   for (let i = 0; i < Math.min(data.length, numSamples); i++) {
-      const sample = data[i];
-      token1Values.push(Number(sample.priceUsd)); // Assuming token1USD is the USD value for Token1
-      token2Values.push(Number(sample.priceUsd/sample.priceNative)); // Assuming token1InToken2 is the price of Token1 in terms of Token2
+    const sample = data[i];
+    token1Values.push(Number(sample.priceUsd)); // Assuming token1USD is the USD value for Token1
+    token2Values.push(Number(sample.priceUsd / sample.priceNative)); // Assuming token1InToken2 is the price of Token1 in terms of Token2
   }
 
   // Calculate means
@@ -1131,18 +937,18 @@ const correlationEstimator1 = (data,days ) => {
   let denominatorToken2 = 0;
 
   for (let i = 0; i < token1Values.length; i++) {
-      const diffToken1 = token1Values[i] - meanToken1;
-      const diffToken2 = token2Values[i] - meanToken2;
+    const diffToken1 = token1Values[i] - meanToken1;
+    const diffToken2 = token2Values[i] - meanToken2;
 
-      numerator += diffToken1 * diffToken2;
-      denominatorToken1 += diffToken1 ** 2;
-      denominatorToken2 += diffToken2 ** 2;
+    numerator += diffToken1 * diffToken2;
+    denominatorToken1 += diffToken1 ** 2;
+    denominatorToken2 += diffToken2 ** 2;
   }
 
 
   // Edge case for two stable tokens
   if (denominatorToken1 === 0 || denominatorToken2 === 0 || numerator === 0) {
-      return 1;
+    return 1;
   }
 
   // Calculate the correlation coefficient
@@ -1165,138 +971,164 @@ const fetchData = async () => {
   }
 };
 
-const initializeRanges = (which, mode) => {
-    let highMultiplier = 0;
-    let lowMultiplier = 0;
+const initializeRanges1 = (which, mode) => {
+  let highMultiplier = 0;
+  let lowMultiplier = 0;
 
-    if (which === 'current') {
-        switch (mode) {
-            case 'aggressive':
-                highMultiplier = 0.75;
-                lowMultiplier = 0.75;
-                myMinRange.value = Number.parseFloat(currentPriceNativeX.value) - Number.parseFloat(mySigma.value) * lowMultiplier;
-                myMaxRange.value = Number.parseFloat(currentPriceNativeX.value) + Number.parseFloat(mySigma.value) * highMultiplier;
-                break;
-            case 'neutral':
-                highMultiplier = 2.5;
-                lowMultiplier = 1.5;
-                if (currentPriceNativeX.value >= myMeanPrice.value) {
-                    myMinRange.value = Number.parseFloat(myMeanPrice.value) - Number.parseFloat(mySigma.value) * lowMultiplier;
-                    myMaxRange.value = Number.parseFloat(currentPriceNativeX.value) + Number.parseFloat(mySigma.value) * highMultiplier;
-                } else {
-                    myMinRange.value = Number.parseFloat(currentPriceNativeX.value) - Number.parseFloat(mySigma.value) * highMultiplier;
-                    myMaxRange.value = Number.parseFloat(myMeanPrice.value) + Number.parseFloat(mySigma.value) * lowMultiplier;
-                }
-                break;
-            case 'wide-short':
-                highMultiplier = 1.5;
-                lowMultiplier = 3.5;
-                myMinRange.value = Number.parseFloat(currentPriceNativeX.value) - Number.parseFloat(mySigma.value) * lowMultiplier;
-                myMaxRange.value = Number.parseFloat(currentPriceNativeX.value) + Number.parseFloat(mySigma.value) * highMultiplier;
-                break;
-            case 'wide-long':
-                highMultiplier = 3.5;
-                lowMultiplier = 1.5;
-                myMinRange.value = Number.parseFloat(currentPriceNativeX.value) - Number.parseFloat(mySigma.value) * lowMultiplier;
-                myMaxRange.value = Number.parseFloat(currentPriceNativeX.value) + Number.parseFloat(mySigma.value) * highMultiplier;
-                break;
+  if (which === 'current') {
+    switch (mode) {
+      case 'aggressive':
+        highMultiplier = 0.75;
+        lowMultiplier = 0.75;
+        myMinRange.value = Number.parseFloat(currentPriceNativeX.value) - Number.parseFloat(mySigma.value) * lowMultiplier;
+        myMaxRange.value = Number.parseFloat(currentPriceNativeX.value) + Number.parseFloat(mySigma.value) * highMultiplier;
+        break;
+      case 'neutral':
+        highMultiplier = 2.5;
+        lowMultiplier = 1.5;
+        if (currentPriceNativeX.value >= myMeanPrice.value) {
+          myMinRange.value = Number.parseFloat(myMeanPrice.value) - Number.parseFloat(mySigma.value) * lowMultiplier;
+          myMaxRange.value = Number.parseFloat(currentPriceNativeX.value) + Number.parseFloat(mySigma.value) * highMultiplier;
+        } else {
+          myMinRange.value = Number.parseFloat(currentPriceNativeX.value) - Number.parseFloat(mySigma.value) * highMultiplier;
+          myMaxRange.value = Number.parseFloat(myMeanPrice.value) + Number.parseFloat(mySigma.value) * lowMultiplier;
         }
-
-        if (invertedPricesFlag.value) {
-            const actualMinRange = 1 / myMaxRange.value;
-            const actualMaxRange = 1 / myMinRange.value;
-            myMinRange.value = actualMinRange;
-            myMaxRange.value = actualMaxRange;
-        }
-
-        // Execute the methods with promises to ensure all operations complete
-        const promise1 = new Promise((resolve) => {
-            findClosestTik('min');
-            resolve();
-        });
-        const promise2 = new Promise((resolve) => {
-            findClosestTik('max');
-            resolve();
-        });
-        const promise3 = new Promise((resolve) => {
-            const liqObjCurrent = calculateAssetBalances(myMinRange.value, myMaxRange.value, currentPriceNativeX.value, currentPriceNativeX.value, true);
-            xTokens.value = Number.parseFloat(liqObjCurrent.xQty);
-            yTokens.value = Number.parseFloat(liqObjCurrent.yQty);
-            xPercentage.value = Number.parseFloat(liqObjCurrent.XPct);
-            yPercentage.value = Number.parseFloat(liqObjCurrent.YPct);
-            resolve();
-        });
-
-        Promise.all([promise1, promise2, promise3]).then(() => {
-            console.log('Promise all resolved for current range');
-        });
-    } else {
-        let actualFuturePrice = Number.parseFloat(myFuturePrice.value);
-        let actualMinRange = Number.parseFloat(myMinRange.value);
-        let actualMaxRange = Number.parseFloat(myMaxRange.value);
-
-        if (invertedPricesFlag.value) {
-            actualFuturePrice = 1 / Number.parseFloat(myFuturePrice.value);
-            actualMinRange = 1 / Number.parseFloat(myMaxRange.value);
-            actualMaxRange = 1 / Number.parseFloat(myMinRange.value);
-        }
-
-        switch (mode) {
-            case 'aggressive':
-                highMultiplier = 0.75;
-                lowMultiplier = 0.75;
-                if (actualFuturePrice > actualMaxRange) {
-                    myFutureMaxRange.value = Number.parseFloat(actualFuturePrice) + Number.parseFloat(mySigma.value) * highMultiplier;
-                    myFutureMinRange.value = (Number.parseFloat(actualMinRange) * Number.parseFloat(actualMaxRange)) / myFutureMaxRange.value;
-                } else {
-                    myFutureMinRange.value = Number.parseFloat(actualFuturePrice) - Number.parseFloat(mySigma.value) * lowMultiplier;
-                    myFutureMaxRange.value = (Number.parseFloat(actualMinRange) * Number.parseFloat(actualMaxRange)) / myFutureMinRange.value;
-                }
-                break;
-            case 'neutral':
-                highMultiplier = 2.5;
-                lowMultiplier = 1.5;
-                if (actualFuturePrice > actualMaxRange) {
-                    myFutureMaxRange.value = Number.parseFloat(actualFuturePrice) + Number.parseFloat(mySigma.value) * highMultiplier;
-                    myFutureMinRange.value = (Number.parseFloat(actualMinRange) * Number.parseFloat(actualMaxRange)) / myFutureMaxRange.value;
-                } else {
-                    myFutureMinRange.value = Number.parseFloat(actualFuturePrice) - Number.parseFloat(mySigma.value) * lowMultiplier;
-                    myFutureMaxRange.value = (Number.parseFloat(actualMinRange) * Number.parseFloat(actualMaxRange)) / myFutureMinRange.value;
-                }
-                break;
-        }
-
-        if (invertedPricesFlag.value) {
-            const actualFutureMinRange = 1 / myFutureMaxRange.value;
-            const actualFutureMaxRange = 1 / myFutureMinRange.value;
-            myFutureMaxRange.value = actualFutureMaxRange;
-            myFutureMinRange.value = actualFutureMinRange;
-        }
-
-        // Execute the methods with promises
-        const promise1 = new Promise((resolve) => {
-            findClosestTik('minFuture');
-            resolve();
-        });
-        const promise2 = new Promise((resolve) => {
-            findClosestTik('maxFuture');
-            resolve();
-        });
-        const promise3 = new Promise((resolve) => {
-            if (myFutureMaxRange.value !== 0) {
-                const liqObjFuture = calculateAssetBalances(myFutureMinRange.value, myFutureMaxRange.value, myFuturePrice.value, myFuturePrice.value, true);
-                xtokensFuture.value = Number.parseFloat(liqObjFuture.xQty);
-                ytokensFuture.value = Number.parseFloat(liqObjFuture.yQty);
-                this.xPercentageFuture.value = Number.parseFloat(liqObjFuture.XPct);
-                this.yPercentageFuture.value = Number.parseFloat(liqObjFuture.YPct);
-            }
-            resolve();
-        });
-
-        Promise.all([promise1, promise2, promise3]).then(() => {
-            console.log('Promise all resolved for future range');
-        });
+        break;
+      case 'wide-short':
+        highMultiplier = 1.5;
+        lowMultiplier = 3.5;
+        myMinRange.value = Number.parseFloat(currentPriceNativeX.value) - Number.parseFloat(mySigma.value) * lowMultiplier;
+        myMaxRange.value = Number.parseFloat(currentPriceNativeX.value) + Number.parseFloat(mySigma.value) * highMultiplier;
+        break;
+      case 'wide-long':
+        highMultiplier = 3.5;
+        lowMultiplier = 1.5;
+        myMinRange.value = Number.parseFloat(currentPriceNativeX.value) - Number.parseFloat(mySigma.value) * lowMultiplier;
+        myMaxRange.value = Number.parseFloat(currentPriceNativeX.value) + Number.parseFloat(mySigma.value) * highMultiplier;
+        break;
     }
+
+    if (invertedPricesFlag.value) {
+      const actualMinRange = 1 / myMaxRange.value;
+      const actualMaxRange = 1 / myMinRange.value;
+      myMinRange.value = actualMinRange;
+      myMaxRange.value = actualMaxRange;
+    }
+
+    // Execute the methods with promises to ensure all operations complete
+    const promise1 = new Promise((resolve) => {
+      findClosestTik('min');
+      resolve();
+    });
+    const promise2 = new Promise((resolve) => {
+      findClosestTik('max');
+      resolve();
+    });
+    const promise3 = new Promise((resolve) => {
+      const liqObjCurrent = calculateAssetBalances(myMinRange.value, myMaxRange.value, currentPriceNativeX.value, currentPriceNativeX.value, true);
+      xTokens.value = Number.parseFloat(liqObjCurrent.xQty);
+      yTokens.value = Number.parseFloat(liqObjCurrent.yQty);
+      xPercentage.value = Number.parseFloat(liqObjCurrent.XPct);
+      yPercentage.value = Number.parseFloat(liqObjCurrent.YPct);
+      resolve();
+    });
+
+    Promise.all([promise1, promise2, promise3]).then(() => {
+      console.log('Promise all resolved for current range');
+    });
+  } else {
+    let actualFuturePrice = Number.parseFloat(myFuturePrice.value);
+    let actualMinRange = Number.parseFloat(myMinRange.value);
+    let actualMaxRange = Number.parseFloat(myMaxRange.value);
+
+    if (invertedPricesFlag.value) {
+      actualFuturePrice = 1 / Number.parseFloat(myFuturePrice.value);
+      actualMinRange = 1 / Number.parseFloat(myMaxRange.value);
+      actualMaxRange = 1 / Number.parseFloat(myMinRange.value);
+    }
+
+    switch (mode) {
+      case 'aggressive':
+        highMultiplier = 0.75;
+        lowMultiplier = 0.75;
+        if (actualFuturePrice > actualMaxRange) {
+          myFutureMaxRange.value = Number.parseFloat(actualFuturePrice) + Number.parseFloat(mySigma.value) * highMultiplier;
+          myFutureMinRange.value = (Number.parseFloat(actualMinRange) * Number.parseFloat(actualMaxRange)) / myFutureMaxRange.value;
+        } else {
+          myFutureMinRange.value = Number.parseFloat(actualFuturePrice) - Number.parseFloat(mySigma.value) * lowMultiplier;
+          myFutureMaxRange.value = (Number.parseFloat(actualMinRange) * Number.parseFloat(actualMaxRange)) / myFutureMinRange.value;
+        }
+        break;
+      case 'neutral':
+        highMultiplier = 2.5;
+        lowMultiplier = 1.5;
+        if (actualFuturePrice > actualMaxRange) {
+          myFutureMaxRange.value = Number.parseFloat(actualFuturePrice) + Number.parseFloat(mySigma.value) * highMultiplier;
+          myFutureMinRange.value = (Number.parseFloat(actualMinRange) * Number.parseFloat(actualMaxRange)) / myFutureMaxRange.value;
+        } else {
+          myFutureMinRange.value = Number.parseFloat(actualFuturePrice) - Number.parseFloat(mySigma.value) * lowMultiplier;
+          myFutureMaxRange.value = (Number.parseFloat(actualMinRange) * Number.parseFloat(actualMaxRange)) / myFutureMinRange.value;
+        }
+        break;
+    }
+
+    if (invertedPricesFlag.value) {
+      const actualFutureMinRange = 1 / myFutureMaxRange.value;
+      const actualFutureMaxRange = 1 / myFutureMinRange.value;
+      myFutureMaxRange.value = actualFutureMaxRange;
+      myFutureMinRange.value = actualFutureMinRange;
+    }
+
+    // Execute the methods with promises
+    const promise1 = new Promise((resolve) => {
+      findClosestTik('minFuture');
+      resolve();
+    });
+    const promise2 = new Promise((resolve) => {
+      findClosestTik('maxFuture');
+      resolve();
+    });
+    const promise3 = new Promise((resolve) => {
+      if (myFutureMaxRange.value !== 0) {
+        const liqObjFuture = calculateAssetBalances(myFutureMinRange.value, myFutureMaxRange.value, myFuturePrice.value, myFuturePrice.value, true);
+        xtokensFuture.value = Number.parseFloat(liqObjFuture.xQty);
+        ytokensFuture.value = Number.parseFloat(liqObjFuture.yQty);
+        this.xPercentageFuture.value = Number.parseFloat(liqObjFuture.XPct);
+        this.yPercentageFuture.value = Number.parseFloat(liqObjFuture.YPct);
+      }
+      resolve();
+    });
+
+    Promise.all([promise1, promise2, promise3]).then(() => {
+      console.log('Promise all resolved for future range');
+    });
+  }
+};
+
+const initializeRanges = (mode) => {
+  let highMultiplier = 0;
+  let lowMultiplier = 0;
+
+  if (mode === 'narrow') {
+    highMultiplier = 0.75;
+    lowMultiplier = 0.75;
+  } else if (mode === 'market') {
+    highMultiplier = 2.5;
+    lowMultiplier = 1.5;
+  } else if (mode === 'wide-short') {
+    highMultiplier = 1.5;
+    lowMultiplier = 3.5;
+  } else if (mode === 'wide-long') {
+    highMultiplier = 3.5;
+    lowMultiplier = 1.5;
+  }
+
+  myMinRange.value = Number.parseFloat(poolDetailsPrice.value.priceNative) - Number.parseFloat(mySigma.value) * lowMultiplier;
+  myMaxRange.value = Number.parseFloat(poolDetailsPrice.value.priceNative) + Number.parseFloat(mySigma.value) * highMultiplier;
+
+  findClosestTik('min');
+  findClosestTik('max');
+  calculateTokensRatio();
 };
 
 
@@ -1332,41 +1164,41 @@ const handleInvertPrices = () => {
 };
 
 const handleTabClick = (value) => {
-  if(value == 1) {
-    initializeRanges('', 'narrow');
+  if (value == 1) {
+    initializeRanges('narrow');
   }
 }
 
 
 const handleAppendInner = (type) => {
-  shiftTik(type,1);
+  shiftTik(type, 1);
 }
 
 const handlePrependInner = (type) => {
-  shiftTik(type,-1);
+  shiftTik(type, -1);
 }
 
 const shiftTik = (which, step) => {
-  let currentTik=0;
+  let currentTik = 0;
   currentTik = findClosestTik(which);
   currentTik += step;
-  if (which==='min') {
-     myMinRange.value = formatNumber(setPriceFromtik(currentTik));
+  if (which === 'min') {
+    myMinRange.value = formatNumber(setPriceFromtik(currentTik));
   }
   else {
-      myMaxRange.value = formatNumber(setPriceFromtik(currentTik));
+    myMaxRange.value = formatNumber(setPriceFromtik(currentTik));
   }
   calculateTokensRatio();
 }
 
 const refreshTokensDistribution = () => {
-    let liqObjCurrent=this.calculateAssetBalances(myMinRange.value,myMaxRange.value,poolDetailsPrice.value.priceNative,poolDetailsPrice.value.priceNative,true);
-        
-        xTokens.value=Number.parseFloat(liqObjCurrent.xQty); //* this.myLiquidity/1000;
-        yTokens.value=Number.parseFloat(liqObjCurrent.yQty); //* this.myLiquidity/1000;  
+  let liqObjCurrent = this.calculateAssetBalances(myMinRange.value, myMaxRange.value, poolDetailsPrice.value.priceNative, poolDetailsPrice.value.priceNative, true);
 
-        xPercentage.value=Number.parseFloat(liqObjCurrent.XPct);
-        yPercentage.value=Number.parseFloat(liqObjCurrent.YPct);
+  xTokens.value = Number.parseFloat(liqObjCurrent.xQty); //* this.myLiquidity/1000;
+  yTokens.value = Number.parseFloat(liqObjCurrent.yQty); //* this.myLiquidity/1000;
+
+  xPercentage.value = Number.parseFloat(liqObjCurrent.XPct);
+  yPercentage.value = Number.parseFloat(liqObjCurrent.YPct);
 };
 
 const backTester = (which) => {
@@ -1384,14 +1216,14 @@ const backTester = (which) => {
   //     actualMaxRange = 1 / myMinRange.value;
   // }
 
-  if (which==='current') {
-    actualMinRange=myMinRange.value;
-    actualMaxRange=myMaxRange.value;
+  if (which === 'current') {
+    actualMinRange = myMinRange.value;
+    actualMaxRange = myMaxRange.value;
     if (invertedPrices.value) {
       actualMinRange = 1 / myMaxRange.value;
       actualMaxRange = 1 / myMinRange.value;
     }
-  } else if (which==='future') {
+  } else if (which === 'future') {
     // actualMinRange=this.myFutureMinRange;
     // actualMaxRange=this.myFutureMaxRange;
     // if (this.invertedPricesFlag) {
@@ -1400,116 +1232,116 @@ const backTester = (which) => {
     // }
   }
 
-  let stdDevs = Number.parseFloat(actualMaxRange-actualMinRange) / Number.parseFloat(mySigma.value);
+  let stdDevs = Number.parseFloat(actualMaxRange - actualMinRange) / Number.parseFloat(mySigma.value);
   let FeesWeight = 1;
   if (stdDevs <= 2) {
-      FeesWeight = 1;
-  } else if(stdDevs > 2 && stdDevs <= 3) {
-      const x1 = 2;
-      const y1 = 1;
-      const x2 = 3;
-      const y2 = 0.81;
-      const m = (y2 - y1) / (x2 - x1);
-      const b = y1 - m * x1;
-      const x = 2;
-      const y = m * x + b;
-      FeesWeight = m * stdDevs + b;
-  } else if(stdDevs >3 && stdDevs <=4) {
-      const x1 = 3;
-      const y1 = 0.81;
-      const x2 = 4;
-      const y2 = 0.68;
-      const m = (y2 - y1) / (x2 - x1);
-      const b = y1 - m * x1;
-      const x = 2;
-      const y = m * x + b;
-      FeesWeight = m * stdDevs + b;
-  } else if(stdDevs >4 && stdDevs <=6) {
-      const x1 = 4;
-      const y1 = 0.68;
-      const x2 = 6;
-      const y2 = 0.5;
-      const m = (y2 - y1) / (x2 - x1);
-      const b = y1 - m * x1;
-      const x = 2;
-      const y = m * x + b;
-      FeesWeight = m * stdDevs + b;
-  } else if (stdDevs >6 && stdDevs <=20) {
-      const x1 = 6;
-      const y1 = 0.5;
-      const x2 = 20;
-      const y2 = 0.1;
-      const m = (y2 - y1) / (x2 - x1);
-      const b = y1 - m * x1;
-      const x = 2;
-      const y = m * x + b;        
-      FeesWeight = m * stdDevs + b;
+    FeesWeight = 1;
+  } else if (stdDevs > 2 && stdDevs <= 3) {
+    const x1 = 2;
+    const y1 = 1;
+    const x2 = 3;
+    const y2 = 0.81;
+    const m = (y2 - y1) / (x2 - x1);
+    const b = y1 - m * x1;
+    const x = 2;
+    const y = m * x + b;
+    FeesWeight = m * stdDevs + b;
+  } else if (stdDevs > 3 && stdDevs <= 4) {
+    const x1 = 3;
+    const y1 = 0.81;
+    const x2 = 4;
+    const y2 = 0.68;
+    const m = (y2 - y1) / (x2 - x1);
+    const b = y1 - m * x1;
+    const x = 2;
+    const y = m * x + b;
+    FeesWeight = m * stdDevs + b;
+  } else if (stdDevs > 4 && stdDevs <= 6) {
+    const x1 = 4;
+    const y1 = 0.68;
+    const x2 = 6;
+    const y2 = 0.5;
+    const m = (y2 - y1) / (x2 - x1);
+    const b = y1 - m * x1;
+    const x = 2;
+    const y = m * x + b;
+    FeesWeight = m * stdDevs + b;
+  } else if (stdDevs > 6 && stdDevs <= 20) {
+    const x1 = 6;
+    const y1 = 0.5;
+    const x2 = 20;
+    const y2 = 0.1;
+    const m = (y2 - y1) / (x2 - x1);
+    const b = y1 - m * x1;
+    const x = 2;
+    const y = m * x + b;
+    FeesWeight = m * stdDevs + b;
   } else {
-      const x1 = 20;
-      const y1 = 0.1;
-      const x2 = 100;
-      const y2 = 0.05;
-      const m = (y2 - y1) / (x2 - x1);
-      const b = y1 - m * x1;
-      const x = 2;
-      const y = m * x + b;      
-      FeesWeight = m * stdDevs + b;
+    const x1 = 20;
+    const y1 = 0.1;
+    const x2 = 100;
+    const y2 = 0.05;
+    const m = (y2 - y1) / (x2 - x1);
+    const b = y1 - m * x1;
+    const x = 2;
+    const y = m * x + b;
+    FeesWeight = m * stdDevs + b;
   }
   const period = 7;
   const averages = [];
   for (let i = period - 1; i < filteredPoolDetailsBasedOnPeriod.value.length; i++) {
-      const volumes = filteredPoolDetailsBasedOnPeriod.value.slice(i - period + 1, i + 1).map(element => element.Volume / 3);
-      const sum = volumes.reduce((acc, volume) => acc + volume, 0);
-      const average = sum / period;
-      averages.push(average);
+    const volumes = filteredPoolDetailsBasedOnPeriod.value.slice(i - period + 1, i + 1).map(element => element.Volume / 3);
+    const sum = volumes.reduce((acc, volume) => acc + volume, 0);
+    const average = sum / period;
+    averages.push(average);
   }
 
   // New code
   const reversedArray = filteredPoolDetailsBasedOnPeriod.value.slice().reverse();
   const initialPrice = reversedArray[0].priceNative;
   // Initial tokens (for hold 50/50)
-  let xHold= Number.parseFloat(500/initialPrice);
-  let yHold= 500;
+  let xHold = Number.parseFloat(500 / initialPrice);
+  let yHold = 500;
   let lHold = xHold * initialPrice + yHold;
   // Let's clean the Back Tester liquidity array
-  backTesterLiquidityArray.value.length=0;
-  xHold=xHold*liquidityValue.value/1000;
-  yHold=yHold*liquidityValue.value/1000;
+  backTesterLiquidityArray.value.length = 0;
+  xHold = xHold * liquidityValue.value / 1000;
+  yHold = yHold * liquidityValue.value / 1000;
 
 
   filteredPoolDetailsBasedOnPeriod.value.forEach(element => {
-      totalPeriods++;
-      // Let's get the calculated liquidity value at this point
-      let liqObject=calculateAssetBalances(actualMinRange, actualMaxRange, initialPrice, element.priceNative ,true, which);
+    totalPeriods++;
+    // Let's get the calculated liquidity value at this point
+    let liqObject = calculateAssetBalances(actualMinRange, actualMaxRange, initialPrice, element.priceNative, true, which);
 
-      if (Number.parseFloat(element.priceNative) >= Number.parseFloat(actualMinRange) &&
-                          Number.parseFloat(element.priceNative) <= Number.parseFloat(actualMaxRange)) {
-          inRangePeriods++;
-          periodFee = liquidityValue.value * Number.parseFloat(FeesWeight) * (element.Volume/3)*
-          (poolDetailsPeriods.value[0].feeTier / 1000000)*(1/(element.Liquidity));
-      } else {
-          periodFee = 0;
-      }
-      totalFees += periodFee;
+    if (Number.parseFloat(element.priceNative) >= Number.parseFloat(actualMinRange) &&
+      Number.parseFloat(element.priceNative) <= Number.parseFloat(actualMaxRange)) {
+      inRangePeriods++;
+      periodFee = liquidityValue.value * Number.parseFloat(FeesWeight) * (element.Volume / 3) *
+        (poolDetailsPeriods.value[0].feeTier / 1000000) * (1 / (element.Liquidity));
+    } else {
+      periodFee = 0;
+    }
+    totalFees += periodFee;
 
-      liqObject.HoldLiquidity=xHold*element.priceNative+yHold;
-      liqObject.TotalValue=liqObject.Liquidity+totalFees;
-      liqObject.periodFee=periodFee;
-      liqObject.dateTime=element.dateTime;
-      backTesterLiquidityArray.value.push(liqObject);
+    liqObject.HoldLiquidity = xHold * element.priceNative + yHold;
+    liqObject.TotalValue = liqObject.Liquidity + totalFees;
+    liqObject.periodFee = periodFee;
+    liqObject.dateTime = element.dateTime;
+    backTesterLiquidityArray.value.push(liqObject);
   });
-  if (which==='current') {
-    inRangePercentaje.value = inRangePeriods*100 / totalPeriods;
+  if (which === 'current') {
+    inRangePercentaje.value = inRangePeriods * 100 / totalPeriods;
     estimatedFees.value = totalFees;
-    estimatedAPR.value = estimatedFees.value * 100 * (365/(totalPeriods/3))*(1/liquidityValue.value);
+    estimatedAPR.value = estimatedFees.value * 100 * (365 / (totalPeriods / 3)) * (1 / liquidityValue.value);
     showBackTestChart();
     console.log("check resp : ", which, inRangePercentaje.value, estimatedFees.value, estimatedAPR.value)
   }
 };
 const megaTest = () => {
-    backTester('current');
+  backTester('current');
 
-    calculateAssetBalances(myMinRange.value,myMaxRange.value,poolDetailsPrice.value.priceNative);
+  calculateAssetBalances(myMinRange.value, myMaxRange.value, poolDetailsPrice.value.priceNative);
 }
 
 const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = 'current') => {
@@ -1802,21 +1634,21 @@ const showLiquidityChart = () => {
       data: chartDataPricesUSD
     },
     {
-        name: 'Hold Pool',
-        data: chartHoldLiquidityInitial,
-      },
-      {
-        name: 'Liquidity with Fees',
-        data: chartLiquidityFees,
-      }
+      name: 'Hold Pool',
+      data: chartHoldLiquidityInitial,
+    },
+    {
+      name: 'Liquidity with Fees',
+      data: chartLiquidityFees,
+    }
   ]
 
   liquididtyChartLabels.value = chartLabels
   liquidityChartRender.value++
   console.log("liquidity chart data", liquidityDatasets.value, liquididtyChartLabels.value)
-}  
+}
 
-const showTokensDistributionChart = () =>{
+const showTokensDistributionChart = () => {
   let chartLabels = [];
   let chartTokenX = [];
   let chartTokenY = [];
@@ -1854,7 +1686,7 @@ const showTokensDistributionChart = () =>{
   console.log(" tokenDistribution chart labels new", tokenDistributionDatasets.value, tokenDistributionChartLabels.value)
 }
 
-const showBackTestChart = () =>{
+const showBackTestChart = () => {
   // Bar chart with liquidity and volume
   let chartLabels = [];
   let dailyLiquidity = [];
@@ -1864,7 +1696,7 @@ const showBackTestChart = () =>{
 
   //console.log(`Records to skip is: ${this.recordsToSkipChart}`);
 
-  backTesterLiquidityArray.value.forEach(element =>{
+  backTesterLiquidityArray.value.forEach(element => {
 
     chartLabels.push(element.dateTime.substring(0, 8));
     dailyLiquidity.push(element.Liquidity);
@@ -1872,18 +1704,18 @@ const showBackTestChart = () =>{
     holdLiquidityData.push(element.HoldLiquidity);
 
   });
-  backTesterDatasets.value =  [{
-      name: 'Pool Value',
-        data: dailyLiquidity
-      },
-      {
-        name: 'Pool plus Fees',
-        data: totalLiquidity
-      },
-      {
-        name: 'Hold',
-        data: holdLiquidityData
-      }]
+  backTesterDatasets.value = [{
+    name: 'Pool Value',
+    data: dailyLiquidity
+  },
+  {
+    name: 'Pool plus Fees',
+    data: totalLiquidity
+  },
+  {
+    name: 'Hold',
+    data: holdLiquidityData
+  }]
 
   backTesterChartLabels.value = chartLabels
   backTesterChartRender.value++
@@ -1894,142 +1726,142 @@ const showBackTestChart = () =>{
 
 /** Computed */
 
-  const filteredPoolDetailsBasedOnPeriod = computed(() => {
-      const filterRecords = [...poolDetailsPeriods.value];
-      return filterRecords.slice(0, parseInt(seletedDuration.value) * 3);
-  })
+const filteredPoolDetailsBasedOnPeriod = computed(() => {
+  const filterRecords = [...poolDetailsPeriods.value];
+  return filterRecords.slice(0, parseInt(seletedDuration.value) * 3);
+})
 
-  const darkMode = computed(() => {
-    return theme.global.current.value.dark;
+const darkMode = computed(() => {
+  return theme.global.current.value.dark;
+});
+
+const detailsTable = computed(() => {
+
+  return filteredPoolDetailsBasedOnPeriod.value.map((poolDetailItem) => {
+    return {
+      date: formatDateTime(poolDetailItem.dateTime),
+      apr: poolDetailItem.apr.toFixed(2) != null ? parseFloat(poolDetailItem.apr).toFixed(2) : 0.00,
+      liquidity: formatMoney(poolDetailItem.Liquidity),
+      volume: formatMoney(poolDetailItem.Volume),
+      fees: formatMoney(poolDetailItem.fees),
+      vol_tvl: poolDetailItem.Liquidity != 0 ? ((poolDetailItem.Volume / poolDetailItem.Liquidity).toFixed(2)) : 0.00,
+    }
   });
+});
 
-  const detailsTable = computed(() => {
-    
-      return filteredPoolDetailsBasedOnPeriod.value.map((poolDetailItem) => {
-          return {
-              date : formatDateTime(poolDetailItem.dateTime),
-              apr : poolDetailItem.apr.toFixed(2) != null ? parseFloat(poolDetailItem.apr).toFixed(2) : 0.00,
-              liquidity : formatMoney(poolDetailItem.Liquidity),
-              volume: formatMoney(poolDetailItem.Volume),
-              fees: formatMoney(poolDetailItem.fees),
-              vol_tvl: poolDetailItem.Liquidity !=0 ? ( (poolDetailItem.Volume/poolDetailItem.Liquidity).toFixed(2)) : 0.00,
-          }
-      });
-  });
-
-  const dailyPriceUsdChart = computed(() => {
-      let chartLabels = [];
-      let chartDataPricesUSD = [];
-      let ix = 0;
-      filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
-          ix++;
-          if (ix % 3 == 0) {
-              if (element.priceUsd !=undefined) {
-                  const day = element.dateTime.slice(6, 8);
-                  const month = element.dateTime.slice(4, 6);
-                  chartLabels.push(`${day} ${MONTH_NAMES[month]}`);
-                  chartDataPricesUSD.push(Number(element.priceUsd));
-              }
-          }
-      });
-      return {
-          chartLabels: chartLabels.reverse(),
-          chartDataPricesUSD: chartDataPricesUSD.reverse(),
+const dailyPriceUsdChart = computed(() => {
+  let chartLabels = [];
+  let chartDataPricesUSD = [];
+  let ix = 0;
+  filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
+    ix++;
+    if (ix % 3 == 0) {
+      if (element.priceUsd != undefined) {
+        const day = element.dateTime.slice(6, 8);
+        const month = element.dateTime.slice(4, 6);
+        chartLabels.push(`${day} ${MONTH_NAMES[month]}`);
+        chartDataPricesUSD.push(Number(element.priceUsd));
       }
+    }
   });
+  return {
+    chartLabels: chartLabels.reverse(),
+    chartDataPricesUSD: chartDataPricesUSD.reverse(),
+  }
+});
 
-  const dailyPriceBaseQuote = computed(() => {
-      let chartLabels = [];
-      let chartDataQuotePrices = [];
-      let ix = 0;
-      filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
-          ix++;
-          if (ix % 3 ==0) {
-              if (element.priceUsd !=undefined) {
-                  const day = element.dateTime.slice(6, 8);
-                  const month = element.dateTime.slice(4, 6);
-                  chartLabels.push(`${day} ${MONTH_NAMES[month]}`);
-                  chartDataQuotePrices.push(Number(element.priceNative));
-              }
-          }
-      });
-      return {
-          chartLabels: chartLabels.reverse(),
-          chartDataQuotePrices: chartDataQuotePrices.reverse(),
+const dailyPriceBaseQuote = computed(() => {
+  let chartLabels = [];
+  let chartDataQuotePrices = [];
+  let ix = 0;
+  filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
+    ix++;
+    if (ix % 3 == 0) {
+      if (element.priceUsd != undefined) {
+        const day = element.dateTime.slice(6, 8);
+        const month = element.dateTime.slice(4, 6);
+        chartLabels.push(`${day} ${MONTH_NAMES[month]}`);
+        chartDataQuotePrices.push(Number(element.priceNative));
       }
+    }
   });
+  return {
+    chartLabels: chartLabels.reverse(),
+    chartDataQuotePrices: chartDataQuotePrices.reverse(),
+  }
+});
 
-  const dailyPriceQuoteBase = computed(() => {
-      let chartLabels = [];
-      let chartDataRelativePrices=[];
-      let ix = 0;
-      filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
-          ix++;
-          if (ix % 3 ==0) {
-              if (element.priceUsd !=undefined) {
-                  const day = element.dateTime.slice(6, 8);
-                  const month = element.dateTime.slice(4, 6);
-                  chartLabels.push(`${day} ${MONTH_NAMES[month]}`);
-                  chartDataRelativePrices.push(parseFloat(1/element.priceNative).toFixed(6));
-              }
-          }
-      });
-      return {
-          chartLabels: chartLabels.reverse(),
-          chartDataRelativePrices: chartDataRelativePrices.reverse(),
+const dailyPriceQuoteBase = computed(() => {
+  let chartLabels = [];
+  let chartDataRelativePrices = [];
+  let ix = 0;
+  filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
+    ix++;
+    if (ix % 3 == 0) {
+      if (element.priceUsd != undefined) {
+        const day = element.dateTime.slice(6, 8);
+        const month = element.dateTime.slice(4, 6);
+        chartLabels.push(`${day} ${MONTH_NAMES[month]}`);
+        chartDataRelativePrices.push(parseFloat(1 / element.priceNative).toFixed(6));
       }
+    }
   });
+  return {
+    chartLabels: chartLabels.reverse(),
+    chartDataRelativePrices: chartDataRelativePrices.reverse(),
+  }
+});
 
-  const dailyAprData = computed(() => {
-      let chartLabels = [];
-      let chartDataAPR=[];
-      let ix = 0;
-      filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
-          ix++;
-          if (ix % 3 ==0) {
-              if (element.priceUsd !=undefined) {
-                  const day = element.dateTime.slice(6, 8);
-                  const month = element.dateTime.slice(4, 6);
-                  chartLabels.push(`${day} ${MONTH_NAMES[month]}`);
-                  chartDataAPR.push(parseFloat(element.apr).toFixed(2));
-              }
-          }
-      });
-      return {
-          chartLabels: chartLabels.reverse(),
-          chartDataAPR: chartDataAPR.reverse(),
+const dailyAprData = computed(() => {
+  let chartLabels = [];
+  let chartDataAPR = [];
+  let ix = 0;
+  filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
+    ix++;
+    if (ix % 3 == 0) {
+      if (element.priceUsd != undefined) {
+        const day = element.dateTime.slice(6, 8);
+        const month = element.dateTime.slice(4, 6);
+        chartLabels.push(`${day} ${MONTH_NAMES[month]}`);
+        chartDataAPR.push(parseFloat(element.apr).toFixed(2));
       }
+    }
   });
+  return {
+    chartLabels: chartLabels.reverse(),
+    chartDataAPR: chartDataAPR.reverse(),
+  }
+});
 
-  const dailyVolumeBarData = computed(() => {
-      let chartLabels = [];
-      let chartDataLiquidity=[];
-      let chartDataVolume=[];
+const dailyVolumeBarData = computed(() => {
+  let chartLabels = [];
+  let chartDataLiquidity = [];
+  let chartDataVolume = [];
 
-      let ix = 0;
-      filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
-          ix++;
-          if (ix % 3 ==0) {
-              if (element.priceUsd !=undefined) {
-                  const day = element.dateTime.slice(6, 8);
-                  const month = element.dateTime.slice(4, 6);
-                  chartLabels.push(`${day} ${MONTH_NAMES[month]}`);
-                  chartDataLiquidity.push(element.Liquidity);
-                  chartDataVolume.push(element.Volume);
+  let ix = 0;
+  filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
+    ix++;
+    if (ix % 3 == 0) {
+      if (element.priceUsd != undefined) {
+        const day = element.dateTime.slice(6, 8);
+        const month = element.dateTime.slice(4, 6);
+        chartLabels.push(`${day} ${MONTH_NAMES[month]}`);
+        chartDataLiquidity.push(element.Liquidity);
+        chartDataVolume.push(element.Volume);
 
-              }
-          }
-      });
-      return {
-          chartLabels: chartLabels.reverse(),
-          chartDataLiquidity: chartDataLiquidity.reverse(),
-          chartDataVolume: chartDataVolume.reverse(),
       }
+    }
   });
+  return {
+    chartLabels: chartLabels.reverse(),
+    chartDataLiquidity: chartDataLiquidity.reverse(),
+    chartDataVolume: chartDataVolume.reverse(),
+  }
+});
 
- const displayPrice = computed(() => {
+const displayPrice = computed(() => {
   if (invertedPrices.value) {
-     // return Number.parseFloat(poolDetailsPrice.value.priceNative).toFixed(4);
+    // return Number.parseFloat(poolDetailsPrice.value.priceNative).toFixed(4);
     return (1 / Number.parseFloat(poolDetailsPrice.value.priceNative)).toFixed(7);
   } else {
     return Number.parseFloat(poolDetailsPrice.value.priceNative).toFixed(7);
@@ -2038,16 +1870,16 @@ const showBackTestChart = () =>{
 
 const lowerPercentageRange = computed(() => {
   if (invertedPrices.value) {
-    const actualMinRange = 1/myMaxRange.value;
-    const actualMaxRange = 1/myMinRange.value;
-    myMinRange.value = 1/actualMaxRange;
-    myMaxRange.value = 1/actualMinRange;
+    const actualMinRange = 1 / myMaxRange.value;
+    const actualMaxRange = 1 / myMinRange.value;
+    myMinRange.value = 1 / actualMaxRange;
+    myMaxRange.value = 1 / actualMinRange;
   }
-  return -1*(100-myMinRange.value*100/poolDetailsPrice.value.priceNative);
+  return -1 * (100 - myMinRange.value * 100 / poolDetailsPrice.value.priceNative);
 });
 
 const higherPercentageRange = computed(() => {
-  return -1*(100-myMaxRange.value*100/poolDetailsPrice.value.priceNative);
+  return -1 * (100 - myMaxRange.value * 100 / poolDetailsPrice.value.priceNative);
 });
 
 const myGMValue = computed(() => {
@@ -2056,11 +1888,11 @@ const myGMValue = computed(() => {
 });
 
 const approximateInitialLiquidityUSD = computed(() => {
-  if (Math.abs(poolDetailsPrice.value.priceNative-poolDetailsPrice.value.priceUsd)/poolDetailsPrice.value.priceUsd<0.01) {
-      return this.formatMoney(this.myLiquidity);
+  if (Math.abs(poolDetailsPrice.value.priceNative - poolDetailsPrice.value.priceUsd) / poolDetailsPrice.value.priceUsd < 0.01) {
+    return this.formatMoney(this.myLiquidity);
   }
   else {
-      return this.formatMoney(this.myLiquidity*poolDetailsPrice.value.priceUsd/currentPriceNativeX.value);
+    return this.formatMoney(this.myLiquidity * poolDetailsPrice.value.priceUsd / currentPriceNativeX.value);
   }
 });
 
@@ -2080,7 +1912,6 @@ onMounted(fetchData);
 </script>
 
 <style scoped>
-
 .select-box-light {
   width: 150px !important;
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
@@ -2159,7 +1990,7 @@ onMounted(fetchData);
 .result-ui {
   border-radius: 16px;
   padding: 30px;
-  gap:38px;
+  gap: 38px;
   box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
 }
 
@@ -2175,8 +2006,9 @@ onMounted(fetchData);
 }
 
 .card-space {
-  margin-right: 20px; /* Adjust the value as needed */
-  padding-right:10px;
+  margin-right: 20px;
+  /* Adjust the value as needed */
+  padding-right: 10px;
   box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
   border-radius: 16px;
   /* height: 280px; */
@@ -2196,343 +2028,359 @@ onMounted(fetchData);
 }
 
 .line-chart .series-name {
-position: relative;
-left: -10px; /* Adjust the value as needed */
-font-weight: bold;
-margin-bottom: 10px; /* Add some space below the series name */
+  position: relative;
+  left: -10px;
+  /* Adjust the value as needed */
+  font-weight: bold;
+  margin-bottom: 10px;
+  /* Add some space below the series name */
 }
+
 .text-color {
-color: #bfac62;
+  color: #bfac62;
 }
 
 .main-text {
-display: flex;
-align-items: baseline;
+  display: flex;
+  align-items: baseline;
 }
 
 .label {
-font-weight: bold;
-color: #3d3939;
+  font-weight: bold;
+  color: #3d3939;
 }
 
 .highlight {
-color: #BFAC62;
-font-family: Poppins;
-font-size: 13px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
-text-transform: capitalize;
+  color: #BFAC62;
+  font-family: Poppins;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-transform: capitalize;
 }
 
 .subtext {
-color: #888888;
-font-size: 14px;
+  color: #888888;
+  font-size: 14px;
 }
 
 .run-text {
-background: #BFAB62;
-padding: 16px 30px;
-height: 65px;
-border-radius: 70px;
-font-weight: 700;
-color:#182230 !important;
-font-size: 16px;
-font-family: Poppins;
-letter-spacing: 0px;
+  background: #BFAB62;
+  padding: 16px 30px;
+  height: 65px;
+  border-radius: 70px;
+  font-weight: 700;
+  color: #182230 !important;
+  font-size: 16px;
+  font-family: Poppins;
+  letter-spacing: 0px;
 }
 
 .router-link {
-text-decoration: none;
-color: rgb(var(--v-theme-primaryColor));
+  text-decoration: none;
+  color: rgb(var(--v-theme-primaryColor));
 }
 
 .round-button-light {
-border-radius: 53.078px;
-border: 0.856px solid #BFAC62;
-background: linear-gradient(90deg, rgba(215, 193, 128, 0.20) 0%, rgba(230, 205, 131, 0.20) 18.51%, rgba(241, 214, 133, 0.20) 32.51%, rgba(255, 225, 136, 0.20) 50%, rgba(215, 193, 128, 0.20) 85.01%);
-color: var(--Gray-700, #344054);
-text-align: center;
-font-family: Poppins;
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
+  border-radius: 53.078px;
+  border: 0.856px solid #BFAC62;
+  background: linear-gradient(90deg, rgba(215, 193, 128, 0.20) 0%, rgba(230, 205, 131, 0.20) 18.51%, rgba(241, 214, 133, 0.20) 32.51%, rgba(255, 225, 136, 0.20) 50%, rgba(215, 193, 128, 0.20) 85.01%);
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 }
 
 .round-button-dark {
-border-radius: 53.078px;
-border: 0.856px solid #CFB871;
-background: linear-gradient(90deg, rgba(215, 193, 128, 0.20) 0%, rgba(230, 205, 131, 0.20) 18.51%, rgba(241, 214, 133, 0.20) 32.51%, rgba(255, 225, 136, 0.20) 50%, rgba(215, 193, 128, 0.20) 85.01%);
-color: var(--Gray-25, #FCFCFD);
-text-align: center;
-font-family: Poppins;
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
+  border-radius: 53.078px;
+  border: 0.856px solid #CFB871;
+  background: linear-gradient(90deg, rgba(215, 193, 128, 0.20) 0%, rgba(230, 205, 131, 0.20) 18.51%, rgba(241, 214, 133, 0.20) 32.51%, rgba(255, 225, 136, 0.20) 50%, rgba(215, 193, 128, 0.20) 85.01%);
+  color: var(--Gray-25, #FCFCFD);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 }
 
 .result-card-light {
-border-radius: 8px;
-border: 1px solid rgba(178, 178, 178, 0.20);
-background: var(--Gray-25, #FCFCFD);
-/* margin: 2rem 0rem 2rem 0rem; */
+  border-radius: 8px;
+  border: 1px solid rgba(178, 178, 178, 0.20);
+  background: var(--Gray-25, #FCFCFD);
+  /* margin: 2rem 0rem 2rem 0rem; */
 }
 
 .result-card-dark {
-border-radius: 8px;
-border: 1px solid rgba(178, 178, 178, 0.20);
-background: #1B1F32;
-/* margin: 2rem 0rem 2rem 0rem; */
+  border-radius: 8px;
+  border: 1px solid rgba(178, 178, 178, 0.20);
+  background: #1B1F32;
+  /* margin: 2rem 0rem 2rem 0rem; */
 }
 
 .result-text {
-font-family: Poppins;
-font-size: 20px;
-font-style: normal;
-font-weight: 600;
-line-height: 20px; 
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
 }
 
 .result-text-dark {
-color: #FCFCFD;
+  color: #FCFCFD;
 }
 
 .result-text-light {
-color: #182230;
+  color: #182230;
 }
 
 .result-text-right {
-color: #BFAC62;
-font-family: Poppins;
-font-size: 16px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
-text-transform: capitalize;
+  color: #BFAC62;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-transform: capitalize;
 }
 
 .custom-card-dark-class {
-border-radius: 16px;
-border: 1px solid rgba(255, 255, 255, 0.17);
-background: rgba(255, 255, 255, 0.04);
-backdrop-filter: blur(21px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(21px);
 }
 
 
 
 .label-color {
-color: rgb(var(--v-theme-labelColor));
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
-font-family: Poppins;
+  color: rgb(var(--v-theme-labelColor));
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  font-family: Poppins;
 }
 
 .label-font {
-font-weight: 600;
-font-family: Poppins;
+  font-weight: 600;
+  font-family: Poppins;
 }
 
 .tab-background-light {
-border-radius: 8px;
-background: #fdfdfd4d;;
+  border-radius: 8px;
+  background: #fdfdfd4d;
+  ;
 }
 
 .tab-background-light .active-tab {
-border-radius: 8px !important;
-border: 1px solid var(--Gray-200, #EAECF0);
-background: rgb(15, 35, 87);
-color:#FFF;
-/* Shadows/shadow-sm */
-box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
+  border-radius: 8px !important;
+  border: 1px solid var(--Gray-200, #EAECF0);
+  background: rgb(15, 35, 87);
+  color: #FFF;
+  /* Shadows/shadow-sm */
+  box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
 }
 
 .tab-background-dark {
-border-radius: 8px;
-background: #1F243A;
-color:#FFF;
+  border-radius: 8px;
+  background: #1F243A;
+  color: #FFF;
 }
 
 .tab-background-dark .active-tab {
-border-radius: 8px !important;
-border: 1px solid var(--Gray-700, #344054);
-background: #FCFCFD;
-color: black;
-box-shadow: 0px 4px 4px 0px rgba(15, 15, 15, 0.25);
+  border-radius: 8px !important;
+  border: 1px solid var(--Gray-700, #344054);
+  background: #FCFCFD;
+  color: black;
+  box-shadow: 0px 4px 4px 0px rgba(15, 15, 15, 0.25);
 }
 
 .calc-heading {
-color: #182230;
-font-size: 20px;
-font-family: Poppins;
-font-style: normal;
-font-weight: 700;
-line-height: normal;
-text-transform: capitalize;
+  color: #182230;
+  font-size: 20px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  text-transform: capitalize;
 }
 
 .calc-heading-dark {
-color: var(--Gray-25, #FCFCFD);
-font-family: Poppins;
-font-size: 20px;
-font-style: normal;
-font-weight: 700;
-line-height: normal;
-text-transform: capitalize;
+  color: var(--Gray-25, #FCFCFD);
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  text-transform: capitalize;
 }
 
 .calc-other-text {
-font-family: Poppins;
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
-text-transform: capitalize;
-height: 29px;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-transform: capitalize;
+  height: 29px;
 }
 
 .calc-other-text-dark {
-color: #EAECF0;
+  color: #EAECF0;
 }
 
 .calc-other-text-light {
-color: #475467;
+  color: #475467;
 }
 
 ::v-deep .v-field__append-inner {
-cursor: pointer;
+  cursor: pointer;
 }
+
 ::v-deep .v-field__prepend-inner {
-cursor: pointer;
+  cursor: pointer;
 }
 
 .chip-gmvalue {
-width:210px !important;
-color: #475467;
-background: #FCFCFD !important;
-border: 1px solid rgba(178, 178, 178, 0.20);
-/* Text sm/Medium */
-font-family: Inter;
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: 20px; /* 142.857% */
+  width: 210px !important;
+  color: #475467;
+  background: #FCFCFD !important;
+  border: 1px solid rgba(178, 178, 178, 0.20);
+  /* Text sm/Medium */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  /* 142.857% */
 }
 
 .chip-gmvalue-dark {
-width:210px !important;
-color: #F9FAFB;
-border: 1px solid rgba(178, 178, 178, 0.20);
-background: #1B1F32;
-/* Text sm/Medium */
-font-family: Inter;
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: 20px; /* 142.857% */
+  width: 210px !important;
+  color: #F9FAFB;
+  border: 1px solid rgba(178, 178, 178, 0.20);
+  background: #1B1F32;
+  /* Text sm/Medium */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  /* 142.857% */
 }
+
 .calc-token {
-font-family: Poppins;
-font-size: 13px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
-text-transform: capitalize;
+  font-family: Poppins;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-transform: capitalize;
 }
+
 .calc-token-dark {
-color: #D0D5DD;
+  color: #D0D5DD;
 }
+
 .calc-token-light {
-color: var(--Gray-600, #475467);
+  color: var(--Gray-600, #475467);
 }
+
 .composition-token {
-color: #98A2B3;
-font-family: Poppins;
-font-size: 13px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
-text-transform: capitalize;
+  color: #98A2B3;
+  font-family: Poppins;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-transform: capitalize;
 }
 
 .y-tokens {
-color: #98A2B3;
-font-family: Poppins;
-font-size: 13px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
-text-transform: capitalize;
+  color: #98A2B3;
+  font-family: Poppins;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-transform: capitalize;
 }
+
 .result-number {
-font-family: Poppins;
-font-size: 20px;
-font-style: normal;
-font-weight: 600;
-line-height: normal;
-text-transform: capitalize;
-margin-top: -0.1rem;
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  text-transform: capitalize;
+  margin-top: -0.1rem;
 }
+
 .result-number-dark {
-color: #EAECF0;
+  color: #EAECF0;
 }
 
 .result-number-light {
-color: #344054;
+  color: #344054;
 }
 
 
 
 ::v-deep .mdi-minus {
-color:#667085 !important;
+  color: #667085 !important;
 }
 
 ::v-deep .mdi-plus {
-color:#667085 !important;
+  color: #667085 !important;
 }
 
 .text-field-width :deep(.v-field--no-label) {
-padding-left: 11px;
-padding-right: 11px;
-padding-bottom: 6px;
+  padding-left: 11px;
+  padding-right: 11px;
+  padding-bottom: 6px;
 }
+
 .text-field-width ::v-deep .v-field__append-inner {
-font-family: Poppins;
-font-size: 13px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
+  font-family: Poppins;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 }
 
 .text-field-dark :deep(.v-field__append-inner) {
-color: #667085
+  color: #667085
 }
+
 .text-field-light :deep(.v-field__append-inner) {
-color: #667085;
+  color: #667085;
 }
+
 .calculator-label {
-font-family: Poppins;
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
-text-transform: capitalize;
-height: 29px;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-transform: capitalize;
+  height: 29px;
 }
 
 .label-dark {
-color: #EAECF0;
+  color: #EAECF0;
 }
 
 .label-light {
-color: #475467;
+  color: #475467;
 }
 
 .gap-cls {
-gap: 28px !important;
+  gap: 28px !important;
 }
 
 .select-box-detail {
@@ -2541,12 +2389,14 @@ gap: 28px !important;
   border-radius: 8px;
   /* width:100px !important; */
 }
+
 .anchor-link {
   color: #213aaa;
   font-weight: 700;
   font-size: larger;
   font-family: Poppins;
 }
+
 .anchor-link-light {
   color: #213aaa;
   text-decoration: none;
@@ -2554,24 +2404,32 @@ gap: 28px !important;
   font-size: larger;
   font-family: Poppins;
 }
+
 .flex-gap {
-  gap:40px;
+  gap: 40px;
 }
+
 .label-height {
   height: 29px !important;
 }
+
 .token-icon {
-width: 30px; /* Adjust size as needed */
-height: 30px; /* Adjust size as needed */
-vertical-align: middle; /* Aligns the image with the text */
-margin-right: 5px; /* Adds spacing between the image and text */
-border-radius: 50% !important;
+  width: 30px;
+  /* Adjust size as needed */
+  height: 30px;
+  /* Adjust size as needed */
+  vertical-align: middle;
+  /* Aligns the image with the text */
+  margin-right: 5px;
+  /* Adds spacing between the image and text */
+  border-radius: 50% !important;
 }
+
 @media (min-width: 1280px) {
-    .v-container {
-      max-width: 1700px !important;
-      width: 100% !important;
-      padding: 16px 4% !important;
-    }
+  .v-container {
+    max-width: 1700px !important;
+    width: 100% !important;
+    padding: 16px 4% !important;
+  }
 }
 </style>
