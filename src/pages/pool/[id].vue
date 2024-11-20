@@ -28,6 +28,12 @@
             </div>
           </div>
           <div class="d-flex flex-column">
+            <div class="label-color">Fee Tier(%)</div>
+            <div class="label-font text-h5 text-textItemColor">
+              {{ poolDetailsPeriods.length ? (poolDetailsPeriods[0].feeTier / 10000) : '' }}
+            </div>
+          </div>
+          <div class="d-flex flex-column">
             <div class="label-color">Chain</div>
             <div class="text-capitalize label-font text-h5 text-textItemColor">
               <span class="text-customText">
@@ -37,7 +43,6 @@
               </span>
             </div>
           </div>
-
           <div class="d-flex flex-column">
             <div class="label-color">Protocol</div>
             <div class="text-capitalize label-font text-h5 text-textItemColor">
@@ -48,13 +53,6 @@
                 <!-- Display DexId if the array length is greater than 0 -->
                 {{ poolDetailsPeriods.length > 0 ? poolDetailsPeriods[0].DexId : '' }}
               </span>
-            </div>
-          </div>
-
-          <div class="d-flex flex-column">
-            <div class="label-color">Fee Tier(%)</div>
-            <div class="label-font text-h5 text-textItemColor">
-              {{ poolDetailsPeriods.length ? (poolDetailsPeriods[0].feeTier / 10000) : '' }}
             </div>
           </div>
           <div class="d-flex flex-column">
@@ -169,14 +167,14 @@
             <div class="label-color">Avg Volatility</div>
             <div class="label-font text-h5 text-textItemColor">
               {{ poolDetailsPeriods.length > 0 ? (weeklyVolatility !== 0 ? (weeklyVolatility.toFixed(2) + '%') :
-              weeklyVolatility) : '' }}
+                weeklyVolatility) : '' }}
             </div>
           </div>
           <div class="d-flex flex-column">
             <div class="label-color">Abs Volatility</div>
             <div class="label-font text-h5 text-textItemColor">
               {{ poolDetailsPeriods.length > 0 ? (absoluteVolatility !== 0 ? (absoluteVolatility.toFixed(2) + '%') :
-                weeklyVolatility ) : '' }}
+                weeklyVolatility) : '' }}
             </div>
           </div>
           <!-- <div class="d-flex flex-column">
@@ -281,7 +279,7 @@
                             :class="[darkMode ? 'label-dark' : 'label-light']">Supply</label>
                           <v-text-field v-model="liquidityValue" class="text-field-width"
                             :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input"
-                            :hide-details="true" density="compact" variant="plain">
+                            :hide-details="true" density="compact" variant="plain" @change="refreshTokensDistribution">
                             <template v-slot:append-inner>
                               USD
                             </template>
@@ -435,7 +433,7 @@
                           <div class="result-text-right">Generated Fees (est)</div>
                           <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
                             {{
-                            formatMoney(estimatedFees) }}</div>
+                              formatMoney(estimatedFees) }}</div>
                         </div>
                       </v-col>
                       <v-col>
@@ -443,7 +441,7 @@
                           <div class="result-text-right">Time In Range (%)</div>
                           <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
                             {{
-                            inRangePercentaje.toFixed(2) + ' %' }}</div>
+                              inRangePercentaje.toFixed(2) + ' %' }}</div>
                         </div>
                       </v-col>
                       <v-col>
@@ -451,7 +449,7 @@
                           <div class="result-text-right">Estimated APR (%)</div>
                           <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
                             {{
-                            estimatedAPR.toFixed(2) + ' %' }}</div>
+                              estimatedAPR.toFixed(2) + ' %' }}</div>
                         </div>
                       </v-col>
                     </v-row>
@@ -586,12 +584,12 @@
                       <div class="d-flex justify-space-between mt-5 mr-10 align-center">
                         <div class="d-flex">
                           <v-btn class="text-none mr-4" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                            min-width="92" variant="outlined" rounded @click="initializeRanges('', 'narrow')">
+                            min-width="92" variant="outlined" rounded @click="initializeRanges1('', 'narrow')">
                             Narrow Range
                           </v-btn>
 
                           <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                            min-width="92" variant="outlined" rounded @click="initializeRanges('', 'conservative')">
+                            min-width="92" variant="outlined" rounded @click="initializeRanges1('', 'conservative')">
                             Wide range
                           </v-btn>
                         </div>
@@ -656,7 +654,7 @@
                           <div class="result-text-right">Generated Fees (est)</div>
                           <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
                             {{
-                            formatMoney(estimatedFees) }}</div>
+                              formatMoney(estimatedFees) }}</div>
                         </div>
                       </v-col>
                       <v-col>
@@ -664,7 +662,7 @@
                           <div class="result-text-right">Time In Range (%)</div>
                           <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
                             {{
-                            inRangePercentaje.toFixed(2) + ' %' }}</div>
+                              inRangePercentaje.toFixed(2) + ' %' }}</div>
                         </div>
                       </v-col>
                       <v-col>
@@ -672,7 +670,7 @@
                           <div class="result-text-right">Estimated APR (%)</div>
                           <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
                             {{
-                            estimatedAPR.toFixed(2) + ' %' }}</div>
+                              estimatedAPR.toFixed(2) + ' %' }}</div>
                         </div>
                       </v-col>
                     </v-row>
@@ -686,6 +684,7 @@
     </div>
   </v-container>
 </template>
+
 <script setup>
 import { useTheme } from 'vuetify';
 import BarChart from '@/components/BarChart.vue';
@@ -740,10 +739,10 @@ const myMaxRange = ref(0);
 const tikFactor = ref(1.0001);
 const invertedPrices = ref(false);
 
-const xPercentage = ref(0);
-const yPercentage = ref(0);
-const xTokens = ref(0);
-const yTokens = ref(0);
+var xPercentage = ref(0);
+var yPercentage = ref(0);
+var xTokens = ref(0);
+var yTokens = ref(0);
 
 const myFeeTier = ref(0);
 const myFeeDelta = ref(0);
@@ -754,6 +753,15 @@ const inRangePercentaje = ref(0);
 const estimatedFees = ref(0);
 const estimatedAPR = ref(0);
 const daysForFees = ref(0);
+
+const currentPriceNativeX = ref([0]);
+const invertedPricesFlag = ref(false);
+const myFuturePrice = ref([0]);
+const myFutureMaxRange = ref([0]);
+const myFutureMinRange = ref([0]);
+const xtokensFuture = ref([0]);
+const ytokensFuture = ref([0]);
+
 
 // New
 const backTesterLiquidityArray = ref([]);
@@ -821,7 +829,6 @@ const setValues = () => {
   myMeanPrice.value = meanValue = getMean(nativePriceArray);
   weeklyVolatility.value = meanValue !== 0 ? ((standardDev * 100) / meanValue) : "N/A";
   initializeRanges(1, 'narrow');
-  // correlationEstimator.value = correlationEstimator1(poolDetailsPeriods.value, seletedDuration.value);
   correlationEstimator.value = (correlationEstimator1(poolDetailsPeriods.value, seletedDuration.value) * 100).toFixed(2);
 
   console.log(correlationEstimator.value);
@@ -900,6 +907,7 @@ const correlationEstimator = async (data, days) => {
   return correlation * 100;  // Convert correlation to percentage
 
 };
+
 const correlationEstimator1 = (data, days) => {
   // Check if the input data is valid
   if (!Array.isArray(data) || data.length === 0 || days <= 0) {
@@ -963,6 +971,140 @@ const fetchData = async () => {
   }
 };
 
+const initializeRanges1 = (which, mode) => {
+  let highMultiplier = 0;
+  let lowMultiplier = 0;
+
+  if (which === 'current') {
+    switch (mode) {
+      case 'aggressive':
+        highMultiplier = 0.75;
+        lowMultiplier = 0.75;
+        myMinRange.value = Number.parseFloat(currentPriceNativeX.value) - Number.parseFloat(mySigma.value) * lowMultiplier;
+        myMaxRange.value = Number.parseFloat(currentPriceNativeX.value) + Number.parseFloat(mySigma.value) * highMultiplier;
+        break;
+      case 'neutral':
+        highMultiplier = 2.5;
+        lowMultiplier = 1.5;
+        if (currentPriceNativeX.value >= myMeanPrice.value) {
+          myMinRange.value = Number.parseFloat(myMeanPrice.value) - Number.parseFloat(mySigma.value) * lowMultiplier;
+          myMaxRange.value = Number.parseFloat(currentPriceNativeX.value) + Number.parseFloat(mySigma.value) * highMultiplier;
+        } else {
+          myMinRange.value = Number.parseFloat(currentPriceNativeX.value) - Number.parseFloat(mySigma.value) * highMultiplier;
+          myMaxRange.value = Number.parseFloat(myMeanPrice.value) + Number.parseFloat(mySigma.value) * lowMultiplier;
+        }
+        break;
+      case 'wide-short':
+        highMultiplier = 1.5;
+        lowMultiplier = 3.5;
+        myMinRange.value = Number.parseFloat(currentPriceNativeX.value) - Number.parseFloat(mySigma.value) * lowMultiplier;
+        myMaxRange.value = Number.parseFloat(currentPriceNativeX.value) + Number.parseFloat(mySigma.value) * highMultiplier;
+        break;
+      case 'wide-long':
+        highMultiplier = 3.5;
+        lowMultiplier = 1.5;
+        myMinRange.value = Number.parseFloat(currentPriceNativeX.value) - Number.parseFloat(mySigma.value) * lowMultiplier;
+        myMaxRange.value = Number.parseFloat(currentPriceNativeX.value) + Number.parseFloat(mySigma.value) * highMultiplier;
+        break;
+    }
+
+    if (invertedPricesFlag.value) {
+      const actualMinRange = 1 / myMaxRange.value;
+      const actualMaxRange = 1 / myMinRange.value;
+      myMinRange.value = actualMinRange;
+      myMaxRange.value = actualMaxRange;
+    }
+
+    // Execute the methods with promises to ensure all operations complete
+    const promise1 = new Promise((resolve) => {
+      findClosestTik('min');
+      resolve();
+    });
+    const promise2 = new Promise((resolve) => {
+      findClosestTik('max');
+      resolve();
+    });
+    const promise3 = new Promise((resolve) => {
+      const liqObjCurrent = calculateAssetBalances(myMinRange.value, myMaxRange.value, currentPriceNativeX.value, currentPriceNativeX.value, true);
+      xTokens.value = Number.parseFloat(liqObjCurrent.xQty);
+      yTokens.value = Number.parseFloat(liqObjCurrent.yQty);
+      xPercentage.value = Number.parseFloat(liqObjCurrent.XPct);
+      yPercentage.value = Number.parseFloat(liqObjCurrent.YPct);
+      resolve();
+    });
+
+    Promise.all([promise1, promise2, promise3]).then(() => {
+      console.log('Promise all resolved for current range');
+    });
+  } else {
+    let actualFuturePrice = Number.parseFloat(myFuturePrice.value);
+    let actualMinRange = Number.parseFloat(myMinRange.value);
+    let actualMaxRange = Number.parseFloat(myMaxRange.value);
+
+    if (invertedPricesFlag.value) {
+      actualFuturePrice = 1 / Number.parseFloat(myFuturePrice.value);
+      actualMinRange = 1 / Number.parseFloat(myMaxRange.value);
+      actualMaxRange = 1 / Number.parseFloat(myMinRange.value);
+    }
+
+    switch (mode) {
+      case 'aggressive':
+        highMultiplier = 0.75;
+        lowMultiplier = 0.75;
+        if (actualFuturePrice > actualMaxRange) {
+          myFutureMaxRange.value = Number.parseFloat(actualFuturePrice) + Number.parseFloat(mySigma.value) * highMultiplier;
+          myFutureMinRange.value = (Number.parseFloat(actualMinRange) * Number.parseFloat(actualMaxRange)) / myFutureMaxRange.value;
+        } else {
+          myFutureMinRange.value = Number.parseFloat(actualFuturePrice) - Number.parseFloat(mySigma.value) * lowMultiplier;
+          myFutureMaxRange.value = (Number.parseFloat(actualMinRange) * Number.parseFloat(actualMaxRange)) / myFutureMinRange.value;
+        }
+        break;
+      case 'neutral':
+        highMultiplier = 2.5;
+        lowMultiplier = 1.5;
+        if (actualFuturePrice > actualMaxRange) {
+          myFutureMaxRange.value = Number.parseFloat(actualFuturePrice) + Number.parseFloat(mySigma.value) * highMultiplier;
+          myFutureMinRange.value = (Number.parseFloat(actualMinRange) * Number.parseFloat(actualMaxRange)) / myFutureMaxRange.value;
+        } else {
+          myFutureMinRange.value = Number.parseFloat(actualFuturePrice) - Number.parseFloat(mySigma.value) * lowMultiplier;
+          myFutureMaxRange.value = (Number.parseFloat(actualMinRange) * Number.parseFloat(actualMaxRange)) / myFutureMinRange.value;
+        }
+        break;
+    }
+
+    if (invertedPricesFlag.value) {
+      const actualFutureMinRange = 1 / myFutureMaxRange.value;
+      const actualFutureMaxRange = 1 / myFutureMinRange.value;
+      myFutureMaxRange.value = actualFutureMaxRange;
+      myFutureMinRange.value = actualFutureMinRange;
+    }
+
+    // Execute the methods with promises
+    const promise1 = new Promise((resolve) => {
+      findClosestTik('minFuture');
+      resolve();
+    });
+    const promise2 = new Promise((resolve) => {
+      findClosestTik('maxFuture');
+      resolve();
+    });
+    const promise3 = new Promise((resolve) => {
+      if (myFutureMaxRange.value !== 0) {
+        const liqObjFuture = calculateAssetBalances(myFutureMinRange.value, myFutureMaxRange.value, myFuturePrice.value, myFuturePrice.value, true);
+        xtokensFuture.value = Number.parseFloat(liqObjFuture.xQty);
+        ytokensFuture.value = Number.parseFloat(liqObjFuture.yQty);
+        this.xPercentageFuture.value = Number.parseFloat(liqObjFuture.XPct);
+        this.yPercentageFuture.value = Number.parseFloat(liqObjFuture.YPct);
+      }
+      resolve();
+    });
+
+    Promise.all([promise1, promise2, promise3]).then(() => {
+      console.log('Promise all resolved for future range');
+    });
+  }
+};
+
 const initializeRanges = (mode) => {
   let highMultiplier = 0;
   let lowMultiplier = 0;
@@ -988,6 +1130,7 @@ const initializeRanges = (mode) => {
   findClosestTik('max');
   calculateTokensRatio();
 };
+
 
 const findClosestTik = (which) => {
   let price = which === 'min' ? myMinRange.value : myMaxRange.value;
@@ -1047,6 +1190,16 @@ const shiftTik = (which, step) => {
   }
   calculateTokensRatio();
 }
+
+const refreshTokensDistribution = () => {
+  let liqObjCurrent = this.calculateAssetBalances(myMinRange.value, myMaxRange.value, poolDetailsPrice.value.priceNative, poolDetailsPrice.value.priceNative, true);
+
+  xTokens.value = Number.parseFloat(liqObjCurrent.xQty); //* this.myLiquidity/1000;
+  yTokens.value = Number.parseFloat(liqObjCurrent.yQty); //* this.myLiquidity/1000;
+
+  xPercentage.value = Number.parseFloat(liqObjCurrent.XPct);
+  yPercentage.value = Number.parseFloat(liqObjCurrent.YPct);
+};
 
 const backTester = (which) => {
   let totalPeriods = 0;
@@ -1240,14 +1393,6 @@ const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = '
     return L * (sc - sa);
   }
 
-  // We need to use current price to estimate the initial x and y values
-  // then depending on the range the values of x and y will change between Pa and Pb
-  // X will be 100% when the price P < Pa and X will be 0% when the price P > Pb
-  // Y will be 0% when the price P < Pa and Y will be 100% when the price P > Pb
-
-  // console.log("Example 3: Using the position created in Example 2, what are asset balances at 2500 USDC per ETH?");
-  //let a = 3000;
-  //let b = 4000;
   let p = Math.sqrt(a * b);
   let x = 500 / p0;
   let y = 500;
@@ -1579,8 +1724,6 @@ const showBackTestChart = () => {
 }
 
 
-
-
 /** Computed */
 
 const filteredPoolDetailsBasedOnPeriod = computed(() => {
@@ -1718,9 +1861,10 @@ const dailyVolumeBarData = computed(() => {
 
 const displayPrice = computed(() => {
   if (invertedPrices.value) {
-    return Number.parseFloat(poolDetailsPrice.value.priceNative).toFixed(4);
+    // return Number.parseFloat(poolDetailsPrice.value.priceNative).toFixed(4);
+    return (1 / Number.parseFloat(poolDetailsPrice.value.priceNative)).toFixed(7);
   } else {
-    return formatNumber(Number.parseFloat(poolDetailsPrice.value.priceNative));
+    return Number.parseFloat(poolDetailsPrice.value.priceNative).toFixed(7);
   }
 });
 
@@ -1743,6 +1887,15 @@ const myGMValue = computed(() => {
   return formatNumber(gmValue);
 });
 
+const approximateInitialLiquidityUSD = computed(() => {
+  if (Math.abs(poolDetailsPrice.value.priceNative - poolDetailsPrice.value.priceUsd) / poolDetailsPrice.value.priceUsd < 0.01) {
+    return this.formatMoney(this.myLiquidity);
+  }
+  else {
+    return this.formatMoney(this.myLiquidity * poolDetailsPrice.value.priceUsd / currentPriceNativeX.value);
+  }
+});
+
 
 watch(seletedDuration, () => {
   setValues();
@@ -1757,6 +1910,7 @@ const protocolIcon = (value) => {
 /** Mounted */
 onMounted(fetchData);
 </script>
+
 <style scoped>
 .select-box-light {
   width: 150px !important;
