@@ -278,13 +278,11 @@
                       <div class="d-flex flex-column flex-gap">
                         <div class="d-flex flex-row mr-6">
                           <label class="calculator-label"
-                            :class="[darkMode ? 'label-dark' : 'label-light']">Supply</label>
+                            :class="[darkMode ? 'label-dark' : 'label-light']">Supply</label> &nbsp;
                           <v-text-field v-model="liquidityValue" class="text-field-width"
                             :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input"
                             :hide-details="true" density="compact" variant="plain" @change="refreshTokensDistribution">
-                            <template v-slot:append-inner>
-                              USD
-                            </template>
+
                           </v-text-field>
                           <h4 class="highlight ml-1">{{ poolDetailsPeriods[0].QuoteToken }}</h4>
                         </div>
@@ -444,8 +442,11 @@
                         <div>
                           <div class="result-text-right">Generated Fees (est)</div>
                           <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
-                            SOL {{
-                              estimatedFees.toFixed(5) }}, {{ approximateFeesUSD }}</div>
+                            {{ poolDetailsPeriods[0].QuoteToken }} {{
+                              estimatedFees.toFixed(5) }},
+                            <br />
+                            <span style="font-size: 12px">(Approx. {{ approximateFeesUSD }})</span>
+                          </div>
                         </div>
                       </v-col>
                       <v-col>
@@ -1184,7 +1185,6 @@ const findClosestTik = (which) => {
 const setPriceFromtik = (tikNumber) => Math.pow(tikFactor.value, myFeeDelta.value * tikNumber);
 
 const calculateTokensRatio = () => {
-  console.log("ratio=====")
   let x = 1;
   let Lx = (x * Math.sqrt(poolDetailsPrice.value.priceNative) * Math.sqrt(myMaxRange.value)) / (Math.sqrt(myMaxRange.value) - Math.sqrt(poolDetailsPrice.value.priceNative));
   let y = Lx * (Math.sqrt(poolDetailsPrice.value.priceNative) - Math.sqrt(myMinRange.value));
