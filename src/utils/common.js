@@ -10,6 +10,6 @@ export function getStandardDeviation(array) {
 };
 
 export function formatNumber(amount) {
-    return amount > 1 ? amount.toFixed(5) : amount.toFixed(17);
+    return amount > 1 ? amount.toFixed(5) : amount;
 };
 

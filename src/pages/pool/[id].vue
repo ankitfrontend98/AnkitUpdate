@@ -244,7 +244,8 @@
                   <div class="d-flex flex-column mr-6">
                     <div class="calc-other-text" :class="[darkMode ? 'calc-other-text-dark' : 'calc-other-text-light']">
                       Current Price:</div>
-                    <div class="highlight">{{ displayPrice }} {{ invertedPrices ? poolDetailsPeriods[0].BaseToken :
+                    <div class="highlight">{{ displayPrice }} {{ invertedPrices ?
+                      poolDetailsPeriods[0].BaseToken :
                       poolDetailsPeriods[0].QuoteToken }}</div>
                   </div>
 
@@ -391,7 +392,7 @@
                                 poolDetailsPeriods[0].BaseToken }}: </span>
                               <span class="highlight ml-1"> {{ xPercentage.toFixed(2) }} %</span>
                             </div>
-                            <div class="composition-token">{{ xTokens }} tokens</div>
+                            <div class="composition-token">{{ Number(xTokens).toFixed(5) }} tokens</div>
                           </div>
                           <div>
                             <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
@@ -400,7 +401,7 @@
                               {{ yPercentage.toFixed(2) }} %
                             </span>
                           </div>
-                          <div class="y-tokens">{{ yTokens }} tokens</div>
+                          <div class="y-tokens">{{ Number(yTokens).toFixed(5) }} tokens</div>
                         </div>
                       </v-card>
                     </v-col>
@@ -1040,7 +1041,6 @@ const fetchData = async () => {
 const initializeRanges1 = (which, mode) => {
   let highMultiplier = 0;
   let lowMultiplier = 0;
-
   if (which === 'current') {
     switch (mode) {
       case 'aggressive':
@@ -1074,7 +1074,7 @@ const initializeRanges1 = (which, mode) => {
         break;
     }
 
-    if (invertedPricesFlag.value) {
+    if (invertedPrices.value) {
       const actualMinRange = 1 / myMaxRange.value;
       const actualMaxRange = 1 / myMinRange.value;
       myMinRange.value = actualMinRange;
@@ -1091,7 +1091,7 @@ const initializeRanges1 = (which, mode) => {
       resolve();
     });
     const promise3 = new Promise((resolve) => {
-      const liqObjCurrent = calculateAssetBalances(myMinRange.value, myMaxRange.value, currentPriceNativeX.value, currentPriceNativeX.value, true);
+      const liqObjCurrent = calculateAssetBalances(myMinRange.value, myMaxRange.value, poolDetailsPrice.value.priceNative, poolDetailsPrice.value.priceNative, true);
       xTokens.value = Number.parseFloat(liqObjCurrent.xQty);
       yTokens.value = Number.parseFloat(liqObjCurrent.yQty);
       xPercentage.value = Number.parseFloat(liqObjCurrent.XPct);
@@ -1138,7 +1138,7 @@ const initializeRanges1 = (which, mode) => {
         break;
     }
 
-    if (invertedPricesFlag.value) {
+    if (invertedPrices.value) {
       const actualFutureMinRange = 1 / myFutureMaxRange.value;
       const actualFutureMaxRange = 1 / myFutureMinRange.value;
       myFutureMaxRange.value = actualFutureMaxRange;
@@ -1184,6 +1184,7 @@ const findClosestTik = (which) => {
 const setPriceFromtik = (tikNumber) => Math.pow(tikFactor.value, myFeeDelta.value * tikNumber);
 
 const calculateTokensRatio = () => {
+  console.log("ratio=====")
   let x = 1;
   let Lx = (x * Math.sqrt(poolDetailsPrice.value.priceNative) * Math.sqrt(myMaxRange.value)) / (Math.sqrt(myMaxRange.value) - Math.sqrt(poolDetailsPrice.value.priceNative));
   let y = Lx * (Math.sqrt(poolDetailsPrice.value.priceNative) - Math.sqrt(myMinRange.value));
@@ -1202,7 +1203,8 @@ const handleInvertPrices = () => {
   invertedPrices.value = !invertedPrices.value;
   [myMinRange.value, myMaxRange.value] = [1 / myMaxRange.value, 1 / myMinRange.value];
   poolDetailsPrice.value.priceNative = 1 / poolDetailsPrice.value.priceNative;
-  calculateTokensRatio();
+  // calculateTokensRatio();
+
 };
 
 const handleTabClick = (value) => {
@@ -1910,12 +1912,13 @@ const dailyVolumeBarData = computed(() => {
 
 const displayPrice = computed(() => {
   if (invertedPrices.value) {
-    // return Number.parseFloat(poolDetailsPrice.value.priceNative).toFixed(4);
-    return (1 / Number.parseFloat(poolDetailsPrice.value.priceNative)).toFixed(7);
+    return formatNumber(1 / Number.parseFloat(currentPriceNativeX.value));
+
   } else {
-    return Number.parseFloat(poolDetailsPrice.value.priceNative).toFixed(7);
+    return formatNumber(Number.parseFloat(currentPriceNativeX.value));
   }
 });
+
 
 const lowerPercentageRange = computed(() => {
   if (invertedPrices.value) {
