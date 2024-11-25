@@ -314,8 +314,8 @@
                           <v-text-field v-model="myMinRange" class="text-field-width"
                             :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input" variant="plain"
                             density="default" :hide-details="true" prepend-inner-icon="mdi-minus"
-                            append-inner-icon="mdi-plus" @click:prepend-inner="handlePrependInner('min')"
-                            @click:append-inner="handleAppendInner('min')"></v-text-field>
+                            append-inner-icon="mdi-plus" @click:prepend-inner="handlePrependInner('future')"
+                            @click:append-inner="handleAppendInner('future')"></v-text-field>
                         </div>
                       </div>
                     </v-col>
@@ -565,7 +565,7 @@
                   </div> -->
                   <div class="d-flex flex-column mr-6">
                     <div class="calc-other-text" :class="[darkMode ? 'calc-other-text-dark' : 'calc-other-text-light']">
-                      Future
+                      Current
                       Price:</div>
                     <div class="highlight">{{ displayPrice }} {{ invertedPrices ? poolDetailsPeriods[0].BaseToken :
                       poolDetailsPeriods[0].QuoteToken }}</div>
@@ -591,102 +591,121 @@
                     </v-btn>
                   </div>
                 </div>
-                <div class="d-flex justify-space-between mr-4 align-center">
-                  <!-- Min Value Input -->
-                  <div class="d-flex flex-column flex-gap" style="flex: 1;">
-                    <div class="d-flex flex-column mr-6">
-                      <div class="label-height">
-                        <label class="calculator-label">Min Value: </label>
-                        <span class="highlight ml-1">{{ lowerPercentageRange.toFixed(2) + '%' }}</span>
-                      </div>
-                      <v-text-field v-model="myMinRange" class="text-field-width"
-                        :class="[darkMode ? 'text-field-dark' : 'text-field-light']" variant="plain" density="default"
-                        :hide-details="true" prepend-inner-icon="mdi-minus" append-inner-icon="mdi-plus"
-                        @click:prepend-inner="handlePrependInner('min')"
-                        @click:append-inner="handleAppendInner('min')"></v-text-field>
-                    </div>
+                <!--Future Price-->
+                <div class="d-flex flex-row flex-gap justify-space-between align-center">
+                  <div class="label-height">
+                    <label class="calculator-label">Future Price / Future CPI: </label>
+                    <span class="highlight ml-1">{{ futurePercentageRange.toFixed(2) }}%</span>
                   </div>
-
-                  <!-- Max Value Input -->
-                  <div class="d-flex flex-column flex-gap" style="flex: 1;">
-                    <div class="d-flex flex-column">
-                      <div class="label-height">
-                        <label class="calculator-label">Max Value: </label>
-                        <span class="highlight ml-1">{{ higherPercentageRange.toFixed(2) + '%' }}</span>
-                      </div>
-                      <v-text-field v-model="myMaxRange" class="text-field-width"
-                        :class="[darkMode ? 'text-field-dark' : 'text-field-light']" :hide-details="true"
-                        density="default" variant="plain" prepend-inner-icon="mdi-minus" append-inner-icon="mdi-plus"
-                        @click:prepend-inner="handlePrependInner('max')"
-                        @click:append-inner="handleAppendInner('max')"></v-text-field>
-                    </div>
-                  </div>
+                  <v-text-field v-model="myFuturePrice" class="text-field-width"
+                    :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input" :hide-details="true"
+                    density="default" variant="plain" prepend-inner-icon="mdi-minus" append-inner-icon="mdi-plus"
+                    @change="findClosestTik('future')" @click:prepend-inner="handlePrependInner('future')"
+                    @click:append-inner="handleAppendInner('future')"></v-text-field>
                 </div>
 
-                <div class="d-flex flex-column">
+                <div class="d-flex justify-space-between mr-4 align-center">
                   <v-row>
-                    <!-- First Column -->
-                    <v-col cols="6">
-                      <div class="d-flex flex-column mr-2">
-                        <div class="calc-other-text">Capital Preservation Indicator</div>
-                        <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{ myGMValue
-                          }}</v-chip>
-                      </div>
-                      <div class="d-flex justify-space-between mt-5 mr-10 align-center">
-                        <div class="d-flex">
-                          <v-btn class="text-none mr-4" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                            min-width="92" variant="outlined" rounded
-                            @click="initializeRanges1('future', 'aggressive')">
-                            Narrow Range
-                          </v-btn>
-
-                          <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                            min-width="92" variant="outlined" rounded @click="initializeRanges1('future', 'neutral')">
-                            Wide range
-                          </v-btn>
+                    <v-col lg="4" cols="12">
+                      <!-- Future Supply -->
+                      <div class="d-flex flex-column flex-gap" style="flex: 1;">
+                        <div class="d-flex flex-column mr-6">
+                          <div class="label-height">
+                            <label class="calculator-label">Future Supply: </label>
+                            <span class="highlight ml-1">{{ invertedPrices ?
+                              poolDetailsPeriods[0].BaseToken :
+                              poolDetailsPeriods[0].QuoteToken }}</span>
+                          </div>
+                          <v-text-field v-model="myFutureLiquidity" class="text-field-width-future"
+                            :class="[darkMode ? 'text-field-dark' : 'text-field-light']" variant="plain"
+                            density="default" :hide-details="true"></v-text-field>
                         </div>
                       </div>
                     </v-col>
-
-                    <!-- Second Column -->
-                    <v-col cols="4">
-                      <div class="calc-other-text">Composition</div>
-                      <v-card class="pa-5 mb-4 " elevation="0"
-                        :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
-                        <div class="d-flex flex-column">
-                          <div class="d-flex flex-column">
-                            <div class="d-flex">
-                              <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
-                                poolDetailsPeriods[0].BaseToken }}: </span>
-                              <span class="highlight ml-1"> {{ xPercentage.toFixed(2) }} %</span>
-                            </div>
-                            <div class="composition-token">{{ xTokens }} tokens</div>
+                    <v-col lg="4" cols="12">
+                      <!-- Min Value Input -->
+                      <div class="d-flex flex-column flex-gap" style="flex: 1;">
+                        <div class="d-flex flex-column mr-6">
+                          <div class="label-height">
+                            <label class="calculator-label">Min Value: </label>
+                            <span class="highlight ml-1">{{ lowPercentageRangeFuture.toFixed(2) + '%' }}</span>
                           </div>
-                          <div>
-                            <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
-                              poolDetailsPeriods[0].QuoteToken }}</span>:
-                            <span class="highlight">
-                              {{ yPercentage.toFixed(2) }} %
-                            </span>
-                          </div>
-                          <div class="y-tokens">{{ yTokens }} tokens</div>
+                          <v-text-field v-model="myFutureMinRange" class="text-field-width-future"
+                            :class="[darkMode ? 'text-field-dark' : 'text-field-light']" variant="plain"
+                            density="default" :hide-details="true" disabled></v-text-field>
                         </div>
-                      </v-card>
+                      </div>
+                    </v-col>
+                    <v-col lg="4" cols="12">
+
+
+                      <!-- Max Value Input -->
+                      <div class="d-flex flex-column flex-gap" style="flex: 1;">
+                        <div class="d-flex flex-column">
+                          <div class="label-height">
+                            <label class="calculator-label">Max Value: </label>
+                            <span class="highlight ml-1">{{ highPercentageRangeFuture.toFixed(2) + '%' }}</span>
+                          </div>
+                          <v-text-field v-model="myFutureMaxRange" class="text-field-width-future"
+                            :class="[darkMode ? 'text-field-dark' : 'text-field-light']" :hide-details="true" disabled
+                            density="default" variant="plain"></v-text-field>
+                        </div>
+                      </div>
                     </v-col>
                   </v-row>
                 </div>
 
+                <div>
+                  <div class="calc-other-text">Composition</div>
+                  <v-card class="pa-5 mb-4 " elevation="0"
+                    :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
+                    <div class="d-flex flex-row justify-space-between">
+                      <div class="d-flex flex-column">
+                        <div>
+                          <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
+                            poolDetailsPeriods[0].BaseToken }}: </span>
+                          <span class="highlight ml-1"> {{ xPercentageFuture.toFixed(2) }} %</span>
+                        </div>
+                        <div class="composition-token"> {{ xtokensFuture ?? 0 }} tokens</div>
+                      </div>
+                      <div class="d-flex flex-column">
+                        <div>
+                          <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
+                            poolDetailsPeriods[0].QuoteToken }}</span>:
+                          <span class="highlight">
+                            {{ yPercentageFuture.toFixed(2) }} %
+                          </span>
+                        </div>
+                        <div class="y-tokens">{{ ytokensFuture ?? 0 }} tokens</div>
+                      </div>
+                    </div>
+                  </v-card>
+                </div>
+
+
+
                 <v-row class="justify-space-between mb-5 mr-10 align-center">
                   <!-- First Column: Range Slider and Text Below -->
-                  <v-col cols="4">
-                    <v-range-slider v-model="daysForFees" :min="0" :max="365" color="#BFAC62"></v-range-slider>
-                    <div class="text-caption mt-2">Day to include for fees: {{ daysForFees }}</div>
+                  <v-col cols="12" lg="6">
+                    <div class="d-flex justify-space-between mt-5 mr-10 align-center">
+                      <div class="d-flex">
+                        <v-btn class="text-none mr-4" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                          min-width="92" variant="outlined" rounded @click="initializeRanges1('future', 'aggressive')">
+                          Narrow Range
+                        </v-btn>
+
+                        <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                          min-width="92" variant="outlined" rounded @click="initializeRanges1('future', 'neutral')">
+                          Market
+                        </v-btn>
+                      </div>
+                    </div>
                   </v-col>
 
                   <!-- Second Column: Run Back Test Button -->
-                  <v-col cols="6" class="d-flex justify-start">
+                  <v-col cols="12" lg="6" class="d-flex justify-end">
                     <v-btn class="text-none ml-4 run-text" color="medium-emphasis" min-width="92" rounded
-                      @click="backTester('future')">
+                      @click="megaTestFuture('future')">
                       Run Back Test
                       <v-icon class="ml-2 gap-cls">mdi-arrow-right</v-icon>
                     </v-btn>
@@ -730,6 +749,75 @@
                 </div>
               </v-card>
             </v-col>
+
+
+
+            <v-col cols="12" lg="6">
+              <v-card :class="[darkMode ? 'custom-card-dark-class' : '', '']">
+                <div class="pt-4 pb-4">
+                  <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
+                  <spline-chart v-else :dark-mode="darkMode" :key="liquidityChartRender" :show-exponential-digit="true"
+                    :labels="liquididtyChartLabels" :series-name="'Liquidity'" :data-values="liquidityDatasets"
+                    :axis-titles="{ xaxis: 'Price', yaxis: 'Liquidity' }" :map-colors="{
+                      stroke: darkMode ? '#DCC271' : '#25356F',
+                      gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
+                      offset: darkMode ? '#DCC271' : '#2C61B0',
+                      offsetColor: darkMode ? 'rgba(0, 0, 0, 0.00) 95.71%)' : 'rgba(183, 201, 228, 0.34)'
+                    }" />
+                </div>
+              </v-card>
+              <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'mt-4']">
+                <div class="pt-4 pb-4">
+                  <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
+                  <spline-chart v-else :dark-mode="darkMode" :key="tokenDistributionChartRender"
+                    :axis-titles="{ xaxis: 'Price' }" :show-exponential-digit="true"
+                    :labels="tokenDistributionChartLabels" :options="{
+                      yaxis: [
+                        {
+                          title: {
+                            text: 'BaseToken Quantity',
+                            style: {
+                              color: darkMode ? '#FFF' : '#98A2B3',
+                              fontWeight: '300'
+                            },
+                          },
+                          labels: {
+                            style: {
+                              colors: darkMode ? '#FFF' : '#98A2B3',
+                            },
+                            formatter: (value) => {
+                              return value > 1000 ? millify(value) : value.toFixed(2);
+                            },
+                          },
+                        },
+                        {
+                          opposite: true,
+                          title: {
+                            text: 'QuoteToken Quantity',
+                            style: {
+                              color: darkMode ? '#FFF' : '#98A2B3',
+                              fontWeight: '300'
+                            },
+                          },
+                          labels: {
+                            style: {
+                              colors: darkMode ? '#FFF' : '#98A2B3',
+                            },
+                            formatter: (value) => {
+                              return value > 1000 ? millify(value) : value.toFixed(2);
+                            },
+                          },
+                        },
+                      ],
+                    }" :series-name="'Tokens Distribution'" :data-values="tokenDistributionDatasets" :map-colors="{
+                      stroke: darkMode ? '#DCC271' : '#25356F',
+                      gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
+                      offset: darkMode ? '#DCC271' : '#2C61B0',
+                      offsetColor: darkMode ? 'rgba(0, 0, 0, 0.00) 95.71%)' : 'rgba(183, 201, 228, 0.34)'
+                    }" />
+                </div>
+              </v-card>
+            </v-col>
           </v-row>
         </v-tabs-window-item>
       </v-tabs-window>
@@ -755,6 +843,7 @@ import millify from "millify";
 const theme = useTheme();
 const activeTab = ref(0)
 const liquidityValue = ref(1000);
+const myFutureLiquidity = ref(0);
 const seletedDuration = ref('7');
 const dataPeriod = DATA_PERIOD_GRAPH;
 const tabs = [{
@@ -808,16 +897,19 @@ const daysForFees = ref(0);
 
 const currentPriceNativeX = ref([0]);
 const invertedPricesFlag = ref(false);
-const myFuturePrice = ref([0]);
+const myFuturePrice = ref(0);
 const myFutureMaxRange = ref([0]);
 const myFutureMinRange = ref([0]);
-const xtokensFuture = ref([0]);
-const ytokensFuture = ref([0]);
+const xtokensFuture = ref(0);
+const ytokensFuture = ref(0);
+const xPercentageFuture = ref(0)
+const yPercentageFuture = ref(0)
 
 
 // New
 const backTesterLiquidityArray = ref([]);
 const liquidityArray = ref([])
+const liquidityArrayFuture = ref([])
 const feeSelectedDays = ref(30)
 const liquidityDatasets = ref([])
 const liquididtyChartLabels = ref([])
@@ -829,6 +921,9 @@ const backTesterDatasets = ref([])
 const backTesterChartLabels = ref([])
 const backTesterChartRender = ref(0)
 
+const futureInRangePercentage = ref(0)
+const futureEstimatedFees = ref(0)
+const futureEstimatedAPR = ref(0)
 
 const { formatDateTime } = useDateFormat();
 
@@ -840,6 +935,19 @@ const approximateFeesUSD = computed(() => {
     return formatMoney(estimatedFees.value * poolDetailsPrice.value.priceUsd / currentPriceNativeX.value);
   }
 })
+
+const highPercentageRangeFuture = computed(() => {
+  return -1 * (100 - myFutureMaxRange.value * 100 / myFuturePrice.value);
+
+})
+const lowPercentageRangeFuture = computed(() => {
+  return -1 * (100 - myFutureMinRange.value * 100 / myFuturePrice.value);
+})
+
+const futurePercentageRange = computed(() => {
+  return -1 * (100 - myFuturePrice.value * 100 / poolDetailsPrice.value.priceNative);
+})
+
 
 const correlation1 = 0;
 /** Methods */
@@ -1024,6 +1132,7 @@ const fetchData = async () => {
     poolDetailsPrice.value = data.output.price;
     correlationEstimator.value = await correlationEstimator(poolDetailsPeriods.value, seletedDuration.value);
     currentPriceNativeX.value = data.output.price.priceNative
+    myFuturePrice.value = data.output.price.priceNative;
     if (Math.abs(data.output.price.priceNative - data.output.price.priceUsd) / data.output.price.priceUsd < 0.01) {
       liquidityValue.value = 1000;
     }
@@ -1104,6 +1213,7 @@ const initializeRanges1 = (which, mode) => {
       console.log('Promise all resolved for current range');
     });
   } else {
+    console.log("future calc-----", myFuturePrice.value, myMinRange.value, myMaxRange.value)
     let actualFuturePrice = Number.parseFloat(myFuturePrice.value);
     let actualMinRange = Number.parseFloat(myMinRange.value);
     let actualMaxRange = Number.parseFloat(myMaxRange.value);
@@ -1146,6 +1256,9 @@ const initializeRanges1 = (which, mode) => {
       myFutureMinRange.value = actualFutureMinRange;
     }
 
+    console.log("ranges of future-----", myFutureMaxRange.value, myFutureMinRange.value)
+
+
     // Execute the methods with promises
     const promise1 = new Promise((resolve) => {
       findClosestTik('minFuture');
@@ -1160,8 +1273,8 @@ const initializeRanges1 = (which, mode) => {
         const liqObjFuture = calculateAssetBalances(myFutureMinRange.value, myFutureMaxRange.value, myFuturePrice.value, myFuturePrice.value, true);
         xtokensFuture.value = Number.parseFloat(liqObjFuture.xQty);
         ytokensFuture.value = Number.parseFloat(liqObjFuture.yQty);
-        this.xPercentageFuture.value = Number.parseFloat(liqObjFuture.XPct);
-        this.yPercentageFuture.value = Number.parseFloat(liqObjFuture.YPct);
+        xPercentageFuture.value = Number.parseFloat(liqObjFuture.XPct);
+        yPercentageFuture.value = Number.parseFloat(liqObjFuture.YPct);
       }
       resolve();
     });
@@ -1172,15 +1285,77 @@ const initializeRanges1 = (which, mode) => {
   }
 };
 
+function findClosestTik(which) {
+
+  let price = 0;
+  switch (which) {
+    case 'min':
+      price = myMinRange.value;
+      break;
+
+    case 'max':
+      price = myMaxRange.value;
+      break;
+
+    case 'future':
+      price = myFuturePrice.value;
+      break;
+
+    case 'minFuture':
+      price = myFutureMinRange.value;
+      break;
+
+    case 'maxFuture':
+      price = myFutureMaxRange.value;
+      break;
+  }
+
+  let pe = (Math.log(price) / Math.log(tikFactor.value)) / myFeeDelta.value;
+  let closestTik = Math.round(pe);
 
 
+  switch (which) {
+    case 'min':
+      price = myMinRange.value;
+      myMinRange.value = formatNumber(setPriceFromtik(closestTik));
+      break;
 
-const findClosestTik = (which) => {
-  let price = which === 'min' ? myMinRange.value : myMaxRange.value;
-  let closestTik = Math.round((Math.log(price) / Math.log(tikFactor.value)) / myFeeDelta.value);
-  which === 'min' ? (myMinRange.value = setPriceFromtik(closestTik)) : (myMaxRange.value = setPriceFromtik(closestTik));
+    case 'max':
+      myMaxRange.value = formatNumber(setPriceFromtik(closestTik));
+      break;
+
+    case 'future':
+      myFuturePrice.value = formatNumber(setPriceFromtik(closestTik));
+      break;
+
+    case 'minFuture':
+      myFutureMinRange.value = formatNumber(setPriceFromtik(closestTik));
+      break;
+
+    case 'maxFuture':
+      myFutureMaxRange.value = formatNumber(setPriceFromtik(closestTik));
+      break;
+  }
+
   return closestTik;
-};
+
+}
+
+// setPriceFromtik(tikNumber){
+//             let price=0;
+//             price=Math.pow(this.tikFactor, this.myFeeDelta*tikNumber);
+
+//             return price;
+
+//         }
+
+
+// const findClosestTik = (which) => {
+//   let price = which === 'min' ? myMinRange.value : myMaxRange.value;
+//   let closestTik = Math.round((Math.log(price) / Math.log(tikFactor.value)) / myFeeDelta.value);
+//   which === 'min' ? (myMinRange.value = setPriceFromtik(closestTik)) : (myMaxRange.value = setPriceFromtik(closestTik));
+//   return closestTik;
+// };
 
 const setPriceFromtik = (tikNumber) => Math.pow(tikFactor.value, myFeeDelta.value * tikNumber);
 
@@ -1202,15 +1377,33 @@ const calculateTokensRatio = () => {
 const handleInvertPrices = () => {
   invertedPrices.value = !invertedPrices.value;
   [myMinRange.value, myMaxRange.value] = [1 / myMaxRange.value, 1 / myMinRange.value];
+  if (myFutureMinRange.value != 0) {
+    const aux1 = myFutureMinRange.value;
+    const aux2 = myFutureMaxRange.value;
+    myFutureMaxRange.value = formatNumber(1 / aux1);
+    myFutureMinRange.value = formatNumber(1 / aux2);
+
+  }
+  myFuturePrice.value = formatNumber(1 / myFuturePrice.value);
   poolDetailsPrice.value.priceNative = 1 / poolDetailsPrice.value.priceNative;
+
   // calculateTokensRatio();
 
 };
 
 const handleTabClick = (value) => {
+  tokenDistributionChartLabels.value = [];
+  tokenDistributionChartRender.value = 0;
+  tokenDistributionDatasets.value = [];
+  liquididtyChartLabels.value = []
+  liquidityChartRender.value = 0;
+  liquidityDatasets.value = [];
+  invertedPrices.value = false
   if (value == 1) {
     initializeRanges1('current', 'neutral')
-
+  }
+  else if (value === 2) {
+    initializeRanges1('future', 'neutral')
   }
 }
 
@@ -1230,10 +1423,38 @@ const shiftTik = (which, step) => {
   if (which === 'min') {
     myMinRange.value = formatNumber(setPriceFromtik(currentTik));
   }
+  else if (which === 'future') {
+    myFuturePrice.value = formatNumber(setPriceFromtik(currentTik));
+  }
   else {
     myMaxRange.value = formatNumber(setPriceFromtik(currentTik));
   }
-  calculateTokensRatio();
+  // calculateTokensRatio();
+
+  let liqObjCurrent = calculateAssetBalances(myMinRange.value, myMaxRange.value, poolDetailsPrice.value.priceNative,
+    poolDetailsPrice.value.priceNative, true);
+
+  let liqObjCurrentAtFuturePrice = calculateAssetBalances(myMinRange.value, myMaxRange.value, poolDetailsPrice.value.priceNative,
+    myFuturePrice.value, true);
+
+  let liqObjFuture = calculateAssetBalances(myFutureMinRange.value, myFutureMaxRange.value, poolDetailsPrice.value.priceNative,
+    myFuturePrice.value, true);
+
+  if (myFutureLiquidity.value === 0) {
+    myFutureLiquidity.value = liqObjCurrentAtFuturePrice.Liquidity;
+  }
+
+  xTokens.value = Number.parseFloat(liqObjCurrent.xQty); //* myLiquidity/1000;
+  yTokens.value = Number.parseFloat(liqObjCurrent.yQty); // * myLiquidity/1000;
+
+  xPercentage.value = Number.parseFloat(liqObjCurrent.XPct);
+  yPercentage.value = Number.parseFloat(liqObjCurrent.YPct);
+
+  xtokensFuture.value = Number.parseFloat(liqObjFuture.xQty);
+  ytokensFuture.value = Number.parseFloat(liqObjFuture.yQty);
+
+  xPercentageFuture.value = Number.parseFloat(liqObjFuture.XPct);
+  yPercentageFuture.value = Number.parseFloat(liqObjFuture.YPct);
 }
 
 const refreshTokensDistribution = () => {
@@ -1269,12 +1490,12 @@ const backTester = (which) => {
       actualMaxRange = 1 / myMinRange.value;
     }
   } else if (which === 'future') {
-    // actualMinRange=this.myFutureMinRange;
-    // actualMaxRange=this.myFutureMaxRange;
-    // if (this.invertedPricesFlag) {
-    //   actualMinRange=1/this.myFutureMaxRange;
-    //   actualMaxRange=1/this.myFutureMinRange;
-    // }
+    actualMinRange = myFutureMinRange.value;
+    actualMaxRange = myFutureMaxRange.value;
+    if (invertedPricesFlag.value) {
+      actualMinRange = 1 / myFutureMaxRange.value;
+      actualMaxRange = 1 / myFutureMinRange.value;
+    }
   }
 
   let stdDevs = Number.parseFloat(actualMaxRange - actualMinRange) / Number.parseFloat(mySigma.value);
@@ -1382,11 +1603,25 @@ const backTester = (which) => {
     showBackTestChart();
     console.log("check resp : ", which, inRangePercentaje.value, estimatedFees.value, estimatedAPR.value)
   }
+  else {
+    futureInRangePercentage.value = inRangePeriods * 100 / totalPeriods;
+    futureEstimatedFees.value = totalFees;
+    futureEstimatedAPR.value = futureEstimatedFees.value * 100 * (365 / (totalPeriods / 3)) * (1 / liquidityValue.value);
+    showLiquidityChart('future');
+    showTokensDistributionChart('future');
+
+  }
 };
 const megaTest = () => {
   backTester('current');
 
   calculateAssetBalances(myMinRange.value, myMaxRange.value, poolDetailsPrice.value.priceNative);
+}
+
+const megaTestFuture = () => {
+  calculateAssetBalances(myFutureMinRange.value, myFutureMaxRange.value, myFuturePrice.value, 0, false, 'future');
+  backTester('future');
+
 }
 
 const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = 'current') => {
@@ -1399,8 +1634,7 @@ const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = '
     actualLiquidity = liquidityValue.value;
     //console.log(`Current liquidity: ${actualLiquidity}`);
   } else {
-    // actualLiquidity = this.myFutureLiquidity;
-    //console.log(`Future liquidity: ${actualLiquidity}`);
+    actualLiquidity = myFutureLiquidity.value;
   }
 
   // Aux functions
@@ -1538,7 +1772,7 @@ const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = '
     // Let/s divide the value of L by 1000
 
     if (which !== 'current') {
-      // this.liquidityArrayFuture.length = 0;
+      liquidityArrayFuture.value.length = 0;
     } else {
       liquidityArray.value.length = 0;
     }
@@ -1601,7 +1835,7 @@ const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = '
       //quantity.push(element);
 
       if (which !== 'current') {
-        // this.liquidityArrayFuture.push(element);
+        liquidityArrayFuture.value.push(element);
       } else {
         liquidityArray.value.push(element);
       }
@@ -1652,15 +1886,16 @@ const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = '
   }
 }
 
-const showLiquidityChart = () => {
+const showLiquidityChart = (type = 'current') => {
   let chartLabels = [];
   let chartDataPricesUSD = [];
   let chartHoldLiquidity = [];
   let chartHoldLiquidityInitial = [];
   let chartLiquidityFees = [];
   let ix = 0;
-  console.log(liquidityArray.value)
-  liquidityArray.value.forEach((element) => {
+  const array = type === 'current' ? liquidityArray.value : liquidityArrayFuture.value
+  console.log('liquidity array-----------------', array)
+  array.forEach((element) => {
     ix++;
     if (ix % 1 == 0) {
       if (element.Price != undefined) {
@@ -1693,7 +1928,7 @@ const showLiquidityChart = () => {
   console.log("liquidity chart data", liquidityDatasets.value, liquididtyChartLabels.value)
 }
 
-const showTokensDistributionChart = () => {
+const showTokensDistributionChart = (type = 'current') => {
   let chartLabels = [];
   let chartTokenX = [];
   let chartTokenY = [];
@@ -1701,8 +1936,8 @@ const showTokensDistributionChart = () => {
   let chartTokenYQty = [];
 
   let ix = 0;
-
-  liquidityArray.value.forEach(element => {
+  const array = type === 'current' ? liquidityArray.value : liquidityArrayFuture.value
+  array.forEach(element => {
     ix++;
     if (ix % 1 == 0) {
       if (element.Price != undefined) {
@@ -1988,6 +2223,12 @@ onMounted(fetchData);
 
 .text-field-width {
   width: 250px !important;
+  border-radius: 10px;
+  margin-top: -0.5rem;
+}
+
+.text-field-width-future {
+  width: 200px !important;
   border-radius: 10px;
   margin-top: -0.5rem;
 }
@@ -2397,7 +2638,21 @@ onMounted(fetchData);
   padding-bottom: 6px;
 }
 
+.text-field-width-future :deep(.v-field--no-label) {
+  padding-left: 11px;
+  padding-right: 11px;
+  padding-bottom: 6px;
+}
+
 .text-field-width ::v-deep .v-field__append-inner {
+  font-family: Poppins;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.text-field-width-future ::v-deep .v-field__append-inner {
   font-family: Poppins;
   font-size: 13px;
   font-style: normal;
