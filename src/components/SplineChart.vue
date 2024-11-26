@@ -63,6 +63,7 @@ export default {
             tools: {
               download: false,
             },
+            offsetY: -5
           },
         },
         dataLabels: {
@@ -94,13 +95,14 @@ export default {
         xaxis: {
           type: "decimal",
           categories: this.labels,
-          tickAmount: 10,
+          tickAmount: 20,
           title: {
             text: this.axisTitles?.xaxis || '',
             style: {
               color: this.darkMode ? "#FFF" : "#98A2B3",
-              fontWeight: "300"
+              fontWeight: "300",
             },
+            offsetY: -20
           },
           labels: {
             style: {
@@ -123,7 +125,8 @@ export default {
             text: this.axisTitles?.yaxis || '',
             style: {
               color: this.darkMode ? "#FFF" : "#98A2B3",
-              fontWeight: "300"
+              fontWeight: "300",
+              fontSize: '12px'
             },
           },
           labels: {
@@ -176,6 +179,14 @@ export default {
             position: "topRight",
             offsetX: -150,
             offsetY: 0,
+          },
+        },
+        legend: {
+          position: 'bottom',
+          markers: {
+            width: 12, // Width of the square marker
+            height: 12, // Height of the square marker
+            radius: 0, // Set border radius to 0 for square shape
           },
         },
       },
