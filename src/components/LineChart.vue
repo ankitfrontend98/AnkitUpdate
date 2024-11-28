@@ -55,7 +55,13 @@ export default {
           },
           toolbar: {
             tools: {
-              download: false,
+              download: false, // Disable the download icon
+              selection: false, // Disable the selection icon
+              zoom: false, // Disable the zoom icon
+              zoomin: true, // Enable the zoom-in icon
+              zoomout: true, // Enable the zoom-out icon
+              pan: false, // Disable the pan icon
+              reset: false, // Disable the reset zoom icon
             }
           },
         },
