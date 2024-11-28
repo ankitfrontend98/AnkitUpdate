@@ -44,7 +44,6 @@ export default {
   },
   computed: {
     computedOptions() {
-      console.log("here options--------------xxxxxxx", this.options && Object.keys(this.options).length > 0 ? { ...this.chartOptions, ...this.options } : this.chartOptions)
       return this.options && Object.keys(this.options).length > 0 ? { ...this.chartOptions, ...this.options } : this.chartOptions
     }
   },
@@ -101,20 +100,21 @@ export default {
         xaxis: {
           type: "decimal",
           categories: this.labels,
-          tickAmount: 20,
+          tickAmount: 7,
           title: {
             text: this.axisTitles?.xaxis || '',
             style: {
               color: this.darkMode ? "#FFF" : "#98A2B3",
               fontWeight: "300",
             },
-            offsetY: -20,
+            // offsetY: 10,
           },
           labels: {
             style: {
               colors: this.darkMode ? "#FFF" : "#98A2B3",
               cssClass: "mr-2",
             },
+            rotate: 0,
             hideOverlappingLabels: true,
             formatter: function (val) {
               if (String(val).includes('.')) {

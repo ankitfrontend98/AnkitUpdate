@@ -1,5 +1,5 @@
 <template>
-  <apexchart type="area" :options="chartOptions" :series="series"></apexchart>
+  <apexchart type="area" :options="computedOptions" :series="series"></apexchart>
 </template>
 <script>
 import millify from "millify";
@@ -17,6 +17,10 @@ export default {
     seriesName: {
       type: String,
       required: true
+    },
+    seriesData: {
+      type: Array,
+      required: false
     },
     chartWidth: {
       type: Number,
@@ -36,12 +40,20 @@ export default {
       type: Boolean,
       required: false,
       default: false,
+    },
+    options: {
+      type: Object,
+      required: false
     }
   },
-
+  computed: {
+    computedOptions() {
+      return this.options && Object.keys(this.options).length > 0 ? { ...this.chartOptions, ...this.options } : this.chartOptions
+    }
+  },
   data() {
     return {
-      series: [{
+      series: this.seriesData && this.seriesData.length > 0 ? this.seriesData : [{
         name: this.seriesName,
         data: this.dataValues,
       }],
