@@ -34,7 +34,7 @@
     <div class="d-flex mt-4">
       <v-row>
         <v-col cols="12" lg="4">
-          <v-card :class="[darkMode ? 'custom-card-dark-class' : '']">
+          <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class']">
             <div class="pt-4 pb-4">
               <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
               <line-chart v-else :dark-mode="darkMode" :key="`${seletedDuration - darkMode}`"
@@ -50,7 +50,7 @@
         </v-col>
         <v-col cols="12" lg="4">
 
-          <v-card :class="[darkMode ? 'custom-card-dark-class' : '']">
+          <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class']">
             <div class="pt-4 pb-4">
               <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
               <line-chart v-else :dark-mode="darkMode" :key="`${seletedDuration - darkMode}`"
@@ -67,7 +67,7 @@
         </v-col>
         <v-col cols="12" lg="4">
 
-          <v-card :class="[darkMode ? 'custom-card-dark-class' : '']">
+          <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class']">
             <div class="pt-4 pb-4">
               <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
               <line-chart v-else :dark-mode="darkMode" :key="`${seletedDuration - darkMode}`"
@@ -86,7 +86,7 @@
     <div class="d-flex mt-6 justify-space-between">
       <v-row>
         <v-col lg="6" cols="12">
-          <v-card :class="[darkMode ? 'custom-card-dark-class' : '']">
+          <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class']">
             <div class="pt-4 pb-4">
               <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="97%" height="300" />
               <bar-chart v-else :dark-mode="darkMode" :key="`${seletedDuration - darkMode}`"
@@ -97,7 +97,7 @@
         </v-col>
         <v-col lg="6" cols="12">
 
-          <v-card :class="[darkMode ? 'custom-card-dark-class' : '']">
+          <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class']">
             <div class="pt-4 pb-4">
               <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="97%" height="300" />
               <line-chart v-else :dark-mode="darkMode" :chart-width="570" :key="`${seletedDuration - darkMode}`"
@@ -158,13 +158,13 @@
           <!-- <div class="d-flex flex-column">
             <div class="label-color">Correlation</div>
             <div class="label-font text-h5 text-textItemColor">
-              {{ poolDetailsPeriods.length > 0 ? correlationEstimator.value.toFixed(3) : ''  }}
+              {{ poolDetailsPeriods.length > 0 ? correlationEstimatorState.value.toFixed(3) : ''  }}
             </div>
           </div> -->
           <div class="d-flex flex-column">
             <div class="label-color">Correlation</div>
             <div class="label-font text-h5 text-textItemColor">
-              {{ poolDetailsPeriods.length > 0 ? correlationEstimator.value + '%' : '' }}
+              {{ poolDetailsPeriods.length > 0 ? correlationEstimatorState.toFixed(2) + '%' : '' }}
             </div>
           </div>
           <div class="d-flex flex-column">
@@ -299,7 +299,7 @@
                               <label class="calculator-label">Min Value: </label>
                               <span class="highlight ml-1">{{ lowerPercentageRange.toFixed(2) + '%' }}</span>
                             </div>
-                            <v-text-field v-model="myMinRange" class="text-field-width"
+                            <v-text-field v-model="myMinRange" class="text-field-width custom-textfield-padding"
                               :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input" variant="plain"
                               density="default" :hide-details="true" prepend-inner-icon="mdi-minus"
                               append-inner-icon="mdi-plus" @click:prepend-inner="handlePrependInner('future')"
@@ -316,7 +316,7 @@
                               <label class="calculator-label">Max Value: </label>
                               <span class="highlight ml-1">{{ higherPercentageRange.toFixed(2) + '%' }}</span>
                             </div>
-                            <v-text-field v-model="myMaxRange" class="text-field-width"
+                            <v-text-field v-model="myMaxRange" class="text-field-width custom-textfield-padding"
                               :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input"
                               :hide-details="true" density="default" variant="plain" prepend-inner-icon="mdi-minus"
                               append-inner-icon="mdi-plus" @click:prepend-inner="handlePrependInner('max')"
@@ -344,24 +344,24 @@
                             <div class="d-flex mb-2">
                               <v-btn class="text-none mr-2"
                                 :class="[darkMode ? 'round-button-dark' : 'round-button-light']" min-width="92"
-                                variant="outlined" rounded @click="initializeRanges1('current', 'aggressive')">
+                                variant="outlined" rounded @click="initializeRanges('current', 'aggressive')">
                                 Narrow
                               </v-btn>
                               <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
                                 min-width="92" variant="outlined" rounded
-                                @click="initializeRanges1('current', 'neutral')">
+                                @click="initializeRanges('current', 'neutral')">
                                 Market
                               </v-btn>
                             </div>
                             <div class="d-flex">
                               <v-btn class="text-none mr-2"
                                 :class="[darkMode ? 'round-button-dark' : 'round-button-light']" min-width="92"
-                                variant="outlined" rounded @click="initializeRanges1('current', 'wide-short')">
+                                variant="outlined" rounded @click="initializeRanges('current', 'wide-short')">
                                 Wide Short
                               </v-btn>
                               <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
                                 min-width="92" variant="outlined" rounded
-                                @click="initializeRanges1('current', 'wide-long')">
+                                @click="initializeRanges('current', 'wide-long')">
                                 Wide Long
                               </v-btn>
                             </div>
@@ -476,12 +476,12 @@
                   <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
                     Liquidity
                   </div>
-                  <v-card :class="[darkMode ? 'custom-card-dark-class' : '', '']">
+                  <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class', '']">
                     <div class="pt-4 pb-4 pr-4">
                       <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                       <spline-chart v-else :dark-mode="darkMode" :key="liquidityChartRender"
                         :show-exponential-digit="true" :labels="liquididtyChartLabels" :data-values="liquidityDatasets"
-                        :options="{ colors: ['#DCC271', '#FFF', '#10C461'] }"
+                        :options="{ colors: ['#DCC271', darkMode ? '#FFF' : '#98A2B3', '#10C461'] }"
                         :axis-titles="{ xaxis: 'Price', yaxis: 'Liquidity' }" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
                           gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
@@ -495,13 +495,13 @@
                   <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">Token
                     Distribution
                   </div>
-                  <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'mt-4']">
+                  <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class', 'mt-4']">
                     <div class="pt-4 pb-4">
                       <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                       <spline-chart v-else :dark-mode="darkMode" :key="tokenDistributionChartRender"
                         :axis-titles="{ xaxis: 'Price' }" :show-exponential-digit="true"
                         :labels="tokenDistributionChartLabels" :options="backTestingButtonClicked ? {
-                          colors: ['#DCC271', '#FFF'],
+                          colors: ['#DCC271', darkMode ? '#FFF' : '#98A2B3'],
                           yaxis: [
                             {
                               title: {
@@ -552,12 +552,12 @@
                   <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
                     Back Testing Results
                   </div>
-                  <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'mt-4']">
+                  <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class', 'mt-4']">
                     <div class="pt-4 pb-4">
                       <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                       <spline-chart v-else :dark-mode="darkMode" :key="backTesterChartRender"
                         :show-exponential-digit="true" :labels="backTesterChartLabels" :data-values="backTesterDatasets"
-                        :options="{ colors: ['#DCC271', '#FFF', '#10C461'] }" :map-colors="{
+                        :options="{ colors: ['#DCC271', darkMode ? '#FFF' : '#98A2B3', '#10C461'] }" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
                           gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
                           offset: darkMode ? '#DCC271' : '#2C61B0',
@@ -623,7 +623,7 @@
                             <label class="calculator-label">Future Price / Future CPI: </label>
                             <span class="highlight ml-1">{{ futurePercentageRange.toFixed(2) }}%</span>
                           </div>
-                          <v-text-field v-model="myFuturePrice" class="text-field-width"
+                          <v-text-field v-model="myFuturePrice" class="text-field-width custom-textfield-padding"
                             :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input"
                             :hide-details="true" density="default" variant="plain" prepend-inner-icon="mdi-minus"
                             append-inner-icon="mdi-plus" @change="findClosestTik('future')"
@@ -657,7 +657,7 @@
                                 poolDetailsPeriods[0].BaseToken :
                                 poolDetailsPeriods[0].QuoteToken }}</span>
                             </div>
-                            <v-text-field v-model="myFutureLiquidity" class="text-field-width"
+                            <v-text-field v-model="myFutureLiquidity" class="text-field-width custom-textfield-padding"
                               :class="[darkMode ? 'text-field-dark' : 'text-field-light']" variant="plain"
                               density="default" :hide-details="true"></v-text-field>
                           </div>
@@ -671,9 +671,10 @@
                               <label class="calculator-label">Min Value: </label>
                               <span class="highlight ml-1">{{ lowPercentageRangeFuture.toFixed(2) + '%' }}</span>
                             </div>
-                            <v-text-field v-model="myFutureMinRange" class="text-field-width"
+                            <v-text-field v-model="myFutureMinRange"
+                              class="text-field-width custom-textfield-padding disabled"
                               :class="[darkMode ? 'text-field-dark' : 'text-field-light']" variant="plain"
-                              density="default" :hide-details="true" disabled></v-text-field>
+                              density="default" :hide-details="true" readonly></v-text-field>
                           </div>
                         </div>
                       </v-col>
@@ -687,8 +688,9 @@
                               <label class="calculator-label">Max Value: </label>
                               <span class="highlight ml-1">{{ highPercentageRangeFuture.toFixed(2) + '%' }}</span>
                             </div>
-                            <v-text-field v-model="myFutureMaxRange" class="text-field-width"
-                              :class="[darkMode ? 'text-field-dark' : 'text-field-light']" :hide-details="true" disabled
+                            <v-text-field v-model="myFutureMaxRange"
+                              class="text-field-width custom-textfield-padding disabled"
+                              :class="[darkMode ? 'text-field-dark' : 'text-field-light']" :hide-details="true" readonly
                               density="default" variant="plain"></v-text-field>
                           </div>
                         </div>
@@ -732,13 +734,12 @@
                       <div class="d-flex justify-space-between mt-5 mr-10 align-center">
                         <div class="d-flex">
                           <v-btn class="text-none mr-4" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                            min-width="92" variant="outlined" rounded
-                            @click="initializeRanges1('future', 'aggressive')">
+                            min-width="92" variant="outlined" rounded @click="initializeRanges('future', 'aggressive')">
                             Narrow Range
                           </v-btn>
 
                           <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                            min-width="92" variant="outlined" rounded @click="initializeRanges1('future', 'neutral')">
+                            min-width="92" variant="outlined" rounded @click="initializeRanges('future', 'neutral')">
                             Market
                           </v-btn>
                         </div>
@@ -810,12 +811,12 @@
                   <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">Future
                     Liquidity
                   </div>
-                  <v-card :class="[darkMode ? 'custom-card-dark-class' : '', '']">
+                  <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class', '']">
                     <div class="pt-4 pb-4">
                       <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                       <spline-chart v-else :dark-mode="darkMode" :key="liquidityChartRender"
                         :show-exponential-digit="true" :labels="liquididtyChartLabels" :data-values="liquidityDatasets"
-                        :options="{ colors: ['#DCC271', '#FFF', '#10C461'] }"
+                        :options="{ colors: ['#DCC271', darkMode ? '#FFF' : '#98A2B3', '#10C461'] }"
                         :axis-titles="{ xaxis: 'Price', yaxis: 'Liquidity' }" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
                           gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
@@ -829,13 +830,13 @@
                   <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">Future
                     Token Distribution
                   </div>
-                  <v-card :class="[darkMode ? 'custom-card-dark-class' : '', 'mt-4']">
+                  <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class', 'mt-4']">
                     <div class="pt-4 pb-4">
                       <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                       <spline-chart v-else :dark-mode="darkMode" :key="tokenDistributionChartRender"
                         :axis-titles="{ xaxis: 'Price' }" :show-exponential-digit="true"
                         :data-values="tokenDistributionDatasets" :labels="tokenDistributionChartLabels" :options="backTestingButtonClicked ? {
-                          colors: ['#DCC271', '#FFF'],
+                          colors: ['#DCC271', darkMode ? '#FFF' : '#98A2B3'],
                           yaxis: [
                             {
                               title: {
@@ -971,6 +972,7 @@ const xtokensFuture = ref(0);
 const ytokensFuture = ref(0);
 const xPercentageFuture = ref(0)
 const yPercentageFuture = ref(0)
+const correlationEstimatorState = ref(0)
 
 
 // New
@@ -1055,9 +1057,9 @@ const tokenDetails = computed(() => {
     {
       id: 5,
       label: 'Protocol',
-      value: poolDetailsPeriods.value.length > 0 ? poolDetailsPeriods.value[0]?.ChainId : '',
+      value: poolDetailsPeriods.value.length > 0 ? poolDetailsPeriods.value[0]?.DexId : '',
       hasImage: true,
-      imgCondition: poolDetailsPeriods.value.length > 0 && poolDetailsPeriods.value[0].baseTokenIcon,
+      imgCondition: poolDetailsPeriods.value.length > 0 && poolDetailsPeriods.value[0].DexId,
       img: protocolIcon(poolDetailsPeriods.value[0]?.DexId)
     },
     {
@@ -1068,7 +1070,7 @@ const tokenDetails = computed(() => {
     {
       id: 7,
       label: 'Price Quote',
-      value: poolDetailsPeriods.value.length ? poolDetailsPeriods.value[0].priceNative : ''
+      value: poolDetailsPeriods.value.length ? currentPriceNativeX.value : ''
     }
   ]
 })
@@ -1103,7 +1105,7 @@ const setValues = () => {
 
     weeklyAvgLiquidity.value += element.Liquidity;
     weeklyVolume.value += element.Volume / 3;
-    weeklyFees.value += element.fees;
+    weeklyFees.value += element.fees / 3;
     if (typeof (element.priceNative) !== "undefined") {
       nativePriceArray.push(Number.parseFloat(element.priceNative));
     }
@@ -1116,16 +1118,16 @@ const setValues = () => {
   } else {
     myFeeDelta.value = 200;
   }
-  weeklyAvgAPR.value = (weeklyVolume.value * poolDetailsPeriods.value[0].feeTier * 365) / (10000 * weeklyAvgLiquidity.value);
+  weeklyAvgAPR.value = 3 * ((weeklyVolume.value * poolDetailsPeriods.value[0].feeTier * 365) / (10000 * weeklyAvgLiquidity.value));
   weeklyAvgLiquidity.value /= counter;
   absoluteVolatility.value = (100 * maxPrice / minPrice) - 100;
   mySigma.value = standardDev = getStandardDeviation(nativePriceArray);
   myMeanPrice.value = meanValue = getMean(nativePriceArray);
   weeklyVolatility.value = meanValue !== 0 ? ((standardDev * 100) / meanValue) : "N/A";
-  initializeRanges1('current', 'neutral')
-  correlationEstimator.value = (correlationEstimator1(poolDetailsPeriods.value, seletedDuration.value) * 100).toFixed(2);
-
-  console.log(correlationEstimator.value);
+  initializeRanges('current', 'neutral')
+  correlationEstimator(poolDetailsPeriods.value.slice(0, seletedDuration.value * 3), seletedDuration.value).then((res) => {
+    correlationEstimatorState.value = res;
+  })
 };
 const correlationEstimator = async (data, days) => {
   // Check if the input data is valid
@@ -1198,7 +1200,8 @@ const correlationEstimator = async (data, days) => {
   // return correlation;
 
   const correlation = numerator / Math.sqrt(denominatorToken1 * denominatorToken2);
-  return correlation * 100;  // Convert correlation to percentage
+  console.log(Math.abs(correlation) * 100)
+  return Math.abs(correlation) * 100;  // Convert correlation to percentage
 
 };
 
@@ -1255,7 +1258,7 @@ const fetchData = async () => {
     const { data } = await apiClient.get(`api/message/${id}`);
     poolDetailsPeriods.value = data.output.periodData;
     poolDetailsPrice.value = data.output.price;
-    correlationEstimator.value = await correlationEstimator(poolDetailsPeriods.value, seletedDuration.value);
+    correlationEstimatorState.value = await correlationEstimator(poolDetailsPeriods.value.slice(0, seletedDuration.value * 3), seletedDuration.value);
     currentPriceNativeX.value = data.output.price.priceNative
     myFuturePrice.value = data.output.price.priceNative;
     if (Math.abs(data.output.price.priceNative - data.output.price.priceUsd) / data.output.price.priceUsd < 0.01) {
@@ -1273,7 +1276,7 @@ const fetchData = async () => {
   }
 };
 
-const initializeRanges1 = (which, mode) => {
+const initializeRanges = (which, mode) => {
   let highMultiplier = 0;
   let lowMultiplier = 0;
   if (which === 'current') {
@@ -1527,10 +1530,10 @@ const handleTabClick = (value) => {
   activeTab.value = value
   backTestingButtonClicked.value = false
   if (value == 1) {
-    initializeRanges1('current', 'neutral')
+    initializeRanges('current', 'neutral')
   }
   else if (value === 2) {
-    initializeRanges1('future', 'neutral')
+    initializeRanges('future', 'neutral')
   }
 }
 
@@ -2381,9 +2384,21 @@ onMounted(fetchData);
   background: #0F0F1B;
 }
 
+.text-field-dark.disabled {
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  background: #1B1F32;
+  color: #8e8f99
+}
+
 .text-field-light {
   border: 1px solid var(--Gray-200, #EAECF0);
   background: var(--Gray-25, #FCFCFD);
+}
+
+.text-field-light.disabled {
+  border: 1px solid var(--Gray-200, #EAECF0);
+  background: var(--Gray-100, #efefef);
+  color: #8e8f99
 }
 
 .token-detail {
@@ -2613,6 +2628,13 @@ onMounted(fetchData);
 }
 
 
+.custom-card-light-class {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  background: #FFF;
+  box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
+}
+
 
 .label-color {
   color: rgb(var(--v-theme-labelColor));
@@ -2692,16 +2714,40 @@ onMounted(fetchData);
 }
 
 .calc-other-text-light {
-  color: #475467;
+  color: #000000;
+  font-family: Poppins;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-transform: capitalize;
+
 }
 
 ::v-deep .v-field__append-inner {
   cursor: pointer;
 }
 
+.custom-textfield-padding::v-deep .v-field__append-inner {
+  padding-top: 18px !important;
+}
+
+.custom-textfield-padding::v-deep .v-field__prepend-inner {
+  padding-top: 15px !important;
+}
+
+.custom-textfield-padding ::v-deep .v-field__input {
+  padding-top: 12px !important
+}
+
 ::v-deep .v-field__prepend-inner {
   cursor: pointer;
 }
+
+::v-deep .v-input--density-default {
+  padding-top: 0px !important;
+}
+
 
 .chip-gmvalue {
   width: 210px !important;
@@ -2847,6 +2893,8 @@ onMounted(fetchData);
   opacity: 1 !important;
 }
 
+
+
 .calculator-label {
   font-family: Poppins;
   font-size: 15px;
@@ -2862,7 +2910,13 @@ onMounted(fetchData);
 }
 
 .label-light {
-  color: #475467;
+  color: #000000;
+  font-family: Poppins;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-transform: capitalize;
 }
 
 .gap-cls {
