@@ -261,7 +261,7 @@
 
                   <div class="d-flex">
                     <v-row>
-                      <v-col cols="12" lg="6">
+                      <v-col cols="12" lg="7">
                         <div class="d-flex flex-row mr-6 align-center ga-2 w-100">
                           <div class="d-flex">
                             <span class="calculator-label" :class="[darkMode ? 'label-dark' : 'label-light']">Supply:
@@ -277,11 +277,11 @@
                           </div>
                         </div>
                       </v-col>
-                      <v-col cols="12" lg="6">
-                        <div class="d-flex flex-row align-items-center">
-                          <div class="result-text-right">Approx: <span
-                              :class="[darkMode ? 'result-number-dark' : 'result-number-light']">{{
-                                approximateInitialLiquidityUSD }}</span></div>
+                      <v-col cols="12" lg="5">
+                        <div class="d-flex flex-row justify-end align-items-center">
+                          <div class="heading-key" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
+                            Approx: <span class="result-text-right">{{
+                              approximateInitialLiquidityUSD }}</span></div>
 
                         </div>
                       </v-col>
@@ -331,37 +331,40 @@
                     <v-row>
                       <!-- First Column -->
                       <v-col cols="12" lg="6">
-                        <div class="d-flex flex-column mr-2">
-                          <div class="calc-other-text">Capital Preservation Indicator</div>
-                          <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{ myGMValue
+                        <div class="d-flex ga-3 flex-column">
+                          <div class="d-flex flex-column mr-2">
+                            <div class="calc-other-text">Capital Preservation Indicator</div>
+                            <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{
+                              myGMValue
                             }}</v-chip>
-                        </div>
-
-                        <!-- Narror & Wide Range -->
-                        <div class="d-flex flex-wrap justify-content-between mt-4">
-                          <div class="d-flex mb-2">
-                            <v-btn class="text-none mr-2"
-                              :class="[darkMode ? 'round-button-dark' : 'round-button-light']" min-width="92"
-                              variant="outlined" rounded @click="initializeRanges1('current', 'aggressive')">
-                              Narrow
-                            </v-btn>
-                            <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                              min-width="92" variant="outlined" rounded
-                              @click="initializeRanges1('current', 'neutral')">
-                              Market
-                            </v-btn>
                           </div>
-                          <div class="d-flex">
-                            <v-btn class="text-none mr-2"
-                              :class="[darkMode ? 'round-button-dark' : 'round-button-light']" min-width="92"
-                              variant="outlined" rounded @click="initializeRanges1('current', 'wide-short')">
-                              Wide Short
-                            </v-btn>
-                            <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                              min-width="92" variant="outlined" rounded
-                              @click="initializeRanges1('current', 'wide-long')">
-                              Wide Long
-                            </v-btn>
+
+                          <!-- Narror & Wide Range -->
+                          <div class="d-flex flex-wrap justify-content-between mt-4">
+                            <div class="d-flex mb-2">
+                              <v-btn class="text-none mr-2"
+                                :class="[darkMode ? 'round-button-dark' : 'round-button-light']" min-width="92"
+                                variant="outlined" rounded @click="initializeRanges1('current', 'aggressive')">
+                                Narrow
+                              </v-btn>
+                              <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                                min-width="92" variant="outlined" rounded
+                                @click="initializeRanges1('current', 'neutral')">
+                                Market
+                              </v-btn>
+                            </div>
+                            <div class="d-flex">
+                              <v-btn class="text-none mr-2"
+                                :class="[darkMode ? 'round-button-dark' : 'round-button-light']" min-width="92"
+                                variant="outlined" rounded @click="initializeRanges1('current', 'wide-short')">
+                                Wide Short
+                              </v-btn>
+                              <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
+                                min-width="92" variant="outlined" rounded
+                                @click="initializeRanges1('current', 'wide-long')">
+                                Wide Long
+                              </v-btn>
+                            </div>
                           </div>
                         </div>
 
@@ -372,12 +375,12 @@
                         <div class="calc-other-text">Composition</div>
                         <v-card class="pa-5 mb-4 " elevation="0"
                           :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
-                          <div class="d-flex flex-column ga-3">
+                          <div class="d-flex flex-column ga-6">
                             <div class="d-flex flex-column">
                               <div class="d-flex">
                                 <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
                                   poolDetailsPeriods[0].BaseToken }}: </span>
-                                <span class="highlight ml-1"> {{ xPercentage.toFixed(2) }} %</span>
+                                <span class="highlight ml-1 composition-val-font"> {{ xPercentage.toFixed(2) }} %</span>
                               </div>
                               <div class="composition-token">{{ Number(xTokens).toFixed(5) }} tokens</div>
                             </div>
@@ -385,7 +388,7 @@
                               <div class="d-flex">
                                 <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
                                   poolDetailsPeriods[0].QuoteToken }}: </span>
-                                <span class="highlight ml-1"> {{ yPercentage.toFixed(2) }} %</span>
+                                <span class="highlight ml-1 composition-val-font"> {{ yPercentage.toFixed(2) }} %</span>
                               </div>
                               <div class="y-tokens">{{ Number(yTokens).toFixed(5) }} tokens</div>
                             </div>
@@ -402,9 +405,9 @@
 
                       <!-- Range Slider -->
                       <v-slider v-model="feeSelectedDays" :step="30" :min="0" :max="365" color="#BFAC62"
-                        class="mt-4 w-50"></v-slider>
+                        track-color="#eee" class="mt-4 w-50"></v-slider>
                       <!-- <input type="range" v-model="feeSelectedDays" :min="0" :max="360" :step="30"> -->
-                      <div class="text-body-1 mt-2">Days to include for fees: <span class="highlight text-body-1">{{
+                      <div class="calc-other-text mt-2">Days to include for fees: <span class="highlight">{{
                         feeSelectedDays
                           }}</span></div>
                     </v-col>
@@ -420,7 +423,8 @@
                   </v-row>
 
                   <hr class="mx-6 border-primary border-opacity-25">
-                  <div class="text-left result-text" :class="[darkMode ? 'result-text-dark' : 'result-text-light']">
+                  <div class="text-left result-text-small"
+                    :class="[darkMode ? 'result-text-dark' : 'result-text-light']">
                     Back Test Results
                   </div>
 
@@ -477,6 +481,7 @@
                       <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                       <spline-chart v-else :dark-mode="darkMode" :key="liquidityChartRender"
                         :show-exponential-digit="true" :labels="liquididtyChartLabels" :data-values="liquidityDatasets"
+                        :options="{ colors: ['#DCC271', '#FFF', '#10C461'] }"
                         :axis-titles="{ xaxis: 'Price', yaxis: 'Liquidity' }" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
                           gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
@@ -495,7 +500,8 @@
                       <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                       <spline-chart v-else :dark-mode="darkMode" :key="tokenDistributionChartRender"
                         :axis-titles="{ xaxis: 'Price' }" :show-exponential-digit="true"
-                        :labels="tokenDistributionChartLabels" :options="{
+                        :labels="tokenDistributionChartLabels" :options="backTestingButtonClicked ? {
+                          colors: ['#DCC271', '#FFF'],
                           yaxis: [
                             {
                               title: {
@@ -533,7 +539,7 @@
                               },
                             },
                           ],
-                        }" :data-values="tokenDistributionDatasets" :map-colors="{
+                        } : {}" :data-values="tokenDistributionDatasets" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
                           gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
                           offset: darkMode ? '#DCC271' : '#2C61B0',
@@ -551,7 +557,7 @@
                       <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                       <spline-chart v-else :dark-mode="darkMode" :key="backTesterChartRender"
                         :show-exponential-digit="true" :labels="backTesterChartLabels" :data-values="backTesterDatasets"
-                        :map-colors="{
+                        :options="{ colors: ['#DCC271', '#FFF', '#10C461'] }" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
                           gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
                           offset: darkMode ? '#DCC271' : '#2C61B0',
@@ -626,12 +632,14 @@
                         </div>
                       </v-col>
                       <v-spacer></v-spacer>
-                      <v-col lg="4" cols="12">
-                        <div class="d-flex flex-column mr-2 ga-3">
-                          <div class="calc-other-text">Capital Preservation Indicator</div>
-                          <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{
-                            myGMValueFuture
-                          }}</v-chip>
+                      <v-col lg="5" cols="12">
+                        <div class="d-flex flex-row justify-end">
+                          <div class="d-flex flex-column justify-end mr-2 ga-3">
+                            <div class="calc-other-text">Capital Preservation Indicator</div>
+                            <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{
+                              myGMValueFuture
+                            }}</v-chip>
+                          </div>
                         </div>
                       </v-col>
                     </v-row>
@@ -697,7 +705,8 @@
                           <div>
                             <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
                               poolDetailsPeriods[0].BaseToken }}: </span>
-                            <span class="highlight ml-1"> {{ xPercentageFuture.toFixed(2) }} %</span>
+                            <span class="highlight ml-1 composition-val-font"> {{ xPercentageFuture.toFixed(2) }}
+                              %</span>
                           </div>
                           <div class="composition-token"> {{ xtokensFuture ?? 0 }} tokens</div>
                         </div>
@@ -705,7 +714,7 @@
                           <div>
                             <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
                               poolDetailsPeriods[0].QuoteToken }}</span>:
-                            <span class="highlight">
+                            <span class="highlight composition-val-font">
                               {{ yPercentageFuture.toFixed(2) }} %
                             </span>
                           </div>
@@ -747,7 +756,8 @@
                   </v-row>
 
                   <hr class="mx-6 border-primary border-opacity-25">
-                  <div class="text-left result-text" :class="[darkMode ? 'result-text-dark' : 'result-text-light']">
+                  <div class="text-left result-text result-text-small"
+                    :class="[darkMode ? 'result-text-dark' : 'result-text-light']">
                     Back Test Results
                   </div>
                   <div class="d-flex flex-column">
@@ -805,6 +815,7 @@
                       <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                       <spline-chart v-else :dark-mode="darkMode" :key="liquidityChartRender"
                         :show-exponential-digit="true" :labels="liquididtyChartLabels" :data-values="liquidityDatasets"
+                        :options="{ colors: ['#DCC271', '#FFF', '#10C461'] }"
                         :axis-titles="{ xaxis: 'Price', yaxis: 'Liquidity' }" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
                           gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
@@ -823,7 +834,8 @@
                       <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                       <spline-chart v-else :dark-mode="darkMode" :key="tokenDistributionChartRender"
                         :axis-titles="{ xaxis: 'Price' }" :show-exponential-digit="true"
-                        :labels="tokenDistributionChartLabels" :options="{
+                        :data-values="tokenDistributionDatasets" :labels="tokenDistributionChartLabels" :options="backTestingButtonClicked ? {
+                          colors: ['#DCC271', '#FFF'],
                           yaxis: [
                             {
                               title: {
@@ -861,7 +873,7 @@
                               },
                             },
                           ],
-                        }" :data-values="tokenDistributionDatasets" :map-colors="{
+                        } : {}" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
                           gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
                           offset: darkMode ? '#DCC271' : '#2C61B0',
@@ -979,6 +991,7 @@ const backTesterChartRender = ref(0)
 const futureInRangePercentage = ref(0)
 const futureEstimatedFees = ref(0)
 const futureEstimatedAPR = ref(0)
+const backTestingButtonClicked = ref(false)
 
 const { formatDateTime } = useDateFormat();
 
@@ -1512,6 +1525,7 @@ const handleTabClick = (value) => {
   liquidityDatasets.value = [];
   invertedPrices.value = false
   activeTab.value = value
+  backTestingButtonClicked.value = false
   if (value == 1) {
     initializeRanges1('current', 'neutral')
   }
@@ -1726,12 +1740,14 @@ const backTester = (which) => {
   }
 };
 const megaTest = () => {
+  backTestingButtonClicked.value = true
   backTester('current');
 
   calculateAssetBalances(myMinRange.value, myMaxRange.value, poolDetailsPrice.value.priceNative);
 }
 
 const megaTestFuture = () => {
+  backTestingButtonClicked.value = true
   calculateAssetBalances(myFutureMinRange.value, myFutureMaxRange.value, myFuturePrice.value, 0, false, 'future');
   backTester('future');
 
@@ -2473,6 +2489,16 @@ onMounted(fetchData);
 .highlight {
   color: #BFAC62;
   font-family: Poppins;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-transform: capitalize;
+}
+
+.composition-val-font {
+  color: #BFAC62;
+  font-family: Poppins;
   font-size: 13px;
   font-style: normal;
   font-weight: 500;
@@ -2550,6 +2576,17 @@ onMounted(fetchData);
   line-height: 20px;
 }
 
+.result-text-small {
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+
+}
+
 .result-text-dark {
   color: #FCFCFD;
 }
@@ -2561,7 +2598,7 @@ onMounted(fetchData);
 .result-text-right {
   color: #BFAC62;
   font-family: Poppins;
-  font-size: 16px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -2642,7 +2679,7 @@ onMounted(fetchData);
 
 .calc-other-text {
   font-family: Poppins;
-  font-size: 14px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -2733,12 +2770,23 @@ onMounted(fetchData);
 
 .result-number {
   font-family: Poppins;
-  font-size: 20px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
   text-transform: capitalize;
   margin-top: -0.1rem;
+}
+
+.heading-key {
+  font-family: Poppins;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 22.5px;
+  text-align: center;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+
 }
 
 .result-number-dark {
@@ -2795,9 +2843,13 @@ onMounted(fetchData);
   color: #667085;
 }
 
+::v-deep(.v-slider-track__background--opacity) {
+  opacity: 1 !important;
+}
+
 .calculator-label {
   font-family: Poppins;
-  font-size: 14px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;

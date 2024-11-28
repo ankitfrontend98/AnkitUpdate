@@ -62,8 +62,14 @@ export default {
           toolbar: {
             tools: {
               download: false,
+              selection: false, // Disable the selection icon
+              zoom: false, // Disable the zoom icon
+              zoomin: true, // Enable the zoom-in icon
+              zoomout: true, // Enable the zoom-out icon
+              pan: false, // Disable the pan icon
+              reset: false, // Disable the reset zoom icon
             },
-            offsetY: -5
+            offsetY: -5,
           },
         },
         dataLabels: {
@@ -102,7 +108,7 @@ export default {
               color: this.darkMode ? "#FFF" : "#98A2B3",
               fontWeight: "300",
             },
-            offsetY: -20
+            offsetY: -20,
           },
           labels: {
             style: {
@@ -182,13 +188,19 @@ export default {
           },
         },
         legend: {
-          position: 'bottom',
-          markers: {
-            width: 12, // Width of the square marker
-            height: 12, // Height of the square marker
-            radius: 0, // Set border radius to 0 for square shape
+          labels: {
+            colors: this.darkMode ? "#FFF" : "#98A2B3", // Set the color of the legend labels
+            useSeriesColors: false, // Set to true if you want labels to match series colors
           },
-        },
+          markers: {
+            shape: "square", // Change the indicator shape to square
+          },
+          position: "top", // Place the legend at the top
+          horizontalAlign: "center", // Align the legend horizontally to the right
+          verticalAlign: "top", // Align the legend vertically to the top
+          // offsetX: 400, // Adjust the legend's X-axis position to avoid overlap
+          offsetY: -5
+        }
       },
     };
   },
