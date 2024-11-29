@@ -77,7 +77,7 @@ export default {
         stroke: {
           show: true,
           width: 3,
-          curve: "smooth",
+          // curve: "smooth",
         },
         grid: {
           borderColor: this.darkMode ? "rgba(255, 255, 255, 0.20)" : "#EAECF0",

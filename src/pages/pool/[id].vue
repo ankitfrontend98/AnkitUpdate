@@ -409,7 +409,7 @@
                       <!-- <input type="range" v-model="feeSelectedDays" :min="0" :max="360" :step="30"> -->
                       <div class="calc-other-text mt-2">Days to include for fees: <span class="highlight">{{
                         feeSelectedDays
-                          }}</span></div>
+                      }}</span></div>
                     </v-col>
 
                     <!-- Second Column: Run Back Test Button -->
@@ -816,8 +816,29 @@
                       <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                       <spline-chart v-else :dark-mode="darkMode" :key="liquidityChartRender"
                         :show-exponential-digit="true" :labels="liquididtyChartLabels" :data-values="liquidityDatasets"
-                        :options="{ colors: ['#DCC271', darkMode ? '#FFF' : '#98A2B3', '#10C461'] }"
-                        :axis-titles="{ xaxis: 'Price', yaxis: 'Liquidity' }" :map-colors="{
+                        :options="{
+                          colors: ['#DCC271', darkMode ? '#FFF' : '#98A2B3', '#10C461'],
+
+                          yaxis: {
+                            opposite: false,
+                            title: {
+                              text: 'Liquidity',
+                              style: {
+                                color: darkMode ? '#FFF' : '#98A2B3',
+                                fontWeight: '300',
+                                fontSize: '12px'
+                              },
+                            },
+                            labels: {
+                              style: {
+                                colors: this.darkMode ? '#FFF' : '#98A2B3',
+                              },
+                              formatter: (value) => {
+                                return value > 1000 ? millify(value) : value.toFixed(2);
+                              },
+                            },
+                          }
+                        }" :axis-titles="{ xaxis: 'Price', yaxis: 'Liquidity' }" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
                           gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
                           offset: darkMode ? '#DCC271' : '#2C61B0',
@@ -836,9 +857,10 @@
                       <spline-chart v-else :dark-mode="darkMode" :key="tokenDistributionChartRender"
                         :axis-titles="{ xaxis: 'Price' }" :show-exponential-digit="true"
                         :data-values="tokenDistributionDatasets" :labels="tokenDistributionChartLabels" :options="backTestingButtonClicked ? {
-                          colors: ['#DCC271', darkMode ? '#FFF' : '#98A2B3'],
+                          colors: [darkMode ? '#FFF' : '#98A2B3', '#DCC271'],
                           yaxis: [
                             {
+
                               title: {
                                 text: 'BaseToken Quantity',
                                 style: {
@@ -856,6 +878,7 @@
                               },
                             },
                             {
+
                               opposite: true,
                               title: {
                                 text: 'QuoteToken Quantity',
@@ -1520,6 +1543,8 @@ const handleInvertPrices = () => {
 };
 
 const handleTabClick = (value) => {
+  activeTab.value = value
+
   tokenDistributionChartLabels.value = [];
   tokenDistributionChartRender.value = 0;
   tokenDistributionDatasets.value = [];
@@ -1527,14 +1552,8 @@ const handleTabClick = (value) => {
   liquidityChartRender.value = 0;
   liquidityDatasets.value = [];
   invertedPrices.value = false
-  activeTab.value = value
   backTestingButtonClicked.value = false
-  if (value == 1) {
-    initializeRanges('current', 'neutral')
-  }
-  else if (value === 2) {
-    initializeRanges('future', 'neutral')
-  }
+  initializeRanges('current', 'neutral')
 }
 
 
