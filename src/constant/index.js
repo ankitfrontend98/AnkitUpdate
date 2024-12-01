@@ -1,10 +1,9 @@
 export const DATA_PERIOD = [
-  // { label: '1 Day', value: '1' },
+  { label: '1 Day', value: '1' },
   { label: '1 Week', value: '7' },
   { label: '1 Month', value: '30' },
   { label: '3 Months', value: '90' },
   { label: '6 Months', value: '180' },
-  { label: 'All', value: 'all' }, // Optional 'All' for no filter
 ];
 
 
@@ -199,5 +198,5 @@ export const ALL_CATEGORIES = [
 	{"text":"Music","value":"Music"},
 	{"text":"Gambling","value":"Gambling"},
 	{"text":"Cybersecurity","value":"Cybersecurity"},
-	{"text":"Tourism","value":"Tourism"}	
+	{"text":"Tourism","value":"Tourism"}
 ];
