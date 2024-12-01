@@ -299,9 +299,10 @@
                               <label class="calculator-label">Min Value: </label>
                               <span class="highlight ml-1">{{ lowerPercentageRange.toFixed(2) + '%' }}</span>
                             </div>
-                            <v-text-field v-model="myMinRange" class="text-field-width custom-textfield-padding"
+                            <v-text-field v-model="myMinRange"
+                              class="text-field-width custom-textfield-padding-append-icon"
                               :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input" variant="plain"
-                              density="default" :hide-details="true" prepend-inner-icon="mdi-minus"
+                              density="compact" :hide-details="true" prepend-inner-icon="mdi-minus"
                               append-inner-icon="mdi-plus" @click:prepend-inner="handlePrependInner('future')"
                               @click:append-inner="handleAppendInner('future')"></v-text-field>
                           </div>
@@ -316,9 +317,10 @@
                               <label class="calculator-label">Max Value: </label>
                               <span class="highlight ml-1">{{ higherPercentageRange.toFixed(2) + '%' }}</span>
                             </div>
-                            <v-text-field v-model="myMaxRange" class="text-field-width custom-textfield-padding"
+                            <v-text-field v-model="myMaxRange"
+                              class="text-field-width custom-textfield-padding-append-icon"
                               :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input"
-                              :hide-details="true" density="default" variant="plain" prepend-inner-icon="mdi-minus"
+                              :hide-details="true" density="compact" variant="plain" prepend-inner-icon="mdi-minus"
                               append-inner-icon="mdi-plus" @click:prepend-inner="handlePrependInner('max')"
                               @click:append-inner="handleAppendInner('max')"></v-text-field>
                           </div>
@@ -404,12 +406,14 @@
                     <v-col cols="12" lg="6">
 
                       <!-- Range Slider -->
-                      <v-slider v-model="feeSelectedDays" :step="30" :min="0" :max="365" color="#BFAC62"
-                        track-color="#eee" class="mt-4 w-50"></v-slider>
-                      <!-- <input type="range" v-model="feeSelectedDays" :min="0" :max="360" :step="30"> -->
-                      <div class="calc-other-text mt-2">Days to include for fees: <span class="highlight">{{
-                        feeSelectedDays
-                      }}</span></div>
+                      <div class="d-flex flex-column justify-center">
+                        <v-slider v-model="feeSelectedDays" :step="30" :min="0" :max="365" color="#BFAC62"
+                          track-color="#eee" class="w-50 custom-slider ml-7"></v-slider>
+                        <!-- <input type="range" v-model="feeSelectedDays" :min="0" :max="360" :step="30"> -->
+                        <div class="calc-other-text mt-2">Days to include for fees: <span class="highlight">{{
+                          feeSelectedDays
+                        }}</span></div>
+                      </div>
                     </v-col>
 
                     <!-- Second Column: Run Back Test Button -->
@@ -623,9 +627,10 @@
                             <label class="calculator-label">Future Price / Future CPI: </label>
                             <span class="highlight ml-1">{{ futurePercentageRange.toFixed(2) }}%</span>
                           </div>
-                          <v-text-field v-model="myFuturePrice" class="text-field-width custom-textfield-padding"
+                          <v-text-field v-model="myFuturePrice"
+                            class="text-field-width custom-textfield-padding-append-icon"
                             :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input"
-                            :hide-details="true" density="default" variant="plain" prepend-inner-icon="mdi-minus"
+                            :hide-details="true" density="compact" variant="plain" prepend-inner-icon="mdi-minus"
                             append-inner-icon="mdi-plus" @change="findClosestTik('future')"
                             @click:prepend-inner="handlePrependInner('future')"
                             @click:append-inner="handleAppendInner('future')"></v-text-field>
@@ -657,9 +662,9 @@
                                 poolDetailsPeriods[0].BaseToken :
                                 poolDetailsPeriods[0].QuoteToken }}</span>
                             </div>
-                            <v-text-field v-model="myFutureLiquidity" class="text-field-width custom-textfield-padding"
+                            <v-text-field v-model="myFutureLiquidity" class="text-field-width"
                               :class="[darkMode ? 'text-field-dark' : 'text-field-light']" variant="plain"
-                              density="default" :hide-details="true"></v-text-field>
+                              density="compact" :hide-details="true"></v-text-field>
                           </div>
                         </div>
                       </v-col>
@@ -674,7 +679,7 @@
                             <v-text-field v-model="myFutureMinRange"
                               class="text-field-width custom-textfield-padding disabled"
                               :class="[darkMode ? 'text-field-dark' : 'text-field-light']" variant="plain"
-                              density="default" :hide-details="true" readonly></v-text-field>
+                              density="compact" :hide-details="true" readonly></v-text-field>
                           </div>
                         </div>
                       </v-col>
@@ -691,7 +696,7 @@
                             <v-text-field v-model="myFutureMaxRange"
                               class="text-field-width custom-textfield-padding disabled"
                               :class="[darkMode ? 'text-field-dark' : 'text-field-light']" :hide-details="true" readonly
-                              density="default" variant="plain"></v-text-field>
+                              density="compact" variant="plain"></v-text-field>
                           </div>
                         </div>
                       </v-col>
@@ -818,26 +823,6 @@
                         :show-exponential-digit="true" :labels="liquididtyChartLabels" :data-values="liquidityDatasets"
                         :options="{
                           colors: ['#DCC271', darkMode ? '#FFF' : '#98A2B3', '#10C461'],
-
-                          yaxis: {
-                            opposite: false,
-                            title: {
-                              text: 'Liquidity',
-                              style: {
-                                color: darkMode ? '#FFF' : '#98A2B3',
-                                fontWeight: '300',
-                                fontSize: '12px'
-                              },
-                            },
-                            labels: {
-                              style: {
-                                colors: this.darkMode ? '#FFF' : '#98A2B3',
-                              },
-                              formatter: (value) => {
-                                return value > 1000 ? millify(value) : value.toFixed(2);
-                              },
-                            },
-                          }
                         }" :axis-titles="{ xaxis: 'Price', yaxis: 'Liquidity' }" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
                           gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
@@ -987,7 +972,6 @@ const estimatedAPR = ref(0);
 const daysForFees = ref(0);
 
 const currentPriceNativeX = ref([0]);
-const invertedPricesFlag = ref(false);
 const myFuturePrice = ref(0);
 const myFutureMaxRange = ref([0]);
 const myFutureMinRange = ref([0]);
@@ -1369,7 +1353,7 @@ const initializeRanges = (which, mode) => {
     let actualMinRange = Number.parseFloat(myMinRange.value);
     let actualMaxRange = Number.parseFloat(myMaxRange.value);
 
-    if (invertedPricesFlag.value) {
+    if (invertedPrices.value) {
       actualFuturePrice = 1 / Number.parseFloat(myFuturePrice.value);
       actualMinRange = 1 / Number.parseFloat(myMaxRange.value);
       actualMaxRange = 1 / Number.parseFloat(myMinRange.value);
@@ -1544,14 +1528,16 @@ const handleInvertPrices = () => {
 
 const handleTabClick = (value) => {
   activeTab.value = value
-
+  if (invertedPrices.value) {
+    handleInvertPrices()
+  }
   tokenDistributionChartLabels.value = [];
   tokenDistributionChartRender.value = 0;
   tokenDistributionDatasets.value = [];
   liquididtyChartLabels.value = []
   liquidityChartRender.value = 0;
   liquidityDatasets.value = [];
-  invertedPrices.value = false
+
   backTestingButtonClicked.value = false
   initializeRanges('current', 'neutral')
 }
@@ -1641,7 +1627,7 @@ const backTester = (which) => {
   } else if (which === 'future') {
     actualMinRange = myFutureMinRange.value;
     actualMaxRange = myFutureMaxRange.value;
-    if (invertedPricesFlag.value) {
+    if (invertedPrices.value) {
       actualMinRange = 1 / myFutureMaxRange.value;
       actualMaxRange = 1 / myFutureMinRange.value;
     }
@@ -2406,7 +2392,7 @@ onMounted(fetchData);
 .text-field-dark.disabled {
   border: 1px solid rgba(255, 255, 255, 0.17);
   background: #1B1F32;
-  color: #8e8f99
+  color: #98A2B3
 }
 
 .text-field-light {
@@ -2417,7 +2403,7 @@ onMounted(fetchData);
 .text-field-light.disabled {
   border: 1px solid var(--Gray-200, #EAECF0);
   background: var(--Gray-100, #efefef);
-  color: #8e8f99
+  color: #98A2B3
 }
 
 .token-detail {
@@ -2743,21 +2729,25 @@ onMounted(fetchData);
 
 }
 
+.custom-slider::v-deep .v-input__details {
+  display: none !important;
+}
+
 ::v-deep .v-field__append-inner {
   cursor: pointer;
 }
 
-.custom-textfield-padding::v-deep .v-field__append-inner {
-  padding-top: 18px !important;
+.custom-textfield-padding-append-icon::v-deep .v-field__append-inner {
+  padding-top: 10px !important;
 }
 
-.custom-textfield-padding::v-deep .v-field__prepend-inner {
-  padding-top: 15px !important;
-}
+/* .custom-textfield-padding::v-deep .v-field__prepend-inner {
+  padding-top: 12px !important;
+} */
 
-.custom-textfield-padding ::v-deep .v-field__input {
+/* .custom-textfield-padding ::v-deep .v-field__input {
   padding-top: 12px !important
-}
+} */
 
 ::v-deep .v-field__prepend-inner {
   cursor: pointer;
