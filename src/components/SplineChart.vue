@@ -117,10 +117,8 @@ export default {
             rotate: 0,
             hideOverlappingLabels: true,
             formatter: function (val) {
-              if (String(val).includes('.')) {
-                return parseFloat(val).toFixed(6);
-              }
-              return val;
+              const num = Number(val);
+              return num.toString().length > 10 ? num.toExponential(6) : num;
             },
 
           },
