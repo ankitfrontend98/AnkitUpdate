@@ -14,3 +14,18 @@ export function formatNumber(amount) {
     return auxAmount > 1 ? auxAmount.toFixed(5) : auxAmount;
 }
 
+
+export function removeTrailingZeros(num) {
+  return parseFloat(num.toString());
+}
+
+  export function formatDecimalNumber(val, point) {
+    if (val.toString().includes('.')) {
+        const decimalPart = val.toString().split('.')[1];
+        if (decimalPart.length > Number(point)) {
+            return Number(val.toFixed(Number(point)));
+        }
+    }
+    return val;
+}
+

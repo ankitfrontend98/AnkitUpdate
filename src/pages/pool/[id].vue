@@ -401,7 +401,7 @@
                   </div>
 
                   <!-- Run Test -->
-                  <v-row class="justify-space-between mb-5 mr-10 align-center">
+                  <v-row class="">
                     <!-- First Column: Range Slider and Text Below -->
                     <v-col cols="12" lg="6">
 
@@ -417,7 +417,7 @@
                     </v-col>
 
                     <!-- Second Column: Run Back Test Button -->
-                    <v-col cols="12" lg="6" class="d-flex justify-start">
+                    <v-col cols="12" lg="6" class="d-flex justify-end">
                       <v-btn class="text-none ml-4 run-text" color="medium-emphasis" min-width="92" rounded
                         @click="megaTest('current')">
                         Run Back Test
@@ -427,48 +427,50 @@
                   </v-row>
 
                   <hr class="mx-6 border-primary border-opacity-25">
-                  <div class="text-left result-text-small"
-                    :class="[darkMode ? 'result-text-dark' : 'result-text-light']">
-                    Back Test Results
-                  </div>
+                  <div class="d-flex flex-column ga-3">
+                    <div class="text-left result-text-small"
+                      :class="[darkMode ? 'result-text-dark' : 'result-text-light']">
+                      Back Test Results
+                    </div>
 
-                  <!-- Bottom Box -->
-                  <div class="d-flex flex-column">
-                    <v-card class="pa-5 mb-4 " elevation="0"
-                      :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
-                      <v-row cols="3">
-                        <v-col>
-                          <div>
-                            <div class="result-text-right">Generated Fees (est)</div>
-                            <div class="result-number"
-                              :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
-                              {{ poolDetailsPeriods[0].QuoteToken }} {{
-                                estimatedFees.toFixed(5) }},
-                              <br />
-                              <span style="font-size: 12px">(Approx. {{ approximateFeesUSD }})</span>
+                    <!-- Bottom Box -->
+                    <div class="d-flex flex-column">
+                      <v-card class="pa-5 mb-4 " elevation="0"
+                        :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
+                        <v-row cols="3">
+                          <v-col>
+                            <div>
+                              <div class="result-text-right">Generated Fees (est)</div>
+                              <div class="result-number"
+                                :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
+                                {{ poolDetailsPeriods[0].QuoteToken }} {{
+                                  estimatedFees.toFixed(5) }},
+                                <br />
+                                <span style="font-size: 12px">(Approx. {{ approximateFeesUSD }})</span>
+                              </div>
                             </div>
-                          </div>
-                        </v-col>
-                        <v-col>
-                          <div>
-                            <div class="result-text-right">Time In Range (%)</div>
-                            <div class="result-number"
-                              :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
-                              {{
-                                inRangePercentaje.toFixed(2) + ' %' }}</div>
-                          </div>
-                        </v-col>
-                        <v-col>
-                          <div>
-                            <div class="result-text-right">Estimated APR (%)</div>
-                            <div class="result-number"
-                              :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
-                              {{
-                                estimatedAPR.toFixed(2) + ' %' }}</div>
-                          </div>
-                        </v-col>
-                      </v-row>
-                    </v-card>
+                          </v-col>
+                          <v-col>
+                            <div>
+                              <div class="result-text-right">Time In Range (%)</div>
+                              <div class="result-number"
+                                :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
+                                {{
+                                  inRangePercentaje.toFixed(2) + ' %' }}</div>
+                            </div>
+                          </v-col>
+                          <v-col>
+                            <div>
+                              <div class="result-text-right">Estimated APR (%)</div>
+                              <div class="result-number"
+                                :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
+                                {{
+                                  estimatedAPR.toFixed(2) + ' %' }}</div>
+                            </div>
+                          </v-col>
+                        </v-row>
+                      </v-card>
+                    </div>
                   </div>
                 </v-card>
               </div>
@@ -520,7 +522,8 @@
                                   colors: darkMode ? '#FFF' : '#98A2B3',
                                 },
                                 formatter: (value) => {
-                                  return value > 1000 ? millify(value) : value.toFixed(2);
+                                  const val = removeTrailingZeros(value);
+                                  return val > 500 ? millify(val) : formatDecimalNumber(val, 2);
                                 },
                               },
                             },
@@ -538,7 +541,8 @@
                                   colors: darkMode ? '#FFF' : '#98A2B3',
                                 },
                                 formatter: (value) => {
-                                  return value > 1000 ? millify(value) : value.toFixed(2);
+                                  const val = removeTrailingZeros(value);
+                                  return val > 500 ? millify(val) : formatDecimalNumber(val, 2);
                                 },
                               },
                             },
@@ -619,7 +623,7 @@
                     </div>
                   </div>
                   <!--Future Price-->
-                  <div class="d-flex flex-row ga-2 justify-space-between align-center">
+                  <div class="d-flex flex-row ga-2 align-center">
                     <v-row>
                       <v-col lg="6" cols="12">
                         <div class="d-flex flex-column mr-6 ga-3 w-100">
@@ -636,14 +640,16 @@
                             @click:append-inner="handleAppendInner('future')"></v-text-field>
                         </div>
                       </v-col>
-                      <v-spacer></v-spacer>
-                      <v-col lg="5" cols="12">
+                      <v-col lg="6" cols="12">
                         <div class="d-flex flex-row justify-end">
-                          <div class="d-flex flex-column justify-end mr-2 ga-3">
+                          <div class="d-flex flex-column justify-end ga-2">
                             <div class="calc-other-text">Capital Preservation Indicator</div>
-                            <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{
-                              myGMValueFuture
-                            }}</v-chip>
+                            <div class="d-flex flex-column justify-end w-100 align-end">
+                              <v-chip :class="[darkMode ? 'chip-gmvalue-dark chip-width' : 'chip-gmvalue chip-width']"
+                                variant="flat">{{
+                                  myGMValueFuture
+                                }}</v-chip>
+                            </div>
                           </div>
                         </div>
                       </v-col>
@@ -733,7 +739,7 @@
 
 
 
-                  <v-row class="justify-space-between mb-5 mr-10 align-center">
+                  <v-row class="">
                     <!-- First Column: Range Slider and Text Below -->
                     <v-col cols="12" lg="6">
                       <div class="d-flex justify-space-between mt-5 mr-10 align-center">
@@ -752,12 +758,14 @@
                     </v-col>
 
                     <!-- Second Column: Run Back Test Button -->
-                    <v-col cols="12" lg="6" class="d-flex justify-end w-100">
-                      <v-btn class="text-none ml-4 run-text" color="medium-emphasis" min-width="92" rounded
-                        @click="megaTestFuture('future')">
-                        Run Back Test
-                        <v-icon class="ml-2 gap-cls">mdi-arrow-right</v-icon>
-                      </v-btn>
+                    <v-col cols="12" lg="6">
+                      <div class="d-flex justify-end w-100">
+                        <v-btn class="text-none run-text" color="medium-emphasis" min-width="92" rounded
+                          @click="megaTestFuture('future')">
+                          Run Back Test
+                          <v-icon class="ml-2 gap-cls">mdi-arrow-right</v-icon>
+                        </v-btn>
+                      </div>
                     </v-col>
                   </v-row>
 
@@ -858,7 +866,8 @@
                                   colors: darkMode ? '#FFF' : '#98A2B3',
                                 },
                                 formatter: (value) => {
-                                  return value > 1000 ? millify(value) : value.toFixed(2);
+                                  const val = removeTrailingZeros(value);
+                                  return val > 500 ? millify(val) : formatDecimalNumber(val, 2);
                                 },
                               },
                             },
@@ -877,7 +886,8 @@
                                   colors: darkMode ? '#FFF' : '#98A2B3',
                                 },
                                 formatter: (value) => {
-                                  return value > 1000 ? millify(value) : value.toFixed(2);
+                                  const val = removeTrailingZeros(value);
+                                  return val > 500 ? millify(val) : formatDecimalNumber(val, 2);
                                 },
                               },
                             },
@@ -909,7 +919,7 @@ import DetailsTable from '@/components/DetailsTable.vue';
 import { ref, onMounted, computed, watch, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
 import apiClient from '@/utils/axios';
-import { getMean, getStandardDeviation, formatNumber } from '@/utils/common';
+import { getMean, getStandardDeviation, formatNumber, removeTrailingZeros, formatDecimalNumber } from '@/utils/common';
 import { formatMoney } from '@/utils/formatMoney.js';
 import { useDateFormat } from '@/utils/composables/useDateFormat';
 import { DATA_PERIOD_GRAPH, MONTH_NAMES } from '@/constant/index.js';
@@ -2171,7 +2181,7 @@ const detailsTable = computed(() => {
   return filteredPoolDetailsBasedOnPeriod.value.map((poolDetailItem) => {
     return {
       date: formatDateTime(poolDetailItem.dateTime),
-      apr: poolDetailItem.apr.toFixed(2) != null ? parseFloat(poolDetailItem.apr).toFixed(2) : 0.00,
+      apr: `${poolDetailItem.apr.toFixed(2) != null ? parseFloat(poolDetailItem.apr).toFixed(2) : 0.00} %`,
       liquidity: formatMoney(poolDetailItem.Liquidity),
       volume: formatMoney(poolDetailItem.Volume),
       fees: formatMoney(poolDetailItem.fees),
@@ -2784,6 +2794,10 @@ onMounted(fetchData);
   font-weight: 500;
   line-height: 20px;
   /* 142.857% */
+}
+
+.chip-width {
+  width: 100% !important;
 }
 
 .calc-token {

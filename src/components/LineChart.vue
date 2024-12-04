@@ -2,6 +2,7 @@
   <apexchart type="area" :options="computedOptions" :series="series"></apexchart>
 </template>
 <script>
+import { formatDecimalNumber, removeTrailingZeros } from "@/utils/common";
 import millify from "millify";
 
 export default {
@@ -126,16 +127,18 @@ export default {
               colors: this.darkMode ? '#FFF' : '#98A2B3',
             },
             formatter: (value) => {
+              const val = removeTrailingZeros(value);
               if (this.showExponentialDigit) {
-                if (-Math.floor(Math.log10(value) + 1) >= 3) {
-                  return value.toExponential(2);
-                } else if (value > 1000) {
-                  return millify(value);
+                if (val != 0 && -Math.floor(Math.log10(val) + 1) >= 3) {
+                  return val.toExponential(2);
+                } else if (val > 1000) {
+                  return millify(val);
                 } else {
-                  return value.toFixed(6);
+                  return formatDecimalNumber(val, 5);
                 }
               }
-              return value > 1000 ? millify(value) : value.toFixed(2);
+
+              return val > 500 ? millify(val) : formatDecimalNumber(val, 2);
             }
           }
         },

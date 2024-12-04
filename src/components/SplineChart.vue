@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { formatDecimalNumber, removeTrailingZeros } from "@/utils/common";
 import millify from "millify";
 
 export default {
@@ -118,7 +119,7 @@ export default {
             hideOverlappingLabels: true,
             formatter: function (val) {
               const num = Number(val);
-              return num.toString().length > 10 ? num.toExponential(6) : num;
+              return num.toString().length > 8 ? num.toExponential(3) : num;
             },
 
           },
@@ -138,7 +139,8 @@ export default {
               colors: this.darkMode ? "#FFF" : "#98A2B3",
             },
             formatter: (value) => {
-              return value > 1000 ? millify(value) : value.toFixed(2);
+              const val = removeTrailingZeros(value);
+              return val > 500 ? millify(val) : formatDecimalNumber(val, 2);
             },
           },
         },
