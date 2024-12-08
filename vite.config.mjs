@@ -14,6 +14,9 @@ import { fileURLToPath, URL } from 'node:url'
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/',  // Ensures correct handling of relative paths for Vercel
+  build: {
+    outDir: 'dist',
+  },
   plugins: [
     VueRouter({
       routesFolder: 'src/pages',  // Assuming page-based routing in src/pages

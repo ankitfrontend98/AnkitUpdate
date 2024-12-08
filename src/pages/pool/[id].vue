@@ -412,7 +412,7 @@
                         <!-- <input type="range" v-model="feeSelectedDays" :min="0" :max="360" :step="30"> -->
                         <div class="calc-other-text mt-2">Days to include for fees: <span class="highlight">{{
                           feeSelectedDays
-                        }}</span></div>
+                            }}</span></div>
                       </div>
                     </v-col>
 
@@ -506,7 +506,7 @@
                       <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                       <spline-chart v-else :dark-mode="darkMode" :key="tokenDistributionChartRender"
                         :axis-titles="{ xaxis: 'Price' }" :show-exponential-digit="true"
-                        :labels="tokenDistributionChartLabels" :options="backTestingButtonClicked ? {
+                        :labels="tokenDistributionChartLabels" :options="{
                           colors: ['#DCC271', darkMode ? '#FFF' : '#98A2B3'],
                           yaxis: [
                             {
@@ -547,7 +547,7 @@
                               },
                             },
                           ],
-                        } : {}" :data-values="tokenDistributionDatasets" :map-colors="{
+                        }" :data-values="tokenDistributionDatasets" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
                           gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
                           offset: darkMode ? '#DCC271' : '#2C61B0',
@@ -827,9 +827,9 @@
                   <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class', '']">
                     <div class="pt-4 pb-4">
                       <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
-                      <spline-chart v-else :dark-mode="darkMode" :key="liquidityChartRender"
-                        :show-exponential-digit="true" :labels="liquididtyChartLabels" :data-values="liquidityDatasets"
-                        :options="{
+                      <spline-chart v-else :dark-mode="darkMode" :key="liquidityChartRenderFuture"
+                        :show-exponential-digit="true" :labels="liquididtyChartLabelsFuture"
+                        :data-values="liquidityDatasetsFuture" :options="{
                           colors: ['#DCC271', darkMode ? '#FFF' : '#98A2B3', '#10C461'],
                         }" :axis-titles="{ xaxis: 'Price', yaxis: 'Liquidity' }" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
@@ -847,9 +847,10 @@
                   <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class', 'mt-4']">
                     <div class="pt-4 pb-4">
                       <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
-                      <spline-chart v-else :dark-mode="darkMode" :key="tokenDistributionChartRender"
+                      <spline-chart v-else :dark-mode="darkMode" :key="tokenDistributionChartRenderFuture"
                         :axis-titles="{ xaxis: 'Price' }" :show-exponential-digit="true"
-                        :data-values="tokenDistributionDatasets" :labels="tokenDistributionChartLabels" :options="backTestingButtonClicked ? {
+                        :data-values="tokenDistributionDatasetsFuture" :labels="tokenDistributionChartLabelsFuture"
+                        :options="{
                           colors: [darkMode ? '#FFF' : '#98A2B3', '#DCC271'],
                           yaxis: [
                             {
@@ -892,7 +893,7 @@
                               },
                             },
                           ],
-                        } : {}" :map-colors="{
+                        }" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
                           gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
                           offset: darkMode ? '#DCC271' : '#2C61B0',
@@ -1000,9 +1001,15 @@ const feeSelectedDays = ref(30)
 const liquidityDatasets = ref([])
 const liquididtyChartLabels = ref([])
 const liquidityChartRender = ref(0)
+const liquidityDatasetsFuture = ref([])
+const liquididtyChartLabelsFuture = ref([])
+const liquidityChartRenderFuture = ref(0)
 const tokenDistributionDatasets = ref([])
 const tokenDistributionChartLabels = ref([])
 const tokenDistributionChartRender = ref(0)
+const tokenDistributionDatasetsFuture = ref([])
+const tokenDistributionChartLabelsFuture = ref([])
+const tokenDistributionChartRenderFuture = ref(0)
 const backTesterDatasets = ref([])
 const backTesterChartLabels = ref([])
 const backTesterChartRender = ref(0)
@@ -1010,7 +1017,6 @@ const backTesterChartRender = ref(0)
 const futureInRangePercentage = ref(0)
 const futureEstimatedFees = ref(0)
 const futureEstimatedAPR = ref(0)
-const backTestingButtonClicked = ref(false)
 
 const { formatDateTime } = useDateFormat();
 
@@ -1541,14 +1547,7 @@ const handleTabClick = (value) => {
   if (invertedPrices.value) {
     handleInvertPrices()
   }
-  tokenDistributionChartLabels.value = [];
-  tokenDistributionChartRender.value = 0;
-  tokenDistributionDatasets.value = [];
-  liquididtyChartLabels.value = []
-  liquidityChartRender.value = 0;
-  liquidityDatasets.value = [];
 
-  backTestingButtonClicked.value = false
   initializeRanges('current', 'neutral')
 }
 
@@ -1758,14 +1757,11 @@ const backTester = (which) => {
   }
 };
 const megaTest = () => {
-  backTestingButtonClicked.value = true
   backTester('current');
-
   calculateAssetBalances(myMinRange.value, myMaxRange.value, poolDetailsPrice.value.priceNative);
 }
 
 const megaTestFuture = () => {
-  backTestingButtonClicked.value = true
   calculateAssetBalances(myFutureMinRange.value, myFutureMaxRange.value, myFuturePrice.value, 0, false, 'future');
   backTester('future');
 
@@ -1989,8 +1985,8 @@ const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = '
 
     }
 
-    showLiquidityChart();
-    showTokensDistributionChart();
+    showLiquidityChart(which);
+    showTokensDistributionChart(which);
 
     // console.log(JSON.stringify(this.liquidityArray));
 
@@ -2054,25 +2050,48 @@ const showLiquidityChart = (type = 'current') => {
       }
     }
   });
+  if (type === 'current') {
+    console.log("breaking charts=========")
+    liquidityDatasets.value = [
+      {
+        name: 'Liquidity',
+        data: chartDataPricesUSD
+      },
+      {
+        name: 'Hold Pool',
+        data: chartHoldLiquidityInitial,
+      },
+      {
+        name: 'Liquidity with Fees',
+        data: chartLiquidityFees,
+      }
+    ]
 
-  liquidityDatasets.value = [
-    {
-      name: 'Liquidity',
-      data: chartDataPricesUSD
-    },
-    {
-      name: 'Hold Pool',
-      data: chartHoldLiquidityInitial,
-    },
-    {
-      name: 'Liquidity with Fees',
-      data: chartLiquidityFees,
-    }
-  ]
+    liquididtyChartLabels.value = chartLabels
+    liquidityChartRender.value++
+    console.log("liquidity chart data", liquidityDatasets.value, liquididtyChartLabels.value)
+  }
+  else {
+    liquidityDatasetsFuture.value = [
+      {
+        name: 'Liquidity',
+        data: chartDataPricesUSD
+      },
+      {
+        name: 'Hold Pool',
+        data: chartHoldLiquidityInitial,
+      },
+      {
+        name: 'Liquidity with Fees',
+        data: chartLiquidityFees,
+      }
+    ]
 
-  liquididtyChartLabels.value = chartLabels
-  liquidityChartRender.value++
-  console.log("liquidity chart data", liquidityDatasets.value, liquididtyChartLabels.value)
+    liquididtyChartLabelsFuture.value = chartLabels
+    liquidityChartRenderFuture.value++
+    console.log("liquidity chart data", liquidityDatasetsFuture.value, liquididtyChartLabelsFuture.value)
+  }
+
 }
 
 const showTokensDistributionChart = (type = 'current') => {
@@ -2097,26 +2116,50 @@ const showTokensDistributionChart = (type = 'current') => {
     }
   });
 
-  tokenDistributionDatasets.value = [
-    {
-      name: `${poolDetailsPeriods.value[0].BaseToken} Qty`,
-      data: chartTokenXQty,
-      pointStyle: false,
-      borderWidth: 1,
-      yAxisID: 'y1' // This dataset will use the quantity y-axis
-    },
-    {
-      name: `${poolDetailsPeriods.value[0].QuoteToken} Qty`,
-      data: chartTokenYQty,
-      pointStyle: false,
-      borderWidth: 1,
-      yAxisID: 'y2' // This dataset will use the quantity y-axis
-    },
-  ]
+  if (type === 'current') {
+    tokenDistributionDatasets.value = [
+      {
+        name: `${poolDetailsPeriods.value[0].BaseToken} Qty`,
+        data: chartTokenXQty,
+        pointStyle: false,
+        borderWidth: 1,
+        yAxisID: 'y1' // This dataset will use the quantity y-axis
+      },
+      {
+        name: `${poolDetailsPeriods.value[0].QuoteToken} Qty`,
+        data: chartTokenYQty,
+        pointStyle: false,
+        borderWidth: 1,
+        yAxisID: 'y2' // This dataset will use the quantity y-axis
+      },
+    ]
 
-  tokenDistributionChartLabels.value = chartLabels
-  tokenDistributionChartRender.value++
-  console.log(" tokenDistribution chart labels new", tokenDistributionDatasets.value, tokenDistributionChartLabels.value)
+    tokenDistributionChartLabels.value = chartLabels
+    tokenDistributionChartRender.value++
+    console.log(" tokenDistribution chart labels new", tokenDistributionDatasets.value, tokenDistributionChartLabels.value)
+  }
+  else {
+    tokenDistributionDatasetsFuture.value = [
+      {
+        name: `${poolDetailsPeriods.value[0].BaseToken} Qty`,
+        data: chartTokenXQty,
+        pointStyle: false,
+        borderWidth: 1,
+        yAxisID: 'y1' // This dataset will use the quantity y-axis
+      },
+      {
+        name: `${poolDetailsPeriods.value[0].QuoteToken} Qty`,
+        data: chartTokenYQty,
+        pointStyle: false,
+        borderWidth: 1,
+        yAxisID: 'y2' // This dataset will use the quantity y-axis
+      },
+    ]
+
+    tokenDistributionChartLabelsFuture.value = chartLabels
+    tokenDistributionChartRenderFuture.value++
+    console.log(" tokenDistribution chart labels new", tokenDistributionDatasetsFuture.value, tokenDistributionChartLabelsFuture.value)
+  }
 }
 
 const showBackTestChart = () => {
