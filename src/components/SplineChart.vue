@@ -175,7 +175,7 @@ export default {
             show: false,
           },
           style: {
-            fontSize: "14px",
+            fontSize: "12px",
             fontFamily: "poppins",
             fontWeight: "800",
             background: this.darkMode ? "#181a29" : "#ffffffb0",
@@ -183,7 +183,7 @@ export default {
           fixed: {
             enabled: true,
             position: "topRight",
-            offsetX: -150,
+            offsetX: -100,
             offsetY: 0,
           },
         },
