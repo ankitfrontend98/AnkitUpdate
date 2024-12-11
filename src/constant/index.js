@@ -68,6 +68,10 @@ export const ALL_CHAINS = [
     value: 'bsc'
   },
   {
+    text: 'Cetus',
+    value: 'cetus'
+  },
+  {
     text: 'Ethereum',
     value: 'ethereum'
   },
@@ -88,29 +92,26 @@ export const ALL_CHAINS = [
     value: 'solana'
   },
   {
+    text: 'Sui',
+    value: 'sui'
+  },
+  {
     text: 'ZYSync',
     value: 'zysync'
   },
-  {
-    text: 'Cetus',
-    value: 'cetus'
-  },
-  {
-    text: 'Sui',
-    value: 'sui'
-}];
+  ];
 
 export const ALL_PROTOCOL = [
   { text: 'Aerodrome', value: 'aerodrome' },
   { text: 'Camelot', value: 'camelot' },
   { text: 'Orca', value: 'orca' },
   { text: 'Pancakeswap', value: 'pancakeswap' },
+  { text: 'Quickswap', value: 'quickswap' },
+  { text: 'Ramses', value: 'ramses' },
   { text: 'Raydium', value: 'raydium' },
   { text: 'Trader joe', value: 'trader joe' },
   { text: 'Uniswap', value: 'uniswap' },
   { text: 'Velodrome', value: 'velodrome' },
-  { text: 'Quickswap', value: 'quickswap' },
-  { text: 'Ramses', value: 'ramses' }
 ];
 
 export const MAIN_TABLE_HEADER = [
@@ -199,4 +200,8 @@ export const ALL_CATEGORIES = [
 	{"text":"Gambling","value":"Gambling"},
 	{"text":"Cybersecurity","value":"Cybersecurity"},
 	{"text":"Tourism","value":"Tourism"}
-];
+].sort((a, b) => {
+  if (a.text.toLowerCase() < b.text.toLowerCase()) return -1;
+  if (a.text.toLowerCase() > b.text.toLowerCase()) return 1;
+  return 0;
+});

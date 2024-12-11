@@ -31,6 +31,23 @@
                 </v-list>
                 <v-divider></v-divider>
                 <v-list>
+                  <v-list-item>
+                    <div class="d-flex justify-space-between align-center">
+                      <div class="d-flex">
+                        <span>App Theme: {{ isDarkMode ? 'Dark' : 'Light' }}</span>
+                      </div>
+                      <input type="checkbox" class="checkbox" id="checkbox" v-model="isDarkMode">
+                      <label for="checkbox"
+                        :class="[isDarkMode ? 'checkbox-dark' : 'checkbox-light', 'checkbox-label']">
+                        <v-icon>mdi-moon-waning-crescent</v-icon>
+                        <v-icon>mdi-brightness-7</v-icon>
+                        <span class="ball"></span>
+                      </label>
+                    </div>
+                  </v-list-item>
+                </v-list>
+                <v-divider></v-divider>
+                <v-list>
                   <v-list-item @click="handleLogout">
                     Logout
                   </v-list-item>
