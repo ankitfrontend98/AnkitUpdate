@@ -4,9 +4,11 @@ import { ref, onMounted, computed, watch } from 'vue';
 import apiClient from '../utils/axios.js';
 import { formatMoney } from '@/utils/formatMoney.js';
 import { ALL_CHAINS, ALL_PROTOCOL, MAIN_TABLE_HEADER, ALL_CATEGORIES, DATA_PERIOD } from '@/constant/index.js'
-
+import { useAppStore } from '@/stores/app'
 
 const theme = useTheme();
+const store = useAppStore();
+
 const dataPeriod = DATA_PERIOD;
 const seletedDuration = ref("1");
 
@@ -251,7 +253,11 @@ const likesSomeCategories = computed(() => {
 const fetchData = async () => {
   loading.value = true;
   try {
-    const { data } = await apiClient.get('api/message/0');
+    if (store.poolList.length === 0) {
+      const { data } = await apiClient.get('api/message/0');
+      store.poolList = data;
+    }
+    const data = store.poolList
     items.value = data.output;
     items.value.forEach((element) => {
       let baseToken = element.BaseToken.substring(0, 10);

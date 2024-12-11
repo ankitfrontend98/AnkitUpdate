@@ -303,8 +303,8 @@
                               class="text-field-width custom-textfield-padding-append-icon"
                               :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input" variant="plain"
                               density="compact" :hide-details="true" prepend-inner-icon="mdi-minus"
-                              append-inner-icon="mdi-plus" @click:prepend-inner="handlePrependInner('future')"
-                              @click:append-inner="handleAppendInner('future')"></v-text-field>
+                              append-inner-icon="mdi-plus" @click:prepend-inner="handlePrependInner('min')"
+                              @click:append-inner="handleAppendInner('min')"></v-text-field>
                           </div>
                         </div>
                       </v-col>
@@ -412,7 +412,7 @@
                         <!-- <input type="range" v-model="feeSelectedDays" :min="0" :max="360" :step="30"> -->
                         <div class="calc-other-text mt-2">Days to include for fees: <span class="highlight">{{
                           feeSelectedDays
-                        }}</span></div>
+                            }}</span></div>
                       </div>
                     </v-col>
 
@@ -452,7 +452,7 @@
                           </v-col>
                           <v-col>
                             <div>
-                              <div class="result-text-right">Time In Range (%)</div>
+                              <div class="result-text-right">Time In Range</div>
                               <div class="result-number"
                                 :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
                                 {{
@@ -589,7 +589,8 @@
                     <div class="pt-4 pb-4">
                       <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                       <spline-chart v-else :dark-mode="darkMode" :key="backTesterChartRender"
-                        :show-exponential-digit="true" :labels="backTesterChartLabels" :data-values="backTesterDatasets"
+                        :axis-types="{ xaxis: 'category' }" :show-exponential-digit="true"
+                        :labels="backTesterChartLabels" :data-values="backTesterDatasets"
                         :options="{ colors: ['#DCC271', darkMode ? '#FFF' : '#98A2B3', '#10C461'] }" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
                           gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
@@ -818,7 +819,7 @@
                         </v-col>
                         <v-col>
                           <div>
-                            <div class="result-text-right">Time In Range (%)</div>
+                            <div class="result-text-right">Time In Range</div>
                             <div class="result-number"
                               :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
                               {{ futureInRangePercentage.toFixed(2) + ' %' }}

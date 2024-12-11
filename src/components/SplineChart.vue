@@ -34,6 +34,10 @@ export default {
       type: Object,
       required: false,
       // default: () => { return { xaxis: '', yaxis: '', y2axis: '' } }
+    },
+    axisTypes: {
+      type: Object,
+      required: false,
     }
   },
   mounted() {
@@ -58,6 +62,11 @@ export default {
           width: "100%",
           zoom: {
             enabled: true,
+          },
+          animations: {
+            enabled: true,
+            easing: 'easeinout',
+            speed: 300, // Adjust speed for smoother transitions
           },
           toolbar: {
             tools: {
@@ -100,7 +109,7 @@ export default {
           },
         },
         xaxis: {
-          type: "decimal",
+          type: this.axisTypes?.xaxis ?? "numeric",
           categories: this.labels,
           tickAmount: 7,
           title: {
@@ -166,9 +175,9 @@ export default {
         //     ],
         //   },
         // },
-        markers: {
-          colors: ["#0D8ABC"],
-        },
+        // markers: {
+        //   colors: ["#0D8ABC"],
+        // },
         tooltip: {
           theme: this.darkMode ? "dark" : "light", // Tooltip theme based on mode
           fillSeriesColor: false, // Prevent the tooltip background from using the series color

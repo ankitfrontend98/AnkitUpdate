@@ -110,7 +110,7 @@ export default {
           },
         },
         xaxis: {
-          type: 'date',
+          type: 'datetime',
           categories: this.labels,
           tickAmount: 10,
           labels: {
