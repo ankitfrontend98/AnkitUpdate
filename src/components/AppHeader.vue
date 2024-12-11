@@ -9,14 +9,6 @@
           <img v-else src="../assets/logo-light.png" width="180" />
         </div>
         <div class="d-flex margin-right">
-          <div class="mt-2">
-            <input type="checkbox" class="checkbox" id="checkbox" v-model="isDarkMode">
-            <label for="checkbox" :class="[isDarkMode ? 'checkbox-dark' : 'checkbox-light', 'checkbox-label']">
-              <v-icon>mdi-moon-waning-crescent</v-icon>
-              <v-icon>mdi-brightness-7</v-icon>
-              <span class="ball"></span>
-            </label>
-          </div>
           <div class="text-center">
             <v-menu v-model="menu" :close-on-content-click="false" location="end">
               <template v-slot:activator="{ props }">
