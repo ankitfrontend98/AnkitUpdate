@@ -29,3 +29,27 @@ export function removeTrailingZeros(num) {
     return val;
 }
 
+
+/**
+ * Converts a YYYYMMDDHHMMSS string to a normal timestamp
+ * @param {string} datetimeString - The datetime string in YYYYMMDDHHMMSS format
+ * @returns {string} - The formatted timestamp as YYYY-MM-DD HH:mm:ss
+ */
+export function convertToTimestamp(datetimeString) {
+  if (!datetimeString || datetimeString.length !== 14) {
+    throw new Error("Invalid datetime string format. Must be in YYYYMMDDHHMMSS format.");
+  }
+
+  const year = datetimeString.slice(0, 4);
+  const month = datetimeString.slice(4, 6) - 1; // Months are 0-based in JavaScript
+  const day = datetimeString.slice(6, 8);
+  const hour = datetimeString.slice(8, 10);
+  const minute = datetimeString.slice(10, 12);
+  const second = datetimeString.slice(12, 14);
+
+  const date = new Date(year, month, day, hour, minute, second);
+  console.log(date)
+
+  // Format the date using Moment.js
+  return date;
+}

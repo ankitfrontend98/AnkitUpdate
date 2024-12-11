@@ -39,7 +39,7 @@ export default {
   mounted() {
     // Logging props to the console
     console.log("Labels:", this.labels);
-    console.log("Data Values:", this.dataValues);
+    console.log("Data Values spline chart:", this.dataValues);
     console.log("Series Name:", this.seriesName);
     console.log("Dark Mode:", this.darkMode);
   },
@@ -66,9 +66,10 @@ export default {
               zoom: false, // Disable the zoom icon
               zoomin: true, // Enable the zoom-in icon
               zoomout: true, // Enable the zoom-out icon
-              pan: false, // Disable the pan icon
+              pan: true, // Disable the pan icon
               reset: false, // Disable the reset zoom icon
             },
+            autoSelected: "pan",
             offsetY: -5,
           },
         },
@@ -169,24 +170,61 @@ export default {
           colors: ["#0D8ABC"],
         },
         tooltip: {
-          theme: this.darkMode ? "dark" : "light",
-          fillSeriesColor: false,
+          theme: this.darkMode ? "dark" : "light", // Tooltip theme based on mode
+          fillSeriesColor: false, // Prevent the tooltip background from using the series color
           marker: {
-            show: false,
+            show: true, // Show series color markers in the tooltip
           },
           style: {
             fontSize: "12px",
-            fontFamily: "poppins",
+            fontFamily: "Poppins",
             fontWeight: "800",
-            background: this.darkMode ? "#181a29" : "#ffffffb0",
           },
           fixed: {
-            enabled: true,
+            enabled: true, // Keep tooltip fixed
             position: "topRight",
             offsetX: -100,
             offsetY: 0,
           },
+          y: {
+            formatter: function (value, { seriesIndex, w }) {
+              const color = w.config.colors[seriesIndex]; // Get the series color
+              return `<span style="color: ${color};">${formatDecimalNumber(value, 3)}</span>`;
+            },
+          },
         },
+
+        // tooltip: {
+        //   custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+        //     const value = series[seriesIndex][dataPointIndex];
+        //     const color = w.config.colors[seriesIndex];
+
+        //     return `
+        //       <div style="padding: 10px; color: #fff; background: ${color}; border-radius: 5px;">
+        //         <strong>${w.globals.seriesNames[seriesIndex]}:</strong> ${value}
+        //       </div>
+        //     `;
+        //   },
+        // },
+        // tooltip: {
+        //   theme: this.darkMode ? "dark" : "light",
+        //   fillSeriesColor: false,
+        //   marker: {
+        //     show: false,
+        //   },
+        //   style: {
+        //     fontSize: "12px",
+        //     fontFamily: "poppins",
+        //     fontWeight: "800",
+        //     background: this.darkMode ? "#181a29" : "#ffffffb0",
+        //   },
+        //   fixed: {
+        //     enabled: true,
+        //     position: "topRight",
+        //     offsetX: -100,
+        //     offsetY: 0,
+        //   },
+        // },
         legend: {
           labels: {
             colors: this.darkMode ? "#FFF" : "#98A2B3", // Set the color of the legend labels

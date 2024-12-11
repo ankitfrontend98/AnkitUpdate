@@ -68,14 +68,15 @@ export default {
           },
           toolbar: {
             tools: {
+              pan: true, // Disable the pan icon
               download: false, // Disable the download icon
               selection: false, // Disable the selection icon
               zoom: false, // Disable the zoom icon
               zoomin: true, // Enable the zoom-in icon
               zoomout: true, // Enable the zoom-out icon
-              pan: false, // Disable the pan icon
               reset: false, // Disable the reset zoom icon
-            }
+            },
+            autoSelected: "pan",
           },
         },
         dataLabels: {
@@ -214,5 +215,9 @@ export default {
   /* Or ::after, depending on your inspection */
   border-bottom-color: red !important;
   /* Change to your desired color */
+}
+
+.apexcharts-pan-icon {
+  display: none !important;
 }
 </style>

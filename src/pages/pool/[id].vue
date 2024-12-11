@@ -168,7 +168,7 @@
             </div>
           </div>
           <div class="d-flex flex-column">
-            <div class="label-color">Avg APR% est.</div>
+            <div class="label-color">Avg APR est.</div>
             <div class="label-font text-h5 text-textItemColor">
               {{ (weeklyAvgAPR.toFixed(3) != null) ? weeklyAvgAPR.toFixed(2) + '%' : 0.00 + '%' }}
             </div>
@@ -278,7 +278,7 @@
                         </div>
                       </v-col>
                       <v-col cols="12" lg="5">
-                        <div class="d-flex flex-row justify-end align-items-center">
+                        <div class="d-flex flex-row align-items-center">
                           <div class="heading-key" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
                             Approx: <span class="result-text-right">{{
                               approximateInitialLiquidityUSD }}</span></div>
@@ -335,7 +335,7 @@
                       <v-col cols="12" lg="6">
                         <div class="d-flex ga-3 flex-column">
                           <div class="d-flex flex-column mr-2">
-                            <div class="calc-other-text">Capital Preservation Indicator</div>
+                            <div class="calc-other-text">Capital Protection Indicator</div>
                             <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{
                               myGMValue
                             }}</v-chip>
@@ -345,24 +345,24 @@
                           <div class="d-flex flex-wrap justify-content-between mt-4">
                             <div class="d-flex mb-2">
                               <v-btn class="text-none mr-2"
-                                :class="[darkMode ? 'round-button-dark' : 'round-button-light']" min-width="92"
+                                :class="[darkMode ? 'round-button-dark' : 'round-button-light']" min-width="124"
                                 variant="outlined" rounded @click="initializeRanges('current', 'aggressive')">
                                 Narrow
                               </v-btn>
                               <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                                min-width="92" variant="outlined" rounded
+                                min-width="124" variant="outlined" rounded
                                 @click="initializeRanges('current', 'neutral')">
                                 Market
                               </v-btn>
                             </div>
                             <div class="d-flex">
                               <v-btn class="text-none mr-2"
-                                :class="[darkMode ? 'round-button-dark' : 'round-button-light']" min-width="92"
+                                :class="[darkMode ? 'round-button-dark' : 'round-button-light']" min-width="124"
                                 variant="outlined" rounded @click="initializeRanges('current', 'wide-short')">
                                 Wide Short
                               </v-btn>
                               <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                                min-width="92" variant="outlined" rounded
+                                min-width="124" variant="outlined" rounded
                                 @click="initializeRanges('current', 'wide-long')">
                                 Wide Long
                               </v-btn>
@@ -407,12 +407,12 @@
 
                       <!-- Range Slider -->
                       <div class="d-flex flex-column justify-center">
-                        <v-slider v-model="feeSelectedDays" :step="30" :min="0" :max="365" color="#BFAC62"
+                        <v-slider v-model="feeSelectedDays" :step="1" :min="0" :max="365" color="#BFAC62"
                           track-color="#eee" class="w-50 custom-slider ml-7"></v-slider>
                         <!-- <input type="range" v-model="feeSelectedDays" :min="0" :max="360" :step="30"> -->
                         <div class="calc-other-text mt-2">Days to include for fees: <span class="highlight">{{
                           feeSelectedDays
-                            }}</span></div>
+                        }}</span></div>
                       </div>
                     </v-col>
 
@@ -426,7 +426,7 @@
                     </v-col>
                   </v-row>
 
-                  <hr class="mx-6 border-primary border-opacity-25">
+                  <hr class="mx-6" style="border: 1px solid rgba(178, 178, 178, 0.7)">
                   <div class="d-flex flex-column ga-3">
                     <div class="text-left result-text-small"
                       :class="[darkMode ? 'result-text-dark' : 'result-text-light']">
@@ -444,7 +444,7 @@
                               <div class="result-number"
                                 :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
                                 {{ poolDetailsPeriods[0].QuoteToken }} {{
-                                  estimatedFees.toFixed(5) }},
+                                  estimatedFees.toFixed(5) }}
                                 <br />
                                 <span style="font-size: 12px">(Approx. {{ approximateFeesUSD }})</span>
                               </div>
@@ -461,7 +461,7 @@
                           </v-col>
                           <v-col>
                             <div>
-                              <div class="result-text-right">Estimated APR (%)</div>
+                              <div class="result-text-right">Estimated APR</div>
                               <div class="result-number"
                                 :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
                                 {{
@@ -506,7 +506,7 @@
                       <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                       <spline-chart v-else :dark-mode="darkMode" :key="tokenDistributionChartRender"
                         :axis-titles="{ xaxis: 'Price' }" :show-exponential-digit="true"
-                        :labels="tokenDistributionChartLabels" :options="{
+                        :labels="tokenDistributionChartLabels" :options="!testClicked ? {} : {
                           colors: ['#DCC271', darkMode ? '#FFF' : '#98A2B3'],
                           yaxis: [
                             {
@@ -547,6 +547,31 @@
                               },
                             },
                           ],
+                          tooltip: {
+                            theme: darkMode ? 'dark' : 'light',
+                            fillSeriesColor: false,
+                            marker: {
+                              show: true,
+                            },
+                            style: {
+                              fontSize: '12px',
+                              fontFamily: 'Poppins',
+                              fontWeight: '800',
+                            },
+                            fixed: {
+                              enabled: true, // Keep tooltip fixed
+                              position: 'topRight',
+                              offsetX: -100,
+                              offsetY: 0,
+                            },
+                            y: {
+                              formatter: function (value, { seriesIndex, dataPointIndex, w }) {
+                                const percentage = tokenDistributionDatasets[seriesIndex].percentages[dataPointIndex];
+                                const color = w.config.colors[seriesIndex];
+                                return `<span style='color: ${color};'>${value}</span><span> (${percentage} %)</span>`;
+                              },
+                            },
+                          },
                         }" :data-values="tokenDistributionDatasets" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
                           gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
@@ -628,7 +653,7 @@
                       <v-col lg="6" cols="12">
                         <div class="d-flex flex-column mr-6 ga-3 w-100">
                           <div class="label-height">
-                            <label class="calculator-label">Future Price / Future CPI: </label>
+                            <label class="calculator-label">Future Price: </label>
                             <span class="highlight ml-1">{{ futurePercentageRange.toFixed(2) }}%</span>
                           </div>
                           <v-text-field v-model="myFuturePrice"
@@ -643,7 +668,7 @@
                       <v-col lg="6" cols="12">
                         <div class="d-flex flex-row justify-end">
                           <div class="d-flex flex-column justify-end ga-2">
-                            <div class="calc-other-text">Capital Preservation Indicator</div>
+                            <div class="calc-other-text">Capital Protection Indicator</div>
                             <div class="d-flex flex-column justify-end w-100 align-end">
                               <v-chip :class="[darkMode ? 'chip-gmvalue-dark chip-width' : 'chip-gmvalue chip-width']"
                                 variant="flat">{{
@@ -745,12 +770,13 @@
                       <div class="d-flex justify-space-between mt-5 mr-10 align-center">
                         <div class="d-flex">
                           <v-btn class="text-none mr-4" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                            min-width="92" variant="outlined" rounded @click="initializeRanges('future', 'aggressive')">
+                            min-width="124" variant="outlined" rounded
+                            @click="initializeRanges('future', 'aggressive')">
                             Narrow Range
                           </v-btn>
 
                           <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                            min-width="92" variant="outlined" rounded @click="initializeRanges('future', 'neutral')">
+                            min-width="124" variant="outlined" rounded @click="initializeRanges('future', 'neutral')">
                             Market
                           </v-btn>
                         </div>
@@ -769,7 +795,7 @@
                     </v-col>
                   </v-row>
 
-                  <hr class="mx-6 border-primary border-opacity-25">
+                  <hr class="mx-6 " style="border: 1px solid rgba(178, 178, 178, 0.7)">
                   <div class="text-left result-text result-text-small"
                     :class="[darkMode ? 'result-text-dark' : 'result-text-light']">
                     Back Test Results
@@ -784,7 +810,7 @@
                             <div class="result-number"
                               :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
                               {{ poolDetailsPeriods[0].QuoteToken }} {{
-                                futureEstimatedFees.toFixed(5) }},
+                                futureEstimatedFees.toFixed(5) }}
                               <br />
                               <span style="font-size: 12px">(Approx. {{ approximateFutureFeesUSD }})</span>
                             </div>
@@ -801,7 +827,7 @@
                         </v-col>
                         <v-col>
                           <div>
-                            <div class="result-text-right">Estimated APR (%)</div>
+                            <div class="result-text-right">Estimated APR</div>
                             <div class="result-number"
                               :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
                               {{
@@ -831,6 +857,7 @@
                         :show-exponential-digit="true" :labels="liquididtyChartLabelsFuture"
                         :data-values="liquidityDatasetsFuture" :options="{
                           colors: ['#DCC271', darkMode ? '#FFF' : '#98A2B3', '#10C461'],
+
                         }" :axis-titles="{ xaxis: 'Price', yaxis: 'Liquidity' }" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
                           gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
@@ -850,7 +877,7 @@
                       <spline-chart v-else :dark-mode="darkMode" :key="tokenDistributionChartRenderFuture"
                         :axis-titles="{ xaxis: 'Price' }" :show-exponential-digit="true"
                         :data-values="tokenDistributionDatasetsFuture" :labels="tokenDistributionChartLabelsFuture"
-                        :options="{
+                        :options="!testClickedFuture ? {} : {
                           colors: [darkMode ? '#FFF' : '#98A2B3', '#DCC271'],
                           yaxis: [
                             {
@@ -893,6 +920,31 @@
                               },
                             },
                           ],
+                          tooltip: {
+                            theme: darkMode ? 'dark' : 'light',
+                            fillSeriesColor: false,
+                            marker: {
+                              show: true,
+                            },
+                            style: {
+                              fontSize: '12px',
+                              fontFamily: 'Poppins',
+                              fontWeight: '800',
+                            },
+                            fixed: {
+                              enabled: true, // Keep tooltip fixed
+                              position: 'topRight',
+                              offsetX: -100,
+                              offsetY: 0,
+                            },
+                            y: {
+                              formatter: function (value, { seriesIndex, dataPointIndex, w }) {
+                                const percentage = tokenDistributionDatasetsFuture[seriesIndex].percentages[dataPointIndex];
+                                const color = w.config.colors[seriesIndex];
+                                return `<span style='color: ${color};'>${value}</span><span> (${percentage} %)</span>`;
+                              },
+                            },
+                          }
                         }" :map-colors="{
                           stroke: darkMode ? '#DCC271' : '#25356F',
                           gradientToColors: darkMode ? '#DCC271' : '#2C61B0',
@@ -920,11 +972,12 @@ import DetailsTable from '@/components/DetailsTable.vue';
 import { ref, onMounted, computed, watch, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
 import apiClient from '@/utils/axios';
-import { getMean, getStandardDeviation, formatNumber, removeTrailingZeros, formatDecimalNumber } from '@/utils/common';
+import { getMean, getStandardDeviation, formatNumber, removeTrailingZeros, formatDecimalNumber, convertToTimestamp } from '@/utils/common';
 import { formatMoney } from '@/utils/formatMoney.js';
 import { useDateFormat } from '@/utils/composables/useDateFormat';
 import { DATA_PERIOD_GRAPH, MONTH_NAMES } from '@/constant/index.js';
 import millify from "millify";
+import moment from 'moment';
 
 
 const theme = useTheme();
@@ -1013,6 +1066,8 @@ const tokenDistributionChartRenderFuture = ref(0)
 const backTesterDatasets = ref([])
 const backTesterChartLabels = ref([])
 const backTesterChartRender = ref(0)
+const testClicked = ref(false)
+const testClickedFuture = ref(false)
 
 const futureInRangePercentage = ref(0)
 const futureEstimatedFees = ref(0)
@@ -1092,7 +1147,7 @@ const tokenDetails = computed(() => {
     },
     {
       id: 7,
-      label: 'Price Quote',
+      label: 'Price (Quote)',
       value: poolDetailsPeriods.value.length ? currentPriceNativeX.value : ''
     }
   ]
@@ -1544,6 +1599,8 @@ const handleInvertPrices = () => {
 
 const handleTabClick = (value) => {
   activeTab.value = value
+  tokenDistributionChartRender.value++
+  tokenDistributionChartRenderFuture.value++
   if (invertedPrices.value) {
     handleInvertPrices()
   }
@@ -1758,10 +1815,12 @@ const backTester = (which) => {
 };
 const megaTest = () => {
   backTester('current');
+  testClicked.value = true
   calculateAssetBalances(myMinRange.value, myMaxRange.value, poolDetailsPrice.value.priceNative);
 }
 
 const megaTestFuture = () => {
+  testClickedFuture.value = true
   calculateAssetBalances(myFutureMinRange.value, myFutureMaxRange.value, myFuturePrice.value, 0, false, 'future');
   backTester('future');
 
@@ -2051,18 +2110,17 @@ const showLiquidityChart = (type = 'current') => {
     }
   });
   if (type === 'current') {
-    console.log("breaking charts=========")
     liquidityDatasets.value = [
       {
-        name: 'Liquidity',
+        name: 'Pool Liquidity',
         data: chartDataPricesUSD
       },
       {
-        name: 'Hold Pool',
+        name: 'Hold Liquidity',
         data: chartHoldLiquidityInitial,
       },
       {
-        name: 'Liquidity with Fees',
+        name: 'Pool + Fees',
         data: chartLiquidityFees,
       }
     ]
@@ -2074,15 +2132,15 @@ const showLiquidityChart = (type = 'current') => {
   else {
     liquidityDatasetsFuture.value = [
       {
-        name: 'Liquidity',
+        name: 'Pool Liquidity',
         data: chartDataPricesUSD
       },
       {
-        name: 'Hold Pool',
+        name: 'Hold Liquidity',
         data: chartHoldLiquidityInitial,
       },
       {
-        name: 'Liquidity with Fees',
+        name: 'Pool + Fees',
         data: chartLiquidityFees,
       }
     ]
@@ -2121,6 +2179,7 @@ const showTokensDistributionChart = (type = 'current') => {
       {
         name: `${poolDetailsPeriods.value[0].BaseToken} Qty`,
         data: chartTokenXQty,
+        percentages: chartTokenX,
         pointStyle: false,
         borderWidth: 1,
         yAxisID: 'y1' // This dataset will use the quantity y-axis
@@ -2128,6 +2187,7 @@ const showTokensDistributionChart = (type = 'current') => {
       {
         name: `${poolDetailsPeriods.value[0].QuoteToken} Qty`,
         data: chartTokenYQty,
+        percentages: chartTokenY,
         pointStyle: false,
         borderWidth: 1,
         yAxisID: 'y2' // This dataset will use the quantity y-axis
@@ -2143,6 +2203,7 @@ const showTokensDistributionChart = (type = 'current') => {
       {
         name: `${poolDetailsPeriods.value[0].BaseToken} Qty`,
         data: chartTokenXQty,
+        percentages: chartTokenX,
         pointStyle: false,
         borderWidth: 1,
         yAxisID: 'y1' // This dataset will use the quantity y-axis
@@ -2150,6 +2211,7 @@ const showTokensDistributionChart = (type = 'current') => {
       {
         name: `${poolDetailsPeriods.value[0].QuoteToken} Qty`,
         data: chartTokenYQty,
+        percentages: chartTokenY,
         pointStyle: false,
         borderWidth: 1,
         yAxisID: 'y2' // This dataset will use the quantity y-axis
@@ -2185,7 +2247,7 @@ const showBackTestChart = () => {
     data: dailyLiquidity
   },
   {
-    name: 'Pool plus Fees',
+    name: 'Pool + Fees',
     data: totalLiquidity
   },
   {
@@ -2223,7 +2285,7 @@ const detailsTable = computed(() => {
 
   return filteredPoolDetailsBasedOnPeriod.value.map((poolDetailItem) => {
     return {
-      date: formatDateTime(poolDetailItem.dateTime),
+      date: moment(convertToTimestamp(poolDetailItem.dateTime)).format('lll'),
       apr: `${poolDetailItem.apr.toFixed(2) != null ? parseFloat(poolDetailItem.apr).toFixed(2) : 0.00} %`,
       liquidity: formatMoney(poolDetailItem.Liquidity),
       volume: formatMoney(poolDetailItem.Volume),

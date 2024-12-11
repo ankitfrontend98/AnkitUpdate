@@ -8,7 +8,7 @@ import { ALL_CHAINS, ALL_PROTOCOL, MAIN_TABLE_HEADER, ALL_CATEGORIES, DATA_PERIO
 
 const theme = useTheme();
 const dataPeriod = DATA_PERIOD;
-const seletedDuration = ref(null);
+const seletedDuration = ref("1");
 
 const items = ref([]);
 const menu = ref(false);
