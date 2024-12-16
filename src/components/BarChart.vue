@@ -1,5 +1,5 @@
 <template>
-  <apexchart type="bar" :options="chartOptions" :series="series"></apexchart>
+  <apexchart class="bar-chart" type="bar" :options="chartOptions" :series="series"></apexchart>
 </template>
 
 <script>
@@ -39,6 +39,7 @@ export default {
             tools: {
               download: false,
             },
+            autoSelected: "pan",
           },
         },
         plotOptions: {
@@ -62,6 +63,7 @@ export default {
 
         },
         xaxis: {
+          type: 'datetime',
           categories: this.labels,
           tickAmount: 10,
           labels: {
@@ -135,5 +137,9 @@ export default {
 
 .apexcharts-tooltip.apexcharts-theme-dark {
   background: #181a29 !important;
+}
+
+.bar-chart .apexcharts-toolbar {
+  display: none !important;
 }
 </style>

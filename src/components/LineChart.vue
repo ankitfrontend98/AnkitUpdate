@@ -47,6 +47,9 @@ export default {
       required: false
     }
   },
+  mounted() {
+    console.log(this.labels, "satetime")
+  },
   computed: {
     computedOptions() {
       return this.options && Object.keys(this.options).length > 0 ? { ...this.chartOptions, ...this.options } : this.chartOptions
@@ -112,7 +115,6 @@ export default {
         xaxis: {
           type: 'datetime',
           categories: this.labels,
-          tickAmount: 10,
           labels: {
             style: {
               colors: this.darkMode ? '#FFF' : '#98A2B3',
@@ -169,6 +171,9 @@ export default {
           colors: [this.mapColors.stroke],
         },
         tooltip: {
+          x: {
+            format: 'dd/MM/yy, HH:mm'
+          },
           theme: this.darkMode ? 'dark' : 'light', // Use pre-defined themes (dark, light),
           fillSeriesColor: false,
           marker: {

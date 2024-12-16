@@ -38,6 +38,11 @@ export default {
     axisTypes: {
       type: Object,
       required: false,
+    },
+    zoom: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   mounted() {
@@ -61,7 +66,7 @@ export default {
           height: "100%",
           width: "100%",
           zoom: {
-            enabled: true,
+            enabled: this.zoom,
           },
           animations: {
             enabled: true,
@@ -73,8 +78,8 @@ export default {
               download: false,
               selection: false, // Disable the selection icon
               zoom: false, // Disable the zoom icon
-              zoomin: true, // Enable the zoom-in icon
-              zoomout: true, // Enable the zoom-out icon
+              zoomin: this.zoom, // Enable the zoom-in icon
+              zoomout: this.zoom, // Enable the zoom-out icon
               pan: true, // Disable the pan icon
               reset: false, // Disable the reset zoom icon
             },
