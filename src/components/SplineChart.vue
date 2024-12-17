@@ -55,6 +55,21 @@ export default {
   computed: {
     computedOptions() {
       return this.options && Object.keys(this.options).length > 0 ? { ...this.chartOptions, ...this.options } : this.chartOptions
+    },
+    computedSeries() {
+      const temp = this.dataValues.map((seriesItem) => {
+        return {
+          ...seriesItem,
+          data: this.labels.map((label, index) => {
+            return {
+              x: parseFloat(label) * 1e6, // Scale up small values
+              y: seriesItem.data[index], // Use corresponding y values
+            };
+          }),
+        };
+      })
+      console.log(temp)
+      return temp
     }
   },
   data() {
@@ -115,7 +130,9 @@ export default {
         },
         xaxis: {
           type: this.axisTypes?.xaxis ?? "numeric",
-          categories: this.labels,
+
+          categories: this.labels.map(item => parseFloat(item) * 1e6),
+          forceNiceScale: true,
           tickAmount: 7,
           title: {
             text: this.axisTitles?.xaxis || '',
@@ -133,7 +150,7 @@ export default {
             rotate: 0,
             hideOverlappingLabels: true,
             formatter: function (val) {
-              const num = Number(val);
+              const num = Number(val / 1e6);
               return num.toString().length > 8 ? num.toExponential(3) : num;
             },
 

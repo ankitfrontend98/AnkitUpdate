@@ -33,11 +33,29 @@ export default {
           type: 'bar',
           height: 350,
           zoom: {
-            enabled: true,
+            enabled: true, // Enable zoom
+          },
+          pan: {
+            enabled: true, // Enable panning
+            mode: "x" // Pan in the x-direction
+          },
+          events: {
+            mouseLeave: () => {
+              document.body.style.cursor = "default"; // Reset cursor on leave
+            },
+            mouseMove: () => {
+              document.body.style.cursor = "move"; // Reset cursor on leave
+            }
           },
           toolbar: {
             tools: {
-              download: false,
+              pan: true, // Disable the pan icon
+              download: false, // Disable the download icon
+              selection: false, // Disable the selection icon
+              zoom: false, // Disable the zoom icon
+              zoomin: true, // Enable the zoom-in icon
+              zoomout: true, // Enable the zoom-out icon
+              reset: false, // Disable the reset zoom icon
             },
             autoSelected: "pan",
           },
@@ -51,7 +69,8 @@ export default {
         },
         colors: this.darkMode ? ['rgba(191, 172, 98, 1)', '#F4F4F5'] : ['rgba(191, 172, 98, 1)', 'rgba(15, 35, 87, 1)'],
         grid: {
-          show: false,
+          borderColor: this.darkMode ? "rgba(255, 255, 255, 0.20)" : "#EAECF0",
+          show: true,
         },
         dataLabels: {
           enabled: false
@@ -88,7 +107,7 @@ export default {
         },
         legend: {
           position: 'top',
-          horizontalAlign: 'right',
+          horizontalAlign: 'center',
           labels: {
             colors: this.darkMode ? '#FFF' : '#98A2B3',
           },
@@ -139,7 +158,7 @@ export default {
   background: #181a29 !important;
 }
 
-.bar-chart .apexcharts-toolbar {
+/* .bar-chart .apexcharts-toolbar {
   display: none !important;
-}
+} */
 </style>

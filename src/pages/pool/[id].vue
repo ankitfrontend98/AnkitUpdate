@@ -405,7 +405,7 @@
                     <!-- <input type="range" v-model="feeSelectedDays" :min="0" :max="360" :step="30"> -->
                     <div class="calc-other-text mt-2">Days to include for fees: <span class="highlight">{{
                       feeSelectedDays
-                    }}</span></div>
+                        }}</span></div>
                   </div>
                 </v-col>
 
@@ -490,7 +490,7 @@
               <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">Token
                 Distribution
               </div>
-              <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class', 'mt-4']">
+              <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class', '']">
                 <div class="pt-4 pb-4">
                   <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                   <spline-chart v-else :dark-mode="darkMode" :key="tokenDistributionChartRender"
@@ -574,7 +574,7 @@
               <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
                 Back Testing Results
               </div>
-              <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class', 'mt-4']">
+              <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class', '']">
                 <div class="pt-4 pb-4">
                   <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                   <spline-chart v-else :dark-mode="darkMode" :key="backTesterChartRender"
@@ -853,7 +853,7 @@
               <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">Future
                 Token Distribution
               </div>
-              <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class', 'mt-4']">
+              <v-card :class="[darkMode ? 'custom-card-dark-class' : 'custom-card-light-class', '']">
                 <div class="pt-4 pb-4">
                   <v-skeleton-loader v-if="loading" :loading="true" class="my-7 mx-2" width="98%" height="100px" />
                   <spline-chart v-else :dark-mode="darkMode" :key="tokenDistributionChartRenderFuture"
