@@ -104,9 +104,18 @@ const filterArrayData = computed(() => {
   if (selectedCategories.value.length > 0) {
     const selectedValues = selectedCategories.value.filter((item) => item !== 'all_select');
     filterData = filterData.filter((item) =>
-      selectedValues.some((selectedValue) => item.baseTokenCategories.includes(selectedValue))
+      selectedValues.some((selectedValue) => {
+        if (selectedValue === 'Stablecoins') {
+          return item.baseTokenCategories.includes('Stablecoins') &&
+            item.quoteTokenCategories.includes('Stablecoins');
+        }
+        else return item.baseTokenCategories.includes(selectedValue) ||
+          item.quoteTokenCategories.includes(selectedValue);
+      })
     );
   }
+
+
 
   // Apply token filters
   if (selectedToken1.value.length > 0) {
@@ -304,7 +313,7 @@ const resetFilter = () => {
   seletedChains.value = [];
   selectedProtocol.value = [];
   selectedCategories.value = [];
-  seletedDuration.value = null;
+  seletedDuration.value = "1";
   selectedToken1.value = [];
   selectedToken2.value = [];
   tempTvlMinPrice.value = tvlMinPrice.value = 0;
