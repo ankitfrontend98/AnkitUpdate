@@ -38,6 +38,7 @@ export default {
     axisTypes: {
       type: Object,
       required: false,
+      default: () => { return { xaxis: 'numeric' } }
     },
     zoom: {
       type: Boolean,
@@ -132,6 +133,7 @@ export default {
           type: this.axisTypes?.xaxis ?? "numeric",
 
           categories: this.labels.map(item => parseFloat(item) * 1e6),
+
           forceNiceScale: true,
           tickAmount: 7,
           title: {
@@ -149,10 +151,23 @@ export default {
             },
             rotate: 0,
             hideOverlappingLabels: true,
-            formatter: function (val) {
-              const num = Number(val / 1e6);
-              return num.toString().length > 8 ? num.toExponential(3) : num;
+            formatter: function (num) {
+              const val = Number(num / 1e6);
+              if (val < 1 && val !== 0) {
+                return val.toExponential(3);
+              }
+
+              if (val >= 1) {
+                return val.toString().length > 8 ? millify(val, { precision: 6 }) : val;
+              }
+
+              // Default case for 0
+              return "0";
             },
+            // formatter: function (val) {
+            //   const num = Number(val / 1e6);
+            //   return num.toString().length > 8 && num < 1 ? num.toExponential(3) : num;
+            // },
 
           },
         },
@@ -223,6 +238,12 @@ export default {
               return `<span style="color: ${color};">${formatDecimalNumber(value, 3)}</span>`;
             },
           },
+          x: this.axisTypes?.xaxis === 'numeric' ? {
+            formatter: function (num) {
+              const val = Number(num / 1e6);
+              return val;
+            },
+          } : {},
         },
 
         // tooltip: {

@@ -405,7 +405,7 @@
                     <!-- <input type="range" v-model="feeSelectedDays" :min="0" :max="360" :step="30"> -->
                     <div class="calc-other-text mt-2">Days to include for fees: <span class="highlight">{{
                       feeSelectedDays
-                        }}</span></div>
+                    }}</span></div>
                   </div>
                 </v-col>
 
@@ -560,6 +560,12 @@
                             return `<span style='color: ${color};'>${value}</span><span> (${percentage} %)</span>`;
                           },
                         },
+                        x: {
+                          formatter: function (num) {
+                            const val = Number(num / 1e6);
+                            return val;
+                          },
+                        }
                       },
                     }" :data-values="tokenDistributionDatasets" :map-colors="{
                       stroke: darkMode ? '#DCC271' : '#25356F',
@@ -758,7 +764,7 @@
                     <div class="d-flex">
                       <v-btn class="text-none mr-4" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
                         min-width="124" variant="outlined" rounded @click="initializeRanges('future', 'aggressive')">
-                        Narrow Range
+                        Narrow
                       </v-btn>
 
                       <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
@@ -924,6 +930,12 @@
                             const percentage = tokenDistributionDatasetsFuture[seriesIndex].percentages[dataPointIndex];
                             const color = w.config.colors[seriesIndex];
                             return `<span style='color: ${color};'>${value}</span><span> (${percentage} %)</span>`;
+                          },
+                        },
+                        x: {
+                          formatter: function (num) {
+                            const val = Number(num / 1e6);
+                            return val;
                           },
                         },
                       }

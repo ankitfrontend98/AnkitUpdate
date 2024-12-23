@@ -104,6 +104,7 @@ export const ALL_CHAINS = [
 export const ALL_PROTOCOL = [
   { text: 'Aerodrome', value: 'aerodrome' },
   { text: 'Camelot', value: 'camelot' },
+  { text: 'Cetus', value: 'cetus' },
   { text: 'Orca', value: 'orca' },
   { text: 'Pancakeswap', value: 'pancakeswap' },
   { text: 'Quickswap', value: 'quickswap' },

@@ -135,13 +135,13 @@ export default {
                 if (val != 0 && -Math.floor(Math.log10(val) + 1) >= 3) {
                   return val.toExponential(2);
                 } else if (val > 1000) {
-                  return millify(val);
+                  return millify(val, { precision: 3 });
                 } else {
                   return formatDecimalNumber(val, 5);
                 }
               }
 
-              return val > 500 ? millify(val) : formatDecimalNumber(val, 2);
+              return val > 500 ? millify(val, { precision: 3 }) : formatDecimalNumber(val, 2);
             }
           }
         },
