@@ -34,6 +34,7 @@ export default {
           height: 350,
           zoom: {
             enabled: true, // Enable zoom
+            allowMouseWheelZoom: false
           },
           pan: {
             enabled: true, // Enable panning

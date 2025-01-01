@@ -653,7 +653,8 @@ async function handleSelectAll(val, selectAll, allSelected) {
 
         <v-btn class="text-customText reset-filters" :class="[darkMode ? 'reset-filters-dark' : 'reset-filters-light']"
           @click="showFavourites = !showFavourites">
-          <span :class="{ 'white-star': !showFavourites }">⭐</span>
+          <span v-if="showFavourites" :class="{ 'custom-star-light': !darkMode, 'custom-star-dark': darkMode }">⭐</span>
+          <span v-else class="custom-star-not-selected">⭐</span>
           <v-tooltip activator="parent" location="bottom">{{ showFavourites ? 'Hide' : 'Show' }} Favourites</v-tooltip>
         </v-btn>
 
@@ -729,7 +730,17 @@ async function handleSelectAll(val, selectAll, allSelected) {
   </v-container>
 </template>
 <style scoped>
-.white-star {
+.custom-star-not-selected {
+  color: transparent;
+  text-shadow: 0 0 0 #bbbcc3;
+}
+
+.custom-star-light {
+  color: transparent;
+  text-shadow: 0 0 0 #142257;
+}
+
+.custom-star-dark {
   color: transparent;
   text-shadow: 0 0 0 rgb(255, 255, 255);
 }

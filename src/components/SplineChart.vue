@@ -83,6 +83,7 @@ export default {
           width: "100%",
           zoom: {
             enabled: this.zoom,
+            allowMouseWheelZoom: false
           },
           animations: {
             enabled: true,

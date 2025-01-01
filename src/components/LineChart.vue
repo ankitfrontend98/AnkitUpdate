@@ -67,7 +67,8 @@ export default {
           height: '100%',
           width: '100%',
           zoom: {
-            enabled: true
+            enabled: true,
+            allowMouseWheelZoom: false
           },
           toolbar: {
             tools: {
