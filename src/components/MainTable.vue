@@ -1,16 +1,21 @@
 <script setup>
 import { useTheme } from 'vuetify';
 import { ref, onMounted, computed, watch } from 'vue';
-import apiClient from '../utils/axios.js';
+import apiClient, { customAuthApiCall } from '../utils/axios.js';
 import { formatMoney } from '@/utils/formatMoney.js';
 import { ALL_CHAINS, ALL_PROTOCOL, MAIN_TABLE_HEADER, ALL_CATEGORIES, DATA_PERIOD } from '@/constant/index.js'
 import { useAppStore } from '@/stores/app'
+import { useAuth0 } from '@auth0/auth0-vue';
+import StarCheckbox from './StarCheckbox.vue';
 
 const theme = useTheme();
 const store = useAppStore();
+const { user } = useAuth0()
+
 
 const dataPeriod = DATA_PERIOD;
 const seletedDuration = ref("1");
+const showFavourites = ref(false)
 
 const items = ref([]);
 const menu = ref(false);
@@ -71,7 +76,6 @@ const filterDataByPeriod = () => {
   if (seletedDuration.value) {
     const selectedPeriod = parseInt(seletedDuration.value, 10);  // Convert the selected duration to a number
     filteredItems.value = items.value.filter(item => {
-      console.log(item)
       // Assuming `item.period` exists and represents the duration in days
       return item.period <= selectedPeriod;
     });
@@ -177,6 +181,14 @@ const filterArrayData = computed(() => {
       '180': 'SMA_APR180d',
     };
 
+    const corrFieldMapping = {
+      '1': 'Correlation7d',
+      '7': 'Correlation7d',
+      '30': 'Correlation30d',
+      '90': 'Correlation90d',
+      '180': 'Correlation180d',
+    }
+
     const selectedPeriod = seletedDuration.value;
 
     // Map the data fields dynamically for the selected period
@@ -187,6 +199,7 @@ const filterArrayData = computed(() => {
         Liquidity: item[liquidityFieldMapping[selectedPeriod]],
         fees: item[feesFieldMapping[selectedPeriod]],
         apr: item[aprFieldMapping[selectedPeriod]],
+        corr: formatCorrelation(item[corrFieldMapping[selectedPeriod]])
       };
     });
     // Remove items where mapped fields are null or undefined
@@ -198,8 +211,7 @@ const filterArrayData = computed(() => {
     });
   }
 
-  // Prioritize selected pairs
-  if (selected.value.length > 0) {
+  if (showFavourites.value) {
     const fav = [];
     const notFav = [];
     filterData.forEach((item) => {
@@ -209,7 +221,7 @@ const filterArrayData = computed(() => {
         notFav.push(item);
       }
     });
-    filterData = [...fav, ...notFav];
+    filterData = [...fav];
   }
   console.log('Filtered Data:', filterData);
   return filterData;
@@ -232,7 +244,7 @@ const getBestCorrelation = (item) => {
   return bestCorrelation !== undefined ? formatCorrelation(bestCorrelation) : 'N/A';
 };
 const formatCorrelation = (correlation) => {
-  return Math.round(Math.abs(correlation) * 100) + ' %';
+  return Math.round(Math.abs(correlation) * 100);
 };
 
 const likesAllChains = computed(() => {
@@ -260,13 +272,14 @@ const likesSomeCategories = computed(() => {
 
 
 const fetchData = async () => {
+
   loading.value = true;
   try {
     if (store.poolList.length === 0) {
       const { data } = await apiClient.get('api/message/0');
       store.poolList = data;
     }
-    const data = store.poolList
+    const data = store.poolList;
     items.value = data.output;
     items.value.forEach((element) => {
       let baseToken = element.BaseToken.substring(0, 10);
@@ -320,6 +333,7 @@ const resetFilter = () => {
   tempTvlMaxPrice.value = tvlMaxPrice.value = 0;
   tempAprMinPrice.value = aprMinPrice.value = 0;
   tempAprMaxPrice.value = aprMaxPrice.value = 0;
+  showFavourites.value = false;
 }
 
 const onChainSelectionChange = () => {
@@ -361,9 +375,7 @@ const protocolIcon = (value) => {
   return `../assets/images/protocols/${value}.png`;
 }
 
-watch(selected, async (newValue) => {
-  localStorage.setItem("favItems", newValue);
-});
+
 
 const updateSort = (value) => {
   console.log('update value', value);
@@ -373,19 +385,58 @@ watch(items, () => {
   filterDataByPeriod();  // Automatically apply period filter once items are fetched
 });
 
-
 // Watch for changes in selected duration or other filters
 // watch(seletedDuration, () => {
 //   filterArrayData.value; // Recalculate when duration or filters change
 // });
 
+const saveFav = async (data) => {
+  await customAuthApiCall('https://hooks.zapier.com/hooks/catch/20482599/28c9xzk/', {
+    method: 'POST', data: {
+      "data": data
+    }
+  })
+}
+
+
 onMounted(() => {
-  fetchData();
-  const favItems = localStorage.getItem('favItems');
-  if (favItems) {
-    selected.value = localStorage.getItem('favItems').split(',');
+  if (store.favPoolList.length > 0) {
+    selected.value = store.favPoolList
   }
+  else {
+    const namespace = 'https://yourdomain.com/';
+    const userMetadata = user.value[`${namespace}user_metadata`];
+    if (userMetadata.favourites.data && Array.isArray(userMetadata.favourites.data)) {
+      selected.value = userMetadata.favourites.data
+      store.favPoolList = selected.value
+    }
+  }
+  fetchData();
+
 });
+
+
+async function handleSelectCheckbox(val, toggleSelect, internalItem) {
+  toggleSelect(internalItem)
+  if (val)
+    selected.value.push(internalItem.value)
+  else selected.value = selected.value.filter(item => item !== internalItem.value)
+
+  store.favPoolList = selected.value
+  await saveFav(selected.value);
+}
+
+async function handleSelectAll(val, selectAll, allSelected) {
+  selectAll(!allSelected)
+  if (val) {
+    selected.value = filterArrayData.value.map(item => item.pairAddress)
+  }
+  else {
+    selected.value = []
+  }
+  store.favPoolList = selected.value
+  await saveFav(selected.value)
+}
 
 </script>
 
@@ -595,6 +646,19 @@ onMounted(() => {
         </v-menu>
       </div>
 
+      <div class="mt-6 mr-4">
+
+
+
+
+        <v-btn class="text-customText reset-filters" :class="[darkMode ? 'reset-filters-dark' : 'reset-filters-light']"
+          @click="showFavourites = !showFavourites">
+          <span :class="{ 'white-star': !showFavourites }">⭐</span>
+          <v-tooltip activator="parent" location="bottom">{{ showFavourites ? 'Hide' : 'Show' }} Favourites</v-tooltip>
+        </v-btn>
+
+      </div>
+
       <div class="mt-6">
         <v-btn class="text-customText reset-filters" :class="[darkMode ? 'reset-filters-dark' : 'reset-filters-light']"
           @click="resetFilter">
@@ -607,6 +671,14 @@ onMounted(() => {
       items-per-page="10" :loading="loading" show-select
       :class="[darkMode ? 'custom-dark-table-background' : 'custom-light-table-background']"
       @update:sort-by="updateSort">
+      <template v-slot:header.data-table-select>
+        <!-- <v-checkbox-btn :indeterminate="someSelected && !allSelected" :model-value="allSelected" color="primary"
+          @update:model-value="(val) => handleSelectAll(val, selectAll, allSelected)"></v-checkbox-btn> -->
+      </template>
+      <template v-slot:item.data-table-select="{ internalItem, isSelected, toggleSelect }">
+        <StarCheckbox :model-value="isSelected(internalItem)" color="primary"
+          @update:model-value="(val) => handleSelectCheckbox(val, toggleSelect, internalItem)" />
+      </template>
       <template v-slot:item.BaseToken="{ item }">
         <router-link class="router-link text-customText" :to="`/pool/${item.pairAddress}`">
           {{ item.BaseToken.substring(0, 10) }}
@@ -637,7 +709,7 @@ onMounted(() => {
                 <span class="text-customText">{{ (item.corr != null ? item.corr.toFixed(2) : 0.00)+'%' }}</span>
               </template> -->
       <template v-slot:item.corr="{ item }">
-        <span class="text-customText">{{ getBestCorrelation(item) }}</span>
+        <span class="text-customText">{{ item.corr }} %</span>
       </template>
 
       <template v-slot:item.Liquidity="{ item }">
@@ -657,6 +729,11 @@ onMounted(() => {
   </v-container>
 </template>
 <style scoped>
+.white-star {
+  color: transparent;
+  text-shadow: 0 0 0 rgb(255, 255, 255);
+}
+
 .width-adjust {
   min-width: 180px !important;
 }

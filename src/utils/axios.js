@@ -14,6 +14,15 @@ export function setAuthToken(token) {
 
 
 
+export const customAuthApiCall = (url, options = {}, baseURLOverride) => {
+  const config = {
+    ...options,
+    baseURL: baseURLOverride || authApiClient.defaults.baseURL,
+    url,
+  };
+  return authApiClient(config);
+};
+
 
 export const authApiClient = axios.create({
   baseURL: 'https://apyatlas.us.auth0.com/api/v2',

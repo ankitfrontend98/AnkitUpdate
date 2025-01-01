@@ -218,250 +218,36 @@
       <!-- <v-tabs-window-item key="1" value="1"> -->
       <v-row v-if="activeTab === '1'">
         <v-col cols="12" lg="6">
-          <div class="d-flex flex-column ga-2">
+
+          <div class="d-flex flex-column ga-2 sticky-top">
             <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">Current
               Price
             </div>
-            <v-card class="d-flex flex-column "
-              :class="[darkMode ? 'calculator-ui-dark sticky-top' : 'calculator-ui sticky-top']">
-              <div class="d-flex justify-space-between">
-                <div class="d-flex flex-column mr-6">
-                  <div class="calc-other-text" :class="[darkMode ? 'calc-other-text-dark' : 'calc-other-text-light']">
-                    Current Price:</div>
-                  <div class="highlight">{{ displayPrice }} {{ invertedPrices ?
-                    poolDetailsPeriods[0].BaseToken :
-                    poolDetailsPeriods[0].QuoteToken }}</div>
-                </div>
-
-                <!-- Invert Price -->
-                <div class="action">
-                  <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                    min-width="92" variant="outlined" rounded @click="handleInvertPrices">
-                    <span class="mt-2 mr-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"
-                        v-if="!darkMode">
-                        <path
-                          d="M10.0001 17.0833C13.9121 17.0833 17.0834 13.912 17.0834 10C17.0834 7.6454 15.9345 5.55912 14.1667 4.27118M10.8334 18.6667L9.16675 17L10.8334 15.3333M10.0001 2.91668C6.08806 2.91668 2.91675 6.08799 2.91675 10C2.91675 12.3546 4.06564 14.4409 5.83341 15.7288M9.16675 4.66668L10.8334 3.00001L9.16675 1.33334"
-                          stroke="#344054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                      </svg>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"
-                        v-else>
-                        <path
-                          d="M10.0001 17.0833C13.9121 17.0833 17.0834 13.912 17.0834 10C17.0834 7.6454 15.9345 5.55912 14.1667 4.27118M10.8334 18.6667L9.16675 17L10.8334 15.3333M10.0001 2.91668C6.08806 2.91668 2.91675 6.08799 2.91675 10C2.91675 12.3546 4.06564 14.4409 5.83341 15.7288M9.16675 4.66668L10.8334 3.00001L9.16675 1.33334"
-                          stroke="#FCFCFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                      </svg>
-                    </span>
-                    Invert Price
-                  </v-btn>
-                </div>
-              </div>
-
-              <div class="d-flex">
-                <v-row>
-                  <v-col cols="12" lg="7">
-                    <div class="d-flex flex-row mr-6 align-center ga-2 w-100">
-                      <div class="d-flex">
-                        <span class="calculator-label" :class="[darkMode ? 'label-dark' : 'label-light']">Supply:
-                        </span> &nbsp; <span class="highlight ml-1">{{ poolDetailsPeriods[0].QuoteToken }}</span>
-                      </div>
-                      <div class="w-100">
-                        <v-text-field v-model="liquidityValue" class="text-field-width"
-                          :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input" :hide-details="true"
-                          density="compact" variant="plain" @change="refreshTokensDistribution">
-
-                        </v-text-field>
-                      </div>
-                    </div>
-                  </v-col>
-                  <v-col cols="12" lg="5">
-                    <div class="d-flex flex-row align-items-center">
-                      <div class="heading-key" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
-                        Approx: <span class="result-text-right">{{
-                          approximateInitialLiquidityUSD }}</span></div>
-
-                    </div>
-                  </v-col>
-                </v-row>
-              </div>
-
-
-              <div class="d-flex">
-                <v-row>
-                  <!-- Min Value Input -->
-                  <v-col cols="12" lg="6">
-                    <div class="d-flex flex-column flex-gap" style="flex: 1;">
-                      <div class="d-flex flex-column mr-6 ga-3 w-100">
-                        <div class="label-height">
-                          <label class="calculator-label">Min Value: </label>
-                          <span class="highlight ml-1">{{ lowerPercentageRange.toFixed(2) + '%' }}</span>
-                        </div>
-                        <v-text-field v-model="myMinRange" class="text-field-width custom-textfield-padding-append-icon"
-                          :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input" variant="plain"
-                          density="compact" :hide-details="true" prepend-inner-icon="mdi-minus"
-                          append-inner-icon="mdi-plus" @click:prepend-inner="handlePrependInner('min')"
-                          @click:append-inner="handleAppendInner('min')"></v-text-field>
-                      </div>
-                    </div>
-                  </v-col>
-
-                  <!-- Max Value Input -->
-                  <v-col cols="12" lg="6">
-                    <div class="d-flex flex-column flex-gap" style="flex: 1;">
-                      <div class="d-flex flex-column ga-3 w-100">
-                        <div class="label-height">
-                          <label class="calculator-label">Max Value: </label>
-                          <span class="highlight ml-1">{{ higherPercentageRange.toFixed(2) + '%' }}</span>
-                        </div>
-                        <v-text-field v-model="myMaxRange" class="text-field-width custom-textfield-padding-append-icon"
-                          :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input" :hide-details="true"
-                          density="compact" variant="plain" prepend-inner-icon="mdi-minus" append-inner-icon="mdi-plus"
-                          @click:prepend-inner="handlePrependInner('max')"
-                          @click:append-inner="handleAppendInner('max')"></v-text-field>
-                      </div>
-                    </div>
-                  </v-col>
-                </v-row>
-              </div>
-
-              <div class="d-flex flex-column">
-                <v-row>
-                  <!-- First Column -->
-                  <v-col cols="12" lg="6">
-                    <div class="d-flex ga-3 flex-column">
-                      <div class="d-flex flex-column mr-2">
-                        <div class="calc-other-text">Capital Protection Indicator</div>
-                        <v-chip :class="[darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{
-                          myGMValue
-                        }}</v-chip>
-                      </div>
-
-                      <!-- Narror & Wide Range -->
-                      <div class="d-flex flex-wrap justify-content-between mt-4">
-                        <div class="d-flex mb-2">
-                          <v-btn class="text-none mr-2" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                            min-width="124" variant="outlined" rounded
-                            @click="initializeRanges('current', 'aggressive')">
-                            Narrow
-                          </v-btn>
-                          <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                            min-width="124" variant="outlined" rounded @click="initializeRanges('current', 'neutral')">
-                            Market
-                          </v-btn>
-                        </div>
-                        <div class="d-flex">
-                          <v-btn class="text-none mr-2" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                            min-width="124" variant="outlined" rounded
-                            @click="initializeRanges('current', 'wide-short')">
-                            Wide Short
-                          </v-btn>
-                          <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                            min-width="124" variant="outlined" rounded
-                            @click="initializeRanges('current', 'wide-long')">
-                            Wide Long
-                          </v-btn>
-                        </div>
-                      </div>
-                    </div>
-
-                  </v-col>
-
-                  <!-- Second Column capital & composition -->
-                  <v-col cols="12" lg="6">
-                    <div class="calc-other-text">Composition</div>
-                    <v-card class="pa-5 mb-4 " elevation="0"
-                      :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
-                      <div class="d-flex flex-column ga-6">
-                        <div class="d-flex flex-column">
-                          <div class="d-flex">
-                            <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
-                              poolDetailsPeriods[0].BaseToken }}: </span>
-                            <span class="highlight ml-1 composition-val-font"> {{ xPercentage.toFixed(2) }} %</span>
-                          </div>
-                          <div class="composition-token">{{ Number(xTokens).toFixed(5) }} tokens</div>
-                        </div>
-                        <div class="d-flex flex-column">
-                          <div class="d-flex">
-                            <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
-                              poolDetailsPeriods[0].QuoteToken }}: </span>
-                            <span class="highlight ml-1 composition-val-font"> {{ yPercentage.toFixed(2) }} %</span>
-                          </div>
-                          <div class="y-tokens">{{ Number(yTokens).toFixed(5) }} tokens</div>
-                        </div>
-                      </div>
-                    </v-card>
-                  </v-col>
-                </v-row>
-              </div>
-
-              <!-- Run Test -->
-              <v-row class="">
-                <!-- First Column: Range Slider and Text Below -->
-                <v-col cols="12" lg="6">
-
-                  <!-- Range Slider -->
-                  <div class="d-flex flex-column justify-center">
-                    <v-slider v-model="feeSelectedDays" :step="1" :min="0" :max="365" color="#BFAC62" track-color="#eee"
-                      class="w-50 custom-slider ml-7"></v-slider>
-                    <!-- <input type="range" v-model="feeSelectedDays" :min="0" :max="360" :step="30"> -->
-                    <div class="calc-other-text mt-2">Days to include for fees: <span class="highlight">{{
-                      feeSelectedDays
-                    }}</span></div>
-                  </div>
-                </v-col>
-
-                <!-- Second Column: Run Back Test Button -->
-                <v-col cols="12" lg="6" class="d-flex justify-end">
-                  <v-btn class="text-none ml-4 run-text" color="medium-emphasis" min-width="92" rounded
-                    @click="megaTest('current')">
-                    Run Back Test
-                    <v-icon class="ml-2 gap-cls">mdi-arrow-right</v-icon>
-                  </v-btn>
-                </v-col>
-              </v-row>
-
-              <hr class="mx-6" style="border: 1px solid rgba(178, 178, 178, 0.7)">
-              <div class="d-flex flex-column ga-3">
-                <div class="text-left result-text-small" :class="[darkMode ? 'result-text-dark' : 'result-text-light']">
-                  Back Test Results
-                </div>
-
-                <!-- Bottom Box -->
-                <div class="d-flex flex-column">
-                  <v-card class="pa-5 mb-4 " elevation="0"
-                    :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
-                    <v-row cols="3">
-                      <v-col>
-                        <div>
-                          <div class="result-text-right">Generated Fees (est)</div>
-                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
-                            {{ poolDetailsPeriods[0].QuoteToken }} {{
-                              estimatedFees.toFixed(5) }}
-                            <br />
-                            <span style="font-size: 12px">(Approx. {{ approximateFeesUSD }})</span>
-                          </div>
-                        </div>
-                      </v-col>
-                      <v-col>
-                        <div>
-                          <div class="result-text-right">Time In Range</div>
-                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
-                            {{
-                              inRangePercentaje.toFixed(2) + ' %' }}</div>
-                        </div>
-                      </v-col>
-                      <v-col>
-                        <div>
-                          <div class="result-text-right">Estimated APR</div>
-                          <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
-                            {{
-                              estimatedAPR.toFixed(2) + ' %' }}</div>
-                        </div>
-                      </v-col>
-                    </v-row>
-                  </v-card>
-                </div>
-              </div>
-            </v-card>
+            <SharedCalculator :type="'apr'" :darkMode="darkMode" :displayPrice="displayPrice" :token="invertedPrices ?
+              poolDetailsPeriods[0].BaseToken :
+              poolDetailsPeriods[0].QuoteToken" :quoteToken="poolDetailsPeriods[0].QuoteToken"
+              :base-token="poolDetailsPeriods[0].BaseToken" :approx-liquidity="approximateInitialLiquidityUSD"
+              :liquidity="liquidityValue" :lowerPercentageRange="lowerPercentageRange" :slider-value="feeSelectedDays"
+              :higherPercentageRange="higherPercentageRange" :range-options="[{ id: 1, label: 'Narrow', value: 'aggressive' },
+              { id: 2, label: 'Market', value: 'neutral' },
+              { id: 3, label: 'Wide Short', value: 'wide-short' }, { id: 3, label: 'Wide Long', value: 'wide-long' }
+              ]" :min="myMinRange" :max="myMaxRange" @update-liquidity-value="(val) => liquidityValue = val"
+              :cpi="myGMValue" :back-test-results="[{
+                id: 1, label: 'Generated Fees (est)',
+                isHtml: true,
+                value: `<span>${poolDetailsPeriods[0].QuoteToken} ${estimatedFees.toFixed(5)}<br />
+              <span style='font-size: 12px'>(Approx. ${approximateFeesUSD})</span></span>`
+              },
+              { id: 2, label: 'Time In Range', value: inRangePercentaje.toFixed(2) + ' %' },
+              { id: 3, label: 'Estimated APR', value: estimatedAPR.toFixed(2) + ' %' }]" :composition-data="[{ id: 1, tokens: Number(xTokens).toFixed(5), tokensPercentage: xPercentage.toFixed(2) },
+              { id: 2, tokens: Number(yTokens).toFixed(5), tokensPercentage: yPercentage.toFixed(2) }]"
+              @update-slider="(val) => feeSelectedDays = val"
+              @handle-prepend-append="(type, state) => type === 'prepend' ? handlePrependInner(state) : handleAppendInner(state)"
+              @update-min-range="(val) => myMinRange = val" @update-max-range="(val) => myMaxRange = val"
+              @initialize-ranges="(calc, type) => initializeRanges(calc, type)"
+              @refresh-tokens-distribution="refreshTokensDistribution" @handle-invert-prices="handleInvertPrices"
+              @handle-run-back-test="megaTest">
+            </SharedCalculator>
           </div>
         </v-col>
         <!-- SplineChart Component for Liquidity Back Test -->
@@ -605,227 +391,34 @@
       <!-- <v-tabs-window-item key="2" value="2"> -->
       <v-row v-if="activeTab === '2'">
         <v-col cols="12" lg="6">
-          <div class="d-flex flex-column ga-2">
+          <div class="d-flex flex-column ga-2 sticky-top">
             <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">Future
               Price
             </div>
-            <v-card class="d-flex flex-column " :class="[darkMode ? 'calculator-ui-dark' : 'calculator-ui']">
-              <div class="d-flex justify-space-between">
-                <!-- <div :class="[darkMode ? 'calc-heading-dark' : 'calc-heading-light']">
-                    <h4>APR CALCULATOR</h4>
-                  </div> -->
-                <div class="d-flex flex-column mr-6">
-                  <div class="calc-other-text" :class="[darkMode ? 'calc-other-text-dark' : 'calc-other-text-light']">
-                    Current
-                    Price:</div>
-                  <div class="highlight">{{ displayPrice }} {{ invertedPrices ? poolDetailsPeriods[0].BaseToken :
-                    poolDetailsPeriods[0].QuoteToken }}</div>
-                </div>
-                <div class="action">
-                  <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                    min-width="92" variant="outlined" rounded @click="handleInvertPrices">
-                    <span class="mt-2 mr-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"
-                        v-if="!darkMode">
-                        <path
-                          d="M10.0001 17.0833C13.9121 17.0833 17.0834 13.912 17.0834 10C17.0834 7.6454 15.9345 5.55912 14.1667 4.27118M10.8334 18.6667L9.16675 17L10.8334 15.3333M10.0001 2.91668C6.08806 2.91668 2.91675 6.08799 2.91675 10C2.91675 12.3546 4.06564 14.4409 5.83341 15.7288M9.16675 4.66668L10.8334 3.00001L9.16675 1.33334"
-                          stroke="#344054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                      </svg>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"
-                        v-else>
-                        <path
-                          d="M10.0001 17.0833C13.9121 17.0833 17.0834 13.912 17.0834 10C17.0834 7.6454 15.9345 5.55912 14.1667 4.27118M10.8334 18.6667L9.16675 17L10.8334 15.3333M10.0001 2.91668C6.08806 2.91668 2.91675 6.08799 2.91675 10C2.91675 12.3546 4.06564 14.4409 5.83341 15.7288M9.16675 4.66668L10.8334 3.00001L9.16675 1.33334"
-                          stroke="#FCFCFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                      </svg>
-                    </span>
-                    Invert Price
-                  </v-btn>
-                </div>
-              </div>
-              <!--Future Price-->
-              <div class="d-flex flex-row ga-2 align-center">
-                <v-row>
-                  <v-col lg="6" cols="12">
-                    <div class="d-flex flex-column mr-6 ga-3 w-100">
-                      <div class="label-height">
-                        <label class="calculator-label">Future Price: </label>
-                        <span class="highlight ml-1">{{ futurePercentageRange.toFixed(2) }}%</span>
-                      </div>
-                      <v-text-field v-model="myFuturePrice"
-                        class="text-field-width custom-textfield-padding-append-icon"
-                        :class="[darkMode ? 'text-field-dark' : 'text-field-light']" type="input" :hide-details="true"
-                        density="compact" variant="plain" prepend-inner-icon="mdi-minus" append-inner-icon="mdi-plus"
-                        @change="findClosestTik('future')" @click:prepend-inner="handlePrependInner('future')"
-                        @click:append-inner="handleAppendInner('future')"></v-text-field>
-                    </div>
-                  </v-col>
-                  <v-col lg="6" cols="12">
-                    <div class="d-flex flex-row justify-end">
-                      <div class="d-flex flex-column justify-end ga-2">
-                        <div class="calc-other-text">Capital Protection Indicator</div>
-                        <div class="d-flex flex-column justify-end w-100 align-end">
-                          <v-chip :class="[darkMode ? 'chip-gmvalue-dark chip-width' : 'chip-gmvalue chip-width']"
-                            variant="flat">{{
-                              myGMValueFuture
-                            }}</v-chip>
-                        </div>
-                      </div>
-                    </div>
-                  </v-col>
-                </v-row>
-              </div>
-
-              <div class="d-flex justify-space-between mr-4 align-center w-100">
-                <v-row>
-                  <v-col lg="4" cols="12">
-                    <!-- Future Supply -->
-                    <div class="d-flex flex-column flex-gap" style="flex: 1;">
-                      <div class="d-flex flex-column mr-6 ga-3 w-100">
-                        <div class="label-height">
-                          <label class="calculator-label">Supply: </label>
-                          <span class="highlight ml-1">{{ invertedPrices ?
-                            poolDetailsPeriods[0].BaseToken :
-                            poolDetailsPeriods[0].QuoteToken }}</span>
-                        </div>
-                        <v-text-field v-model="myFutureLiquidity" class="text-field-width"
-                          :class="[darkMode ? 'text-field-dark' : 'text-field-light']" variant="plain" density="compact"
-                          :hide-details="true"></v-text-field>
-                      </div>
-                    </div>
-                  </v-col>
-                  <v-col lg="4" cols="12">
-                    <!-- Min Value Input -->
-                    <div class="d-flex flex-column flex-gap" style="flex: 1;">
-                      <div class="d-flex flex-column mr-6 ga-3 w-100">
-                        <div class="label-height">
-                          <label class="calculator-label">Min Value: </label>
-                          <span class="highlight ml-1">{{ lowPercentageRangeFuture.toFixed(2) + '%' }}</span>
-                        </div>
-                        <v-text-field v-model="myFutureMinRange"
-                          class="text-field-width custom-textfield-padding disabled"
-                          :class="[darkMode ? 'text-field-dark' : 'text-field-light']" variant="plain" density="compact"
-                          :hide-details="true" readonly></v-text-field>
-                      </div>
-                    </div>
-                  </v-col>
-                  <v-col lg="4" cols="12">
-
-
-                    <!-- Max Value Input -->
-                    <div class="d-flex flex-column flex-gap" style="flex: 1;">
-                      <div class="d-flex flex-column ga-3 w-100">
-                        <div class="label-height">
-                          <label class="calculator-label">Max Value: </label>
-                          <span class="highlight ml-1">{{ highPercentageRangeFuture.toFixed(2) + '%' }}</span>
-                        </div>
-                        <v-text-field v-model="myFutureMaxRange"
-                          class="text-field-width custom-textfield-padding disabled"
-                          :class="[darkMode ? 'text-field-dark' : 'text-field-light']" :hide-details="true" readonly
-                          density="compact" variant="plain"></v-text-field>
-                      </div>
-                    </div>
-                  </v-col>
-                </v-row>
-              </div>
-
-              <div>
-                <div class="calc-other-text">Composition</div>
-                <v-card class="pa-5 mb-4 " elevation="0" :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
-                  <div class="d-flex flex-row justify-space-between ga-6">
-                    <div class="d-flex flex-column">
-                      <div>
-                        <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
-                          poolDetailsPeriods[0].BaseToken }}: </span>
-                        <span class="highlight ml-1 composition-val-font"> {{ xPercentageFuture.toFixed(2) }}
-                          %</span>
-                      </div>
-                      <div class="composition-token"> {{ xtokensFuture ?? 0 }} tokens</div>
-                    </div>
-                    <div class="d-flex flex-column">
-                      <div>
-                        <span :class="[darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
-                          poolDetailsPeriods[0].QuoteToken }}</span>:
-                        <span class="highlight composition-val-font">
-                          {{ yPercentageFuture.toFixed(2) }} %
-                        </span>
-                      </div>
-                      <div class="y-tokens" style="word-break: break-all">{{ ytokensFuture ?? 0 }} tokens</div>
-                    </div>
-                  </div>
-                </v-card>
-              </div>
-
-
-
-              <v-row class="">
-                <!-- First Column: Range Slider and Text Below -->
-                <v-col cols="12" lg="6">
-                  <div class="d-flex justify-space-between mt-5 mr-10 align-center">
-                    <div class="d-flex">
-                      <v-btn class="text-none mr-4" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                        min-width="124" variant="outlined" rounded @click="initializeRanges('future', 'aggressive')">
-                        Narrow
-                      </v-btn>
-
-                      <v-btn class="text-none" :class="[darkMode ? 'round-button-dark' : 'round-button-light']"
-                        min-width="124" variant="outlined" rounded @click="initializeRanges('future', 'neutral')">
-                        Market
-                      </v-btn>
-                    </div>
-                  </div>
-                </v-col>
-
-                <!-- Second Column: Run Back Test Button -->
-                <v-col cols="12" lg="6">
-                  <div class="d-flex justify-end w-100">
-                    <v-btn class="text-none run-text" color="medium-emphasis" min-width="92" rounded
-                      @click="megaTestFuture('future')">
-                      Run Back Test
-                      <v-icon class="ml-2 gap-cls">mdi-arrow-right</v-icon>
-                    </v-btn>
-                  </div>
-                </v-col>
-              </v-row>
-
-              <hr class="mx-6 " style="border: 1px solid rgba(178, 178, 178, 0.7)">
-              <div class="text-left result-text result-text-small"
-                :class="[darkMode ? 'result-text-dark' : 'result-text-light']">
-                Back Test Results
-              </div>
-              <div class="d-flex flex-column">
-                <v-card class="pa-5 mb-4 " elevation="0" :class="[darkMode ? 'result-card-dark' : 'result-card-light']">
-                  <v-row cols="3">
-                    <v-col>
-                      <div>
-                        <div class="result-text-right">Generated Fees (est)</div>
-                        <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
-                          {{ poolDetailsPeriods[0].QuoteToken }} {{
-                            futureEstimatedFees.toFixed(5) }}
-                          <br />
-                          <span style="font-size: 12px">(Approx. {{ approximateFutureFeesUSD }})</span>
-                        </div>
-                      </div>
-                    </v-col>
-                    <v-col>
-                      <div>
-                        <div class="result-text-right">Time In Range</div>
-                        <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
-                          {{ futureInRangePercentage.toFixed(2) + ' %' }}
-                        </div>
-                      </div>
-                    </v-col>
-                    <v-col>
-                      <div>
-                        <div class="result-text-right">Estimated APR</div>
-                        <div class="result-number" :class="[darkMode ? 'result-number-dark' : 'result-number-light']">
-                          {{
-                            futureEstimatedAPR.toFixed(2) + ' %' }}</div>
-                      </div>
-                    </v-col>
-                  </v-row>
-                </v-card>
-              </div>
-            </v-card>
+            <SharedCalculator :type="'future'" :darkMode="darkMode" :displayPrice="displayPrice" :price="myFuturePrice"
+              :price-percent="futurePercentageRange ?? 0" :token="invertedPrices ?
+                poolDetailsPeriods[0].BaseToken :
+                poolDetailsPeriods[0].QuoteToken" :quoteToken="poolDetailsPeriods[0].QuoteToken"
+              :base-token="poolDetailsPeriods[0].BaseToken" :approx-liquidity="approximateInitialLiquidityUSDFuture"
+              :liquidity="myFutureLiquidity" :lowerPercentageRange="lowPercentageRangeFuture"
+              :slider-value="feeSelectedDaysFuture" :higherPercentageRange="highPercentageRangeFuture" :range-options="[{ id: 1, label: 'Narrow', value: 'aggressive' },
+              { id: 2, label: 'Market', value: 'neutral' },
+              ]" :min="myFutureMinRange" :max="myFutureMaxRange"
+              @update-liquidity-value="(val) => myFutureLiquidity = val" :cpi="myGMValue" :back-test-results="[{
+                id: 1, label: 'Generated Fees (est)',
+                isHtml: true,
+                value: `<span>${poolDetailsPeriods[0].QuoteToken} ${futureEstimatedFees.toFixed(5)}<br />
+              <span style='font-size: 12px'>(Approx. ${approximateFutureFeesUSD})</span></span>`
+              },
+              { id: 2, label: 'Time In Range', value: futureInRangePercentage.toFixed(2) + ' %' },
+              { id: 3, label: 'Estimated APR', value: futureEstimatedAPR.toFixed(2) + ' %' }]" :composition-data="[{ id: 1, tokens: xtokensFuture ?? 0, tokensPercentage: xPercentageFuture.toFixed(2) },
+              { id: 2, tokens: ytokensFuture ?? 0, tokensPercentage: yPercentageFuture.toFixed(2) }]"
+              @update-slider="(val) => feeSelectedDaysFuture = val"
+              @handle-prepend-append="(type, state) => type === 'prepend' ? handlePrependInner(state) : handleAppendInner(state)"
+              @initialize-ranges="(calc, type) => initializeRanges(calc, type)"
+              @handle-invert-prices="handleInvertPrices" @update-price="val => findClosestTik(val)"
+              @handle-run-back-test="megaTestFuture">
+            </SharedCalculator>
           </div>
         </v-col>
 
@@ -972,6 +565,7 @@ import { useDateFormat } from '@/utils/composables/useDateFormat';
 import { DATA_PERIOD_GRAPH, MONTH_NAMES } from '@/constant/index.js';
 import millify from "millify";
 import moment from 'moment';
+import SharedCalculator from '@/components/SharedCalculator.vue';
 
 
 const theme = useTheme();
@@ -1045,6 +639,7 @@ const backTesterLiquidityArray = ref([]);
 const liquidityArray = ref([])
 const liquidityArrayFuture = ref([])
 const feeSelectedDays = ref(30)
+const feeSelectedDaysFuture = ref(30)
 const liquidityDatasets = ref([])
 const liquididtyChartLabels = ref([])
 const liquidityChartRender = ref(0)
@@ -1814,9 +1409,9 @@ const megaTest = () => {
 }
 
 const megaTestFuture = () => {
+  backTester('future');
   testClickedFuture.value = true
   calculateAssetBalances(myFutureMinRange.value, myFutureMaxRange.value, myFuturePrice.value, 0, false, 'future');
-  backTester('future');
 
 }
 
@@ -2008,11 +1603,21 @@ const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = '
 
       let atPeriodFee = 0;
 
-      if (estimatedAPR.value > 0 && feeSelectedDays.value > 0) {
-        atPeriodFee = actualLiquidity * Number(feeSelectedDays.value) * Number.parseFloat(estimatedAPR.value) / (100 * 365);
+      if (which === 'current') {
+        if (estimatedAPR.value > 0 && feeSelectedDays.value > 0) {
+          atPeriodFee = actualLiquidity * Number(feeSelectedDays.value) * Number.parseFloat(estimatedAPR.value) / (100 * 365);
 
-      } else {
-        atPeriodFee = 0;
+        } else {
+          atPeriodFee = 0;
+        }
+      }
+      else {
+        if (futureEstimatedAPR.value > 0 && feeSelectedDaysFuture.value > 0) {
+          atPeriodFee = actualLiquidity * Number(feeSelectedDaysFuture.value) * Number.parseFloat(futureEstimatedAPR.value) / (100 * 365);
+
+        } else {
+          atPeriodFee = 0;
+        }
       }
 
       var element = {
@@ -2446,6 +2051,14 @@ const approximateInitialLiquidityUSD = computed(() => {
   }
 });
 
+const approximateInitialLiquidityUSDFuture = computed(() => {
+  if (Math.abs(poolDetailsPrice.value.priceNative - poolDetailsPrice.value.priceUsd) / poolDetailsPrice.value.priceUsd < 0.01) {
+    return formatMoney(myFutureLiquidity.value);
+  }
+  else {
+    return formatMoney(myFutureLiquidity.value * poolDetailsPrice.value.priceUsd / currentPriceNativeX.value);
+  }
+});
 
 watch(seletedDuration, () => {
   setValues();
@@ -3099,7 +2712,7 @@ onMounted(fetchData);
 
   .sticky-top {
     position: sticky;
-    top: 0;
+    top: 10px;
   }
 }
 </style>
