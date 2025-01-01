@@ -6,6 +6,7 @@ export const useAppStore = defineStore('app', {
   state: () => ({
     darkMode: false,
     poolList: [],
+    favPoolList: []
   }),
   getters: {
     getTheme: (state) => state.darkMode,
@@ -20,5 +21,11 @@ export const useAppStore = defineStore('app', {
         console.error('Failed to fetch pool list:', error)
       }
     },
+    addToFavPoolList(item) {
+        this.favPoolList.push(item);
+    },
+    setFavPoolList(array){
+      this.favPoolList = array
+    }
   },
 })

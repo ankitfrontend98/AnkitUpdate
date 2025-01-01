@@ -102,6 +102,9 @@ export default {
             autoSelected: "pan",
             offsetY: -5,
           },
+          events: {
+            mouseWheelZoom: false, // Disables mouse scroll zoom
+          },
         },
         dataLabels: {
           enabled: false,
@@ -158,7 +161,7 @@ export default {
               }
 
               if (val >= 1) {
-                return val.toString().length > 8 ? millify(val, { precision: 6 }) : val;
+                return val.toString().length > 8 ? millify(val, { precision: 3 }) : val;
               }
 
               // Default case for 0
