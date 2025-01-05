@@ -655,7 +655,7 @@ async function handleSelectAll(val, selectAll, allSelected) {
           @click="showFavourites = !showFavourites">
           <span v-if="showFavourites" :class="{ 'custom-star-light': !darkMode, 'custom-star-dark': darkMode }">⭐</span>
           <span v-else class="custom-star-not-selected">⭐</span>
-          <v-tooltip activator="parent" location="bottom">{{ showFavourites ? 'Hide' : 'Show' }} Favourites</v-tooltip>
+          <v-tooltip activator="parent" location="bottom">{{ showFavourites ? 'Hide' : 'Show' }} Favorites</v-tooltip>
         </v-btn>
 
       </div>

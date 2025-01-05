@@ -93,6 +93,8 @@ export default {
           }
         },
         yaxis: {
+          opposite: true,
+
           labels: {
             style: {
               colors: this.darkMode ? '#FFF' : '#98A2B3',
@@ -130,7 +132,13 @@ export default {
             position: 'topRight',
             offsetX: -250,
             offsetY: 0,
-          }
+          },
+          y: {
+            formatter: function (value, { seriesIndex, w }) {
+              const color = w.config.colors[seriesIndex]; // Get the series color
+              return `<span style="color: ${color};">${value}</span>`;
+            },
+          },
         },
       },
       series: [{

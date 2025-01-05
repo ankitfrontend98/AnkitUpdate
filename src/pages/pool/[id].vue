@@ -1968,10 +1968,10 @@ const dailyAprData = computed(() => {
     ix++;
     if (ix % 3 == 0) {
       if (element.priceUsd != undefined) {
-        const day = element.dateTime.slice(6, 8);
-        const month = element.dateTime.slice(4, 6);
-        chartLabels.push(`${day} ${MONTH_NAMES[month]}`);
-        chartDataAPR.push(parseFloat(element.apr).toFixed(2));
+        const date = new Date(convertToTimestamp(element.dateTime));
+        const isoDate = date.toISOString();
+        chartLabels.push(isoDate);
+        chartDataAPR.push(parseFloat(1 / element.priceNative).toFixed(6));
       }
     }
   });
