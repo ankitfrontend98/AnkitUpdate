@@ -150,10 +150,10 @@
           <div class="calc-other-text">Composition</div>
           <v-card class="pa-5 mb-4 " elevation="0" :class="[props.darkMode ? 'result-card-dark' : 'result-card-light']">
             <div class="d-flex flex-column ga-6">
-              <div v-for="item in composition" :key="item.id" class="d-flex flex-column">
+              <div v-for="(item, index) in composition" :key="item.id" class="d-flex flex-column">
                 <div class="d-flex">
                   <span :class="[props.darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
-                    props.baseToken }}: </span>
+                    index===0?props.baseToken: props.quoteToken }}: </span>
                   <span class="highlight ml-1 composition-val-font"> {{ item.tokensPercentage }} %</span>
                 </div>
                 <div class="composition-token">{{ item.tokens }} tokens</div>
