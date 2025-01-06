@@ -391,24 +391,32 @@ watch(items, () => {
 // });
 
 const saveFav = async (data) => {
-  await customAuthApiCall('https://hooks.zapier.com/hooks/catch/20482599/28c9xzk/', {
-    method: 'POST', data: {
-      "data": data
-    }
-  })
+  const userId = user.value?.sub
+  const payload = {
+    "favorites": data
+  }
+  try {
+    await apiClient.post(`api/favorites/${userId}`, payload)
+  }
+  catch (err) {
+    console.log(err)
+  }
 }
 
-
-onMounted(() => {
+onMounted(async () => {
   if (store.favPoolList.length > 0) {
-    selected.value = store.favPoolList
+    selected.value = [...store.favPoolList]
   }
   else {
-    const namespace = 'https://yourdomain.com/';
-    const userMetadata = user.value[`${namespace}user_metadata`];
-    if (userMetadata.favourites.data && Array.isArray(userMetadata.favourites.data)) {
-      selected.value = userMetadata.favourites.data
-      store.favPoolList = selected.value
+    const userId = user.value?.sub
+    try {
+      const { data } = await apiClient.get(`api/favorites/${userId}`);
+      if (data && data?.favorites) selected.value = data?.favorites || [];
+      else selected.value = []
+      store.favPoolList = [...selected.value];
+    }
+    catch (error) {
+      console.log(error)
     }
   }
   fetchData();
@@ -422,21 +430,23 @@ async function handleSelectCheckbox(val, toggleSelect, internalItem) {
     selected.value.push(internalItem.value)
   else selected.value = selected.value.filter(item => item !== internalItem.value)
 
+  const uniqueArray = [...new Set(selected.value)];
+  selected.value = [...uniqueArray]
   store.favPoolList = selected.value
   await saveFav(selected.value);
 }
 
-async function handleSelectAll(val, selectAll, allSelected) {
-  selectAll(!allSelected)
-  if (val) {
-    selected.value = filterArrayData.value.map(item => item.pairAddress)
-  }
-  else {
-    selected.value = []
-  }
-  store.favPoolList = selected.value
-  await saveFav(selected.value)
-}
+// async function handleSelectAll(val, selectAll, allSelected) {
+//   selectAll(!allSelected)
+//   if (val) {
+//     selected.value = filterArrayData.value.map(item => item.pairAddress)
+//   }
+//   else {
+//     selected.value = []
+//   }
+//   store.favPoolList = selected.value
+//   await saveFav(selected.value)
+// }
 
 </script>
 
@@ -654,7 +664,9 @@ async function handleSelectAll(val, selectAll, allSelected) {
         <v-btn class="text-customText reset-filters" :class="[darkMode ? 'reset-filters-dark' : 'reset-filters-light']"
           @click="showFavourites = !showFavourites">
           <span v-if="showFavourites" :class="{ 'custom-star-light': !darkMode, 'custom-star-dark': darkMode }">⭐</span>
-          <span v-else class="custom-star-not-selected">⭐</span>
+          <span v-else
+            :class="{ 'custom-star-not-selected-light': !darkMode, 'custom-star-not-selected-dark': darkMode }">⭐</span>
+
           <v-tooltip activator="parent" location="bottom">{{ showFavourites ? 'Hide' : 'Show' }} Favorites</v-tooltip>
         </v-btn>
 
@@ -730,9 +742,14 @@ async function handleSelectAll(val, selectAll, allSelected) {
   </v-container>
 </template>
 <style scoped>
-.custom-star-not-selected {
+.custom-star-not-selected-light {
   color: transparent;
   text-shadow: 0 0 0 #bbbcc3;
+}
+
+.custom-star-not-selected-dark {
+  color: transparent;
+  text-shadow: 0 0 0 #5d5757;
 }
 
 .custom-star-light {
@@ -742,7 +759,7 @@ async function handleSelectAll(val, selectAll, allSelected) {
 
 .custom-star-dark {
   color: transparent;
-  text-shadow: 0 0 0 rgb(255, 255, 255);
+  text-shadow: 0 0 0 rgb(var(--v-theme-labelColor));
 }
 
 .width-adjust {

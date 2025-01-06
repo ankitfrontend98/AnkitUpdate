@@ -2,13 +2,14 @@
   <div class="star-container">
     <label>
       <!-- The hidden checkbox -->
-      <input
-        type="checkbox"
-        v-model="isChecked"
-        @change="emit('update:modelValue', isChecked)"
-      />
+      <input type="checkbox" v-model="isChecked" @change="emit('update:modelValue', isChecked)" />
       <!-- The visible star -->
-      <span class="star" :class="{ active: isChecked, light: !darkMode, dark:darkMode }">&#9733;</span>
+      <div style="cursor: pointer;">
+        <span v-if="isChecked" :class="{ 'custom-star-light': !darkMode, 'custom-star-dark': darkMode }">⭐</span>
+        <span v-else
+          :class="{ 'custom-star-not-selected-light': !darkMode, 'custom-star-not-selected-dark': darkMode }">⭐</span>
+      </div>
+      <!-- <span class="star" :class="{ active: isChecked, light: !darkMode, dark: darkMode }">&#9733;</span> -->
     </label>
   </div>
 </template>
@@ -42,14 +43,35 @@ watch(
 </script>
 
 <style scoped>
+.custom-star-not-selected-light {
+  color: transparent;
+  text-shadow: 0 0 0 #bbbcc3;
+}
+
+.custom-star-not-selected-dark {
+  color: transparent;
+  text-shadow: 0 0 0 #5d5757;
+}
+
+.custom-star-light {
+  color: transparent;
+  text-shadow: 0 0 0 #142257;
+}
+
+.custom-star-dark {
+  color: transparent;
+  text-shadow: 0 0 0 rgb(var(--v-theme-labelColor));
+}
+
+
 .star-container {
   display: flex;
-  justify-content: center;  
+  justify-content: center;
   position: relative;
 }
 
 input[type="checkbox"] {
-  display: none; 
+  display: none;
 }
 
 .star {
@@ -61,9 +83,10 @@ input[type="checkbox"] {
 }
 
 .star.active.light {
-  color: #142257; 
+  color: #142257;
 }
+
 .star.active.dark {
-  color: rgb(var(--v-theme-labelColor)); 
+  color: rgb(var(--v-theme-labelColor));
 }
 </style>
