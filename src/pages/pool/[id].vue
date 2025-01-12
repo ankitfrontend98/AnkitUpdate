@@ -758,22 +758,23 @@ const setValues = () => {
   weeklyFees.value = 0;
   filteredPoolDetailsBasedOnPeriod.value.forEach((element) => {
     if (counter === 0) {
-      minPrice = element.priceNative;
-      maxPrice = element.priceNative;
+      minPrice = Number.parseFloat(element.priceNative);
+      maxPrice = Number.parseFloat(element.priceNative);
     }
     else {
-      if (element.priceNative < minPrice) {
-        minPrice = element.priceNative;
+      if (Number.parseFloat(element.priceNative) < minPrice) {
+        minPrice = Number.parseFloat(element.priceNative);
       }
-      if (element.priceNative > maxPrice) {
-        maxPrice = element.priceNative;
+      if (Number.parseFloat(element.priceNative) > maxPrice) {
+        maxPrice = Number.parseFloat(element.priceNative);
       }
     }
 
     weeklyAvgLiquidity.value += element.Liquidity;
     weeklyVolume.value += element.Volume / 3;
     weeklyFees.value += element.fees / 3;
-    if (typeof (element.priceNative) !== "undefined") {
+    if (typeof (element.priceNative) !== "undefined" &&
+      Number.parseFloat(element.priceNative) > 0) {
       nativePriceArray.push(Number.parseFloat(element.priceNative));
     }
     counter++;
@@ -949,33 +950,44 @@ const initializeRanges = (which, mode) => {
   if (which === 'current') {
     switch (mode) {
       case 'aggressive':
-        highMultiplier = 0.75;
-        lowMultiplier = 0.75;
-        myMinRange.value = Number.parseFloat(currentPriceNativeX.value) - Number.parseFloat(mySigma.value) * lowMultiplier;
-        myMaxRange.value = Number.parseFloat(currentPriceNativeX.value) + Number.parseFloat(mySigma.value) * highMultiplier;
+        if (Number.parseFloat(weeklyVolatility.value) * 1.5 > 75) {
+          lowMultiplier = 75;
+        }
+        else {
+          lowMultiplier = Number.parseFloat(weeklyVolatility.value) * 1.5;
+        }
+        myMinRange.value = formatNumber(Number.parseFloat(currentPriceNativeX.value) * (1 - (lowMultiplier / 100)));
+        myMaxRange.value = formatNumber(Number.parseFloat(currentPriceNativeX.value) * (1 + (Number.parseFloat(weeklyVolatility.value) * 1.5 / 100)));
         break;
       case 'neutral':
-        highMultiplier = 2.5;
-        lowMultiplier = 1.5;
-        if (currentPriceNativeX.value >= myMeanPrice.value) {
-          myMinRange.value = Number.parseFloat(myMeanPrice.value) - Number.parseFloat(mySigma.value) * lowMultiplier;
-          myMaxRange.value = Number.parseFloat(currentPriceNativeX.value) + Number.parseFloat(mySigma.value) * highMultiplier;
-        } else {
-          myMinRange.value = Number.parseFloat(currentPriceNativeX.value) - Number.parseFloat(mySigma.value) * highMultiplier;
-          myMaxRange.value = Number.parseFloat(myMeanPrice.value) + Number.parseFloat(mySigma.value) * lowMultiplier;
+        if (Number.parseFloat(weeklyVolatility.value) * 3 > 75) {
+          lowMultiplier = 75;
         }
+        else {
+          lowMultiplier = Number.parseFloat(weeklyVolatility.value) * 3;
+        }
+        myMinRange.value = formatNumber(Number.parseFloat(currentPriceNativeX.value) * (1 - (lowMultiplier / 100)));
+        myMaxRange.value = formatNumber(Number.parseFloat(currentPriceNativeX.value) * (1 + (Number.parseFloat(weeklyVolatility.value) * 3 / 100)));
         break;
       case 'wide-short':
-        highMultiplier = 1.5;
-        lowMultiplier = 3.5;
-        myMinRange.value = Number.parseFloat(currentPriceNativeX.value) - Number.parseFloat(mySigma.value) * lowMultiplier;
-        myMaxRange.value = Number.parseFloat(currentPriceNativeX.value) + Number.parseFloat(mySigma.value) * highMultiplier;
+        if (Number.parseFloat(weeklyVolatility.value) * 6 > 75) {
+          lowMultiplier = 75;
+        }
+        else {
+          lowMultiplier = Number.parseFloat(weeklyVolatility.value) * 6;
+        }
+        myMinRange.value = formatNumber(Number.parseFloat(currentPriceNativeX.value) * (1 - (lowMultiplier / 100)));
+        myMaxRange.value = formatNumber(Number.parseFloat(currentPriceNativeX.value) * (1 + (Number.parseFloat(weeklyVolatility.value) * 1.5 / 100)));
         break;
       case 'wide-long':
-        highMultiplier = 3.5;
-        lowMultiplier = 1.5;
-        myMinRange.value = Number.parseFloat(currentPriceNativeX.value) - Number.parseFloat(mySigma.value) * lowMultiplier;
-        myMaxRange.value = Number.parseFloat(currentPriceNativeX.value) + Number.parseFloat(mySigma.value) * highMultiplier;
+        if (Number.parseFloat(weeklyVolatility.value) * 1.5 > 75) {
+          lowMultiplier = 75;
+        }
+        else {
+          lowMultiplier = Number.parseFloat(weeklyVolatility.value) * 1.5;
+        }
+        myMinRange.value = formatNumber(Number.parseFloat(currentPriceNativeX.value) * (1 - (lowMultiplier / 100)));
+        myMaxRange.value = formatNumber(Number.parseFloat(currentPriceNativeX.value) * (1 + (Number.parseFloat(weeklyVolatility.value) * 6 / 100)));
         break;
     }
 
@@ -1248,7 +1260,7 @@ const shiftTik = (which, step) => {
 }
 
 const refreshTokensDistribution = () => {
-  let liqObjCurrent = this.calculateAssetBalances(myMinRange.value, myMaxRange.value, poolDetailsPrice.value.priceNative, poolDetailsPrice.value.priceNative, true);
+  let liqObjCurrent = calculateAssetBalances(myMinRange.value, myMaxRange.value, poolDetailsPrice.value.priceNative, poolDetailsPrice.value.priceNative, true);
 
   xTokens.value = Number.parseFloat(liqObjCurrent.xQty); //* this.myLiquidity/1000;
   yTokens.value = Number.parseFloat(liqObjCurrent.yQty); //* this.myLiquidity/1000;
@@ -1288,69 +1300,20 @@ const backTester = (which) => {
     }
   }
 
+  if (actualMaxRange < actualMinRange) {
+    console.log(`Max range is less than min range`);
+    alert(`Max range is less than min range`);
+    return;
+  }
+
   let stdDevs = Number.parseFloat(actualMaxRange - actualMinRange) / Number.parseFloat(mySigma.value);
   let FeesWeight = 1;
-  if (stdDevs <= 2) {
-    FeesWeight = 1;
-  } else if (stdDevs > 2 && stdDevs <= 3) {
-    const x1 = 2;
-    const y1 = 1;
-    const x2 = 3;
-    const y2 = 0.81;
-    const m = (y2 - y1) / (x2 - x1);
-    const b = y1 - m * x1;
-    const x = 2;
-    const y = m * x + b;
-    FeesWeight = m * stdDevs + b;
-  } else if (stdDevs > 3 && stdDevs <= 4) {
-    const x1 = 3;
-    const y1 = 0.81;
-    const x2 = 4;
-    const y2 = 0.68;
-    const m = (y2 - y1) / (x2 - x1);
-    const b = y1 - m * x1;
-    const x = 2;
-    const y = m * x + b;
-    FeesWeight = m * stdDevs + b;
-  } else if (stdDevs > 4 && stdDevs <= 6) {
-    const x1 = 4;
-    const y1 = 0.68;
-    const x2 = 6;
-    const y2 = 0.5;
-    const m = (y2 - y1) / (x2 - x1);
-    const b = y1 - m * x1;
-    const x = 2;
-    const y = m * x + b;
-    FeesWeight = m * stdDevs + b;
-  } else if (stdDevs > 6 && stdDevs <= 20) {
-    const x1 = 6;
-    const y1 = 0.5;
-    const x2 = 20;
-    const y2 = 0.1;
-    const m = (y2 - y1) / (x2 - x1);
-    const b = y1 - m * x1;
-    const x = 2;
-    const y = m * x + b;
-    FeesWeight = m * stdDevs + b;
-  } else {
-    const x1 = 20;
-    const y1 = 0.1;
-    const x2 = 100;
-    const y2 = 0.05;
-    const m = (y2 - y1) / (x2 - x1);
-    const b = y1 - m * x1;
-    const x = 2;
-    const y = m * x + b;
-    FeesWeight = m * stdDevs + b;
-  }
-  const period = 7;
-  const averages = [];
-  for (let i = period - 1; i < filteredPoolDetailsBasedOnPeriod.value.length; i++) {
-    const volumes = filteredPoolDetailsBasedOnPeriod.value.slice(i - period + 1, i + 1).map(element => element.Volume / 3);
-    const sum = volumes.reduce((acc, volume) => acc + volume, 0);
-    const average = sum / period;
-    averages.push(average);
-  }
+
+  let r = Math.sqrt(actualMaxRange / actualMinRange);
+
+  let factor = r - 1;
+
+  FeesWeight = 3.3 / (factor * 100 / weeklyVolatility.value);
 
   // New code
   const reversedArray = filteredPoolDetailsBasedOnPeriod.value.slice().reverse();
@@ -1368,7 +1331,7 @@ const backTester = (which) => {
   reversedArray.forEach(element => {
     totalPeriods++;
     // Let's get the calculated liquidity value at this point
-    let liqObject = calculateAssetBalances(actualMinRange, actualMaxRange, initialPrice, element.priceNative, true, which);
+    let liqObject = calculateAssetBalances(actualMinRange, actualMaxRange, initialPrice, Number.parseFloat(element.priceNative), true, which);
 
     if (Number.parseFloat(element.priceNative) >= Number.parseFloat(actualMinRange) &&
       Number.parseFloat(element.priceNative) <= Number.parseFloat(actualMaxRange)) {
@@ -1418,6 +1381,10 @@ const megaTestFuture = () => {
 const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = 'current') => {
 
   //console.log(`Entered calculateAssetBalances with a=${a} b=${b} p0=${p0} pTarget=${pTarget} single=${single} which=${which}`);
+  if (b < a) {
+    console.log(`Selected range is not valid - Error: b=${b} is less than a=${a}`);
+    return;
+  }
 
   let actualLiquidity = 0;
 
@@ -1971,10 +1938,11 @@ const dailyAprData = computed(() => {
         const date = new Date(convertToTimestamp(element.dateTime));
         const isoDate = date.toISOString();
         chartLabels.push(isoDate);
-        chartDataAPR.push(parseFloat(1 / element.priceNative).toFixed(6));
+        chartDataAPR.push(element.apr);
       }
     }
   });
+
   return {
     chartLabels: chartLabels.reverse(),
     chartDataAPR: chartDataAPR.reverse(),

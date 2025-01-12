@@ -40,7 +40,8 @@
             <div class="w-100">
               <v-text-field v-model="liquidityValue" class="text-field-width"
                 :class="[props.darkMode ? 'text-field-dark' : 'text-field-light']" type="input" :hide-details="true"
-                density="compact" variant="plain" @change="props.type === 'apr' ? emit('refreshTokensDistribution') : ''">
+                density="compact" variant="plain"
+                @change="props.type === 'apr' ? emit('refreshTokensDistribution') : ''">
 
               </v-text-field>
             </div>
@@ -153,7 +154,7 @@
               <div v-for="(item, index) in composition" :key="item.id" class="d-flex flex-column">
                 <div class="d-flex">
                   <span :class="[props.darkMode ? 'calc-token-dark' : 'calc-token-light']" class="calc-token">{{
-                    index===0?props.baseToken: props.quoteToken }}: </span>
+                    index === 0 ? props.baseToken : props.quoteToken }}: </span>
                   <span class="highlight ml-1 composition-val-font"> {{ item.tokensPercentage }} %</span>
                 </div>
                 <div class="composition-token">{{ item.tokens }} tokens</div>
@@ -171,12 +172,13 @@
 
         <!-- Range Slider -->
         <div class="d-flex flex-column justify-center">
+          <div class="calc-other-text mt-2">Days to include for fees: <span class="highlight">{{
+            feeSelectedDays
+              }}</span></div>
           <v-slider v-model="feeSelectedDays" :step="1" :min="0" :max="365" color="#BFAC62" track-color="#eee"
             class="w-50 custom-slider ml-7"></v-slider>
           <!-- <input type="range" v-model="feeSelectedDays" :min="0" :max="360" :step="30"> -->
-          <div class="calc-other-text mt-2">Days to include for fees: <span class="highlight">{{
-            feeSelectedDays
-          }}</span></div>
+
         </div>
       </v-col>
 
@@ -190,7 +192,7 @@
       </v-col>
     </v-row>
 
-    <hr class="mx-6" style="border: 1px solid rgba(178, 178, 178, 0.7)">
+    <!-- <hr class="mx-6" style="border: 1px solid rgba(178, 178, 178, 0.7)"> -->
     <div class="d-flex flex-column ga-3">
       <div class="text-left result-text-small" :class="[props.darkMode ? 'result-text-dark' : 'result-text-light']">
         Back Test Results

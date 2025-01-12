@@ -110,7 +110,7 @@ export const ALL_PROTOCOL = [
   { text: 'Quickswap', value: 'quickswap' },
   { text: 'Ramses', value: 'ramses' },
   { text: 'Raydium', value: 'raydium' },
-  { text: 'Trader joe', value: 'trader joe' },
+  { text: 'Traderjoe', value: 'traderjoe' },
   { text: 'Uniswap', value: 'uniswap' },
   { text: 'Velodrome', value: 'velodrome' },
 ];
