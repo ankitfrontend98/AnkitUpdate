@@ -243,7 +243,8 @@
               { id: 2, tokens: Number(yTokens).toFixed(5), tokensPercentage: yPercentage.toFixed(2) }]"
               @update-slider="(val) => feeSelectedDays = val"
               @handle-prepend-append="(type, state) => type === 'prepend' ? handlePrependInner(state) : handleAppendInner(state)"
-              @update-min-range="(val) => myMinRange = val" @update-max-range="(val) => myMaxRange = val"
+              @update-min-range="(val) => { myMinRange = val; }" @update-max-range="(val) => { myMaxRange = val; }"
+              @handle-blur="(type) => findClosestTik(type)"
               @initialize-ranges="(calc, type) => initializeRanges(calc, type)"
               @refresh-tokens-distribution="refreshTokensDistribution" @handle-invert-prices="handleInvertPrices"
               @handle-run-back-test="megaTest">
@@ -413,10 +414,10 @@
               { id: 2, label: 'Time In Range', value: futureInRangePercentage.toFixed(2) + ' %' },
               { id: 3, label: 'Estimated APR', value: futureEstimatedAPR.toFixed(2) + ' %' }]" :composition-data="[{ id: 1, tokens: xtokensFuture ?? 0, tokensPercentage: xPercentageFuture.toFixed(2) },
               { id: 2, tokens: ytokensFuture ?? 0, tokensPercentage: yPercentageFuture.toFixed(2) }]"
-              @update-slider="(val) => feeSelectedDaysFuture = val"
+              @update-slider="(val) => feeSelectedDaysFuture = val" @handle-blur="(type) => { findClosestTik(type) }"
               @handle-prepend-append="(type, state) => type === 'prepend' ? handlePrependInner(state) : handleAppendInner(state)"
               @initialize-ranges="(calc, type) => initializeRanges(calc, type)"
-              @handle-invert-prices="handleInvertPrices" @update-price="val => findClosestTik(val)"
+              @handle-invert-prices="handleInvertPrices" @update-price="val => myFuturePrice = val"
               @handle-run-back-test="megaTestFuture">
             </SharedCalculator>
           </div>

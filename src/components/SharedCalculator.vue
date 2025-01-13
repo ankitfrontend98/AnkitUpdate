@@ -72,6 +72,7 @@
               <v-text-field v-model="myFuturePrice" class="text-field-width custom-textfield-padding-append-icon"
                 :class="[props.darkMode ? 'text-field-dark' : 'text-field-light']" type="input" variant="plain"
                 density="compact" :hide-details="true" prepend-inner-icon="mdi-minus" append-inner-icon="mdi-plus"
+                @blur="emit('handleBlur', 'future')"
                 @click:prepend-inner="emit('handlePrependAppend', 'prepend', 'future')"
                 @click:append-inner="emit('handlePrependAppend', 'append', 'future')"></v-text-field>
             </div>
@@ -91,7 +92,7 @@
                 type="input" variant="plain" density="compact" :hide-details="true"
                 :readonly="props.type === 'future' ? true : false"
                 :prepend-inner-icon="props.type === 'future' ? '' : 'mdi-minus'"
-                :append-inner-icon="props.type === 'future' ? '' : 'mdi-plus'"
+                :append-inner-icon="props.type === 'future' ? '' : 'mdi-plus'" @blur="emit('handleBlur', 'min')"
                 @click:prepend-inner="emit('handlePrependAppend', 'prepend', 'min')"
                 @click:append-inner="emit('handlePrependAppend', 'append', 'min')"></v-text-field>
             </div>
@@ -110,7 +111,7 @@
                 :class="{ 'text-field-dark': props.darkMode, 'text-field-light': !props.darkMode, disabled: props.type === 'future' }"
                 type="input" :hide-details="true" density="compact" variant="plain"
                 :prepend-inner-icon="props.type === 'future' ? '' : 'mdi-minus'"
-                :append-inner-icon="props.type === 'future' ? '' : 'mdi-plus'"
+                :append-inner-icon="props.type === 'future' ? '' : 'mdi-plus'" @blur="emit('handleBlur', 'max')"
                 @click:prepend-inner="emit('handlePrependAppend', 'prepend', 'max')"
                 @click:append-inner="emit('handlePrependAppend', 'append', 'max')"></v-text-field>
             </div>
@@ -227,7 +228,7 @@ const props = defineProps(['type', 'darkMode', 'displayPrice', 'token', 'quoteTo
   'compositionData', 'price', 'pricePercent'
 ])
 
-const emit = defineEmits(['handleInvertPrices', 'refreshTokensDistribution', 'updateLiquidityValue',
+const emit = defineEmits(['handleInvertPrices', 'refreshTokensDistribution', 'updateLiquidityValue', 'handleBlur',
   'handlePrependAppend', 'initializeRanges', 'handleRunBackTest', 'updateSlider', 'updatePrice'])
 
 const liquidityValue = ref(props.liquidity);
