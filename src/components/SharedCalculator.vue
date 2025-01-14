@@ -126,21 +126,26 @@
         <v-col cols="12" lg="6">
           <div class="d-flex ga-3 flex-column">
             <div class="d-flex flex-column mr-2">
-              <div class="calc-other-text">Capital Protection Indicator</div>
+              <div class="calc-other-text">Geometric Mean</div>
               <v-chip :class="[props.darkMode ? 'chip-gmvalue-dark' : 'chip-gmvalue']" variant="flat">{{
                 props.cpi
               }}</v-chip>
             </div>
 
             <!-- Narror & Wide Range -->
-            <div class="d-flex flex-wrap justify-content-between mt-4" style="width: 280px;">
-              <div class="d-flex ga-2" style="flex-wrap: wrap;">
-                <v-btn v-for="item in rangeOptions" :key="item.id" class="text-none mr-2"
-                  :class="[props.darkMode ? 'round-button-dark' : 'round-button-light']" min-width="124"
-                  variant="outlined" rounded
-                  @click="emit('initializeRanges', props.type === 'apr' ? 'current' : 'future', item.value)">
-                  {{ item.label }}
-                </v-btn>
+            <div class="d-flex flex-column mr-2">
+              <div v-if="type === 'future'" class="calc-other-text mt-5">Capital Protection Ranges</div>
+
+              <div class="d-flex flex-wrap justify-content-between " :class="type === 'future' ? 'mt-2' : 'mt-4'"
+                style="width: 280px;">
+                <div class="d-flex ga-2" style="flex-wrap: wrap;">
+                  <v-btn v-for="item in rangeOptions" :key="item.id" class="text-none mr-2"
+                    :class="[props.darkMode ? 'round-button-dark' : 'round-button-light']" min-width="124"
+                    variant="outlined" rounded
+                    @click="emit('initializeRanges', props.type === 'apr' ? 'current' : 'future', item.value)">
+                    {{ item.label }}
+                  </v-btn>
+                </div>
               </div>
             </div>
           </div>
@@ -175,7 +180,7 @@
         <div class="d-flex flex-column justify-center">
           <div class="calc-other-text mt-2">Days to include for fees: <span class="highlight">{{
             feeSelectedDays
-              }}</span></div>
+          }}</span></div>
           <v-slider v-model="feeSelectedDays" :step="1" :min="0" :max="365" color="#BFAC62" track-color="#eee"
             class="w-50 custom-slider ml-7"></v-slider>
           <!-- <input type="range" v-model="feeSelectedDays" :min="0" :max="360" :step="30"> -->
