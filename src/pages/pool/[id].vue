@@ -15,14 +15,15 @@
     <div class="mt-4">
       <v-card :class="[darkMode ? 'dark-token-details' : 'token-detail']">
         <div class="d-flex flex-wrap justify-space-between pa-6 align-center" style="gap:10px" v-if="!loading">
-          <div v-for="item in tokenDetails" :key="item.id" class="d-flex flex-column">
+          <div v-for="item in tokenDetails" :key="item.id" class="d-flex flex-column container-item-mobile">
             <div class="label-color">{{ item.label }}</div>
-            <div v-if="!item.hasImage" class="label-font text-h5 text-textItemColor">
+            <div v-if="!item.hasImage" class="label-font text-h5 text-textItemColor container-item-text-mobile">
               {{ item.value }}
             </div>
             <div v-else class="text-capitalize label-font text-h5 text-textItemColor">
-              <span class="text-customText">
-                <img v-if="item.imgCondition" :src="item.img" alt="Quote Token Icon" class="token-icon">
+              <span class="text-customText container-item-text-mobile">
+                <img v-if="item.imgCondition" :src="item.img" alt="Quote Token Icon"
+                  class="token-icon container-item-img-mobile">
                 {{ item.value }}
               </span>
             </div>
@@ -117,63 +118,51 @@
     <div class="mt-4">
       <v-card :class="[darkMode ? 'dark-token-details' : 'token-detail']">
         <div class="d-flex justify-space-between pa-6 align-center flex-wrap" style="gap:10px" v-if="!loading">
-          <!-- <div class="d-flex flex-column">
-            <div class="label-color">Price Quote</div>
-            <div class="label-font text-h5 text-textItemColor">
-              {{ poolDetailsPeriods.length ?  poolDetailsPeriods[0].priceNative : '' }}
-            </div>
-          </div> -->
-          <div class="d-flex flex-column">
+          <div class="d-flex flex-column container-item-mobile ">
             <div class="label-color">Avg Liquidity</div>
-            <div class="label-font text-h5 text-textItemColor">
+            <div class="label-font text-h5 text-textItemColor container-item-text-mobile">
               {{ poolDetailsPeriods.length > 0 ? formatMoney(weeklyAvgLiquidity) : '' }}
             </div>
           </div>
-          <div class="d-flex flex-column">
+          <div class="d-flex flex-column container-item-mobile ">
             <div class="label-color">Period Volume</div>
-            <div class="label-font text-h5 text-textItemColor">
+            <div class="label-font text-h5 text-textItemColor container-item-text-mobile">
               {{ poolDetailsPeriods.length > 0 ? formatMoney(weeklyVolume) : '' }}
             </div>
           </div>
-          <div class="d-flex flex-column">
+          <div class="d-flex flex-column container-item-mobile ">
             <div class="label-color">Weekly Fees</div>
-            <div class="label-font text-h5 text-textItemColor">
+            <div class="label-font text-h5 text-textItemColor container-item-text-mobile">
               {{ poolDetailsPeriods.length > 0 ? formatMoney(weeklyFees) : '' }}
             </div>
           </div>
-          <div class="d-flex flex-column">
+          <div class="d-flex flex-column container-item-mobile ">
             <div class="label-color">Avg Volatility</div>
-            <div class="label-font text-h5 text-textItemColor">
+            <div class="label-font text-h5 text-textItemColor container-item-text-mobile">
               {{ poolDetailsPeriods.length > 0 ? (weeklyVolatility !== 0 ? (weeklyVolatility.toFixed(2) + '%') :
                 weeklyVolatility) : '' }}
             </div>
           </div>
-          <div class="d-flex flex-column">
+          <div class="d-flex flex-column container-item-mobile ">
             <div class="label-color">Abs Volatility</div>
-            <div class="label-font text-h5 text-textItemColor">
+            <div class="label-font text-h5 text-textItemColor container-item-text-mobile">
               {{ poolDetailsPeriods.length > 0 ? (absoluteVolatility !== 0 ? (absoluteVolatility.toFixed(2) + '%') :
                 weeklyVolatility) : '' }}
             </div>
           </div>
-          <!-- <div class="d-flex flex-column">
+          <div class="d-flex flex-column container-item-mobile ">
             <div class="label-color">Correlation</div>
-            <div class="label-font text-h5 text-textItemColor">
-              {{ poolDetailsPeriods.length > 0 ? correlationEstimatorState.value.toFixed(3) : ''  }}
-            </div>
-          </div> -->
-          <div class="d-flex flex-column">
-            <div class="label-color">Correlation</div>
-            <div class="label-font text-h5 text-textItemColor">
+            <div class="label-font text-h5 text-textItemColor container-item-text-mobile">
               {{ poolDetailsPeriods.length > 0 ? correlationEstimatorState.toFixed(2) + '%' : '' }}
             </div>
           </div>
-          <div class="d-flex flex-column">
+          <div class="d-flex flex-column container-item-mobile ">
             <div class="label-color">Avg APR est.</div>
-            <div class="label-font text-h5 text-textItemColor">
+            <div class="label-font text-h5 text-textItemColor container-item-text-mobile">
               {{ (weeklyAvgAPR.toFixed(3) != null) ? weeklyAvgAPR.toFixed(2) + '%' : 0.00 + '%' }}
             </div>
           </div>
-          <div class="d-flex flex-column">
+          <div class="d-flex flex-column container-item-mobile ">
             <div class="label-color">Dex screener</div>
             <div v-if="poolDetailsPeriods.length > 0">
               <a class="label-font text-h6 text-textItemColor"
@@ -207,15 +196,10 @@
       </div>
     </div>
     <div class="mt-4 mb-10">
-      <!-- <v-tabs-window v-model="activeTab">
-        <v-tabs-window-item key="0" value="0"> -->
-      <details-table v-if="activeTab === '0'" :key="seletedDuration" :items="detailsTable" :dark-mode="darkMode"
+      <DetailsTable v-if="activeTab === '0'" :key="seletedDuration" :items="detailsTable" :dark-mode="darkMode"
         class="w-100" />
-      <!-- </v-tabs-window-item> -->
 
-      <!-- Kuladeep -->
 
-      <!-- <v-tabs-window-item key="1" value="1"> -->
       <v-row v-if="activeTab === '1'">
         <v-col cols="12" lg="6">
 
@@ -385,11 +369,7 @@
           </div>
         </v-col>
       </v-row>
-      <!-- </v-tabs-window-item> -->
 
-      <!-- Kuladeep -->
-
-      <!-- <v-tabs-window-item key="2" value="2"> -->
       <v-row v-if="activeTab === '2'">
         <v-col cols="12" lg="6">
           <div class="d-flex flex-column ga-2 sticky-top">
@@ -545,8 +525,6 @@
           </div>
         </v-col>
       </v-row>
-      <!-- </v-tabs-window-item> -->
-      <!-- </v-tabs-window> -->
     </div>
   </v-container>
 </template>
@@ -557,13 +535,15 @@ import BarChart from '@/components/BarChart.vue';
 import LineChart from '@/components/LineChart.vue';
 import SplineChart from '@/components/SplineChart.vue';
 import DetailsTable from '@/components/DetailsTable.vue';
-import { ref, onMounted, computed, watch, toRefs } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import apiClient from '@/utils/axios';
-import { getMean, getStandardDeviation, formatNumber, removeTrailingZeros, formatDecimalNumber, convertToTimestamp } from '@/utils/common';
+import {
+  getMean, getStandardDeviation, formatNumber, removeTrailingZeros, formatDecimalNumber,
+  convertToTimestamp
+} from '@/utils/common';
 import { formatMoney } from '@/utils/formatMoney.js';
-import { useDateFormat } from '@/utils/composables/useDateFormat';
-import { DATA_PERIOD_GRAPH, MONTH_NAMES } from '@/constant/index.js';
+import { DATA_PERIOD_GRAPH } from '@/constant/index.js';
 import millify from "millify";
 import moment from 'moment';
 import SharedCalculator from '@/components/SharedCalculator.vue';
@@ -593,7 +573,6 @@ const id = route.params.id
 /** Reactive Properties */
 const poolDetailsPeriods = ref([]);
 const poolDetailsPrice = ref([]);
-const poolDetailsDefination = ref([]);
 const weeklyAvgAPR = ref(0);
 const weeklyVolume = ref(0);
 const weeklyFees = ref(0);
@@ -622,7 +601,6 @@ const loading = ref(false);
 const inRangePercentaje = ref(0);
 const estimatedFees = ref(0);
 const estimatedAPR = ref(0);
-const daysForFees = ref(0);
 
 const currentPriceNativeX = ref([0]);
 const myFuturePrice = ref(0);
@@ -662,9 +640,6 @@ const testClickedFuture = ref(false)
 const futureInRangePercentage = ref(0)
 const futureEstimatedFees = ref(0)
 const futureEstimatedAPR = ref(0)
-
-const { formatDateTime } = useDateFormat();
-
 const approximateFeesUSD = computed(() => {
   if (Math.abs(poolDetailsPrice.value.priceNative - poolDetailsPrice.value.priceUsd) / poolDetailsPrice.value.priceUsd < 0.01) {
     return formatMoney(estimatedFees.value);
@@ -742,9 +717,6 @@ const tokenDetails = computed(() => {
     }
   ]
 })
-
-
-const correlation1 = 0;
 /** Methods */
 const setValues = () => {
   let minPrice = 0;
@@ -804,29 +776,6 @@ const correlationEstimator = async (data, days) => {
     throw new Error("Invalid data or number of days");
   }
 
-  const getBestCorrelation = (item) => {
-    const correlations = [
-      item.Correlation7d,
-      item.Correlation30d,
-      item.Correlation90d,
-      item.Correlation180d
-    ];
-
-    // Filter out null or undefined values
-    const validCorrelations = correlations.filter(correlation => correlation !== null && correlation !== undefined);
-
-    // Find the highest correlation value
-    const bestCorrelation = validCorrelations.length > 0 ? Math.max(...validCorrelations) : null;
-
-    // Return the formatted correlation or 'N/A' if none is found
-    return bestCorrelation !== null ? formatCorrelation(bestCorrelation) : 'N/A';
-  };
-
-  const formatCorrelation = (correlation) => {
-    return (correlation * 100).toFixed(2) + ' %';
-  };
-
-
   // Calculate the total number of samples based on days and samples per day
   const numSamples = days * 3; // 3 samples per day
 
@@ -869,58 +818,10 @@ const correlationEstimator = async (data, days) => {
   // return correlation;
 
   const correlation = numerator / Math.sqrt(denominatorToken1 * denominatorToken2);
-  console.log(Math.abs(correlation) * 100)
   return Math.abs(correlation) * 100;  // Convert correlation to percentage
 
 };
 
-const correlationEstimator1 = (data, days) => {
-  // Check if the input data is valid
-  if (!Array.isArray(data) || data.length === 0 || days <= 0) {
-    throw new Error("Invalid data or number of days");
-  }
-
-  // Calculate the total number of samples based on days and samples per day
-  const numSamples = days * 3; // 3 samples per day
-
-  // Extract values for Token1 and Token2
-  const token1Values = [];
-  const token2Values = [];
-
-  for (let i = 0; i < Math.min(data.length, numSamples); i++) {
-    const sample = data[i];
-    token1Values.push(Number(sample.priceUsd)); // Assuming token1USD is the USD value for Token1
-    token2Values.push(Number(sample.priceUsd / sample.priceNative)); // Assuming token1InToken2 is the price of Token1 in terms of Token2
-  }
-
-  // Calculate means
-  const meanToken1 = token1Values.reduce((sum, value) => sum + value, 0) / token1Values.length;
-  const meanToken2 = token2Values.reduce((sum, value) => sum + value, 0) / token2Values.length;
-
-  // Calculate the numerator and denominator for the correlation coefficient
-  let numerator = 0;
-  let denominatorToken1 = 0;
-  let denominatorToken2 = 0;
-
-  for (let i = 0; i < token1Values.length; i++) {
-    const diffToken1 = token1Values[i] - meanToken1;
-    const diffToken2 = token2Values[i] - meanToken2;
-
-    numerator += diffToken1 * diffToken2;
-    denominatorToken1 += diffToken1 ** 2;
-    denominatorToken2 += diffToken2 ** 2;
-  }
-
-
-  // Edge case for two stable tokens
-  if (denominatorToken1 === 0 || denominatorToken2 === 0 || numerator === 0) {
-    return 1;
-  }
-
-  // Calculate the correlation coefficient
-  const correlation = numerator / Math.sqrt(denominatorToken1 * denominatorToken2);
-  return correlation;
-};
 const fetchData = async () => {
   loading.value = true;
   try {
@@ -1021,7 +922,6 @@ const initializeRanges = (which, mode) => {
       console.log('Promise all resolved for current range');
     });
   } else {
-    console.log("future calc-----", myFuturePrice.value, myMinRange.value, myMaxRange.value)
     let actualFuturePrice = Number.parseFloat(myFuturePrice.value);
     let actualMinRange = Number.parseFloat(myMinRange.value);
     let actualMaxRange = Number.parseFloat(myMaxRange.value);
@@ -1063,10 +963,6 @@ const initializeRanges = (which, mode) => {
       myFutureMaxRange.value = actualFutureMaxRange;
       myFutureMinRange.value = actualFutureMinRange;
     }
-
-    console.log("ranges of future-----", myFutureMaxRange.value, myFutureMinRange.value)
-
-
     // Execute the methods with promises
     const promise1 = new Promise((resolve) => {
       findClosestTik('minFuture');
@@ -1149,38 +1045,8 @@ function findClosestTik(which) {
 
 }
 
-// setPriceFromtik(tikNumber){
-//             let price=0;
-//             price=Math.pow(this.tikFactor, this.myFeeDelta*tikNumber);
-
-//             return price;
-
-//         }
-
-
-// const findClosestTik = (which) => {
-//   let price = which === 'min' ? myMinRange.value : myMaxRange.value;
-//   let closestTik = Math.round((Math.log(price) / Math.log(tikFactor.value)) / myFeeDelta.value);
-//   which === 'min' ? (myMinRange.value = setPriceFromtik(closestTik)) : (myMaxRange.value = setPriceFromtik(closestTik));
-//   return closestTik;
-// };
 
 const setPriceFromtik = (tikNumber) => Math.pow(tikFactor.value, myFeeDelta.value * tikNumber);
-
-const calculateTokensRatio = () => {
-  let x = 1;
-  let Lx = (x * Math.sqrt(poolDetailsPrice.value.priceNative) * Math.sqrt(myMaxRange.value)) / (Math.sqrt(myMaxRange.value) - Math.sqrt(poolDetailsPrice.value.priceNative));
-  let y = Lx * (Math.sqrt(poolDetailsPrice.value.priceNative) - Math.sqrt(myMinRange.value));
-  xPercentage.value = (100 * Number.parseFloat(poolDetailsPrice.value.priceNative)) / (Number.parseFloat(poolDetailsPrice.value.priceNative) + Number.parseFloat(y));
-  yPercentage.value = (100 * Number.parseFloat(y)) / (Number.parseFloat(poolDetailsPrice.value.priceNative) + Number.parseFloat(y));
-  if (invertedPrices.value) {
-    [xPercentage.value, yPercentage.value] = [yPercentage.value, xPercentage.value];
-  }
-  let MaxX = Number.parseFloat(liquidityValue.value) / Number.parseFloat(poolDetailsPrice.value.priceUsd);
-  let MaxY = Number.parseFloat(MaxX) * Number.parseFloat(poolDetailsPrice.value.priceNative);
-  xTokens.value = Number.parseFloat(MaxX) * (xPercentage.value / 100.0);
-  yTokens.value = Number.parseFloat(MaxY) * (yPercentage.value / 100.0);
-};
 
 const handleInvertPrices = () => {
   invertedPrices.value = !invertedPrices.value;
@@ -1195,8 +1061,6 @@ const handleInvertPrices = () => {
   myFuturePrice.value = formatNumber(1 / myFuturePrice.value);
   poolDetailsPrice.value.priceNative = 1 / poolDetailsPrice.value.priceNative;
 
-  // calculateTokensRatio();
-
 };
 
 const handleTabClick = (value) => {
@@ -1206,8 +1070,6 @@ const handleTabClick = (value) => {
   if (invertedPrices.value) {
     handleInvertPrices()
   }
-
-  // initializeRanges('current', 'neutral')
 }
 
 
@@ -1232,7 +1094,6 @@ const shiftTik = (which, step) => {
   else {
     myMaxRange.value = formatNumber(setPriceFromtik(currentTik));
   }
-  // calculateTokensRatio();
 
   let liqObjCurrent = calculateAssetBalances(myMinRange.value, myMaxRange.value, poolDetailsPrice.value.priceNative,
     poolDetailsPrice.value.priceNative, true);
@@ -1306,8 +1167,7 @@ const backTester = (which) => {
     alert(`Max range is less than min range`);
     return;
   }
-
-  let stdDevs = Number.parseFloat(actualMaxRange - actualMinRange) / Number.parseFloat(mySigma.value);
+  // let stdDevs = Number.parseFloat(actualMaxRange - actualMinRange) / Number.parseFloat(mySigma.value);
   let FeesWeight = 1;
 
   let r = Math.sqrt(actualMaxRange / actualMinRange);
@@ -1322,12 +1182,11 @@ const backTester = (which) => {
   // Initial tokens (for hold 50/50)
   let xHold = Number.parseFloat(500 / initialPrice);
   let yHold = 500;
-  let lHold = xHold * initialPrice + yHold;
+  // let lHold = xHold * initialPrice + yHold;
   // Let's clean the Back Tester liquidity array
   backTesterLiquidityArray.value.length = 0;
   xHold = xHold * liquidityValue.value / 1000;
   yHold = yHold * liquidityValue.value / 1000;
-  console.log("New Data filtered pool data:", filteredPoolDetailsBasedOnPeriod.value);
 
   reversedArray.forEach(element => {
     totalPeriods++;
@@ -1355,7 +1214,6 @@ const backTester = (which) => {
     estimatedFees.value = totalFees;
     estimatedAPR.value = estimatedFees.value * 100 * (365 / (totalPeriods / 3)) * (1 / liquidityValue.value);
     showBackTestChart();
-    console.log("check resp : ", which, inRangePercentaje.value, estimatedFees.value, estimatedAPR.value)
   }
   else {
     futureInRangePercentage.value = inRangePeriods * 100 / totalPeriods;
@@ -1381,7 +1239,6 @@ const megaTestFuture = () => {
 
 const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = 'current') => {
 
-  //console.log(`Entered calculateAssetBalances with a=${a} b=${b} p0=${p0} pTarget=${pTarget} single=${single} which=${which}`);
   if (b < a) {
     console.log(`Selected range is not valid - Error: b=${b} is less than a=${a}`);
     return;
@@ -1391,7 +1248,6 @@ const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = '
 
   if (which === 'current') {
     actualLiquidity = liquidityValue.value;
-    //console.log(`Current liquidity: ${actualLiquidity}`);
   } else {
     actualLiquidity = myFutureLiquidity.value;
   }
@@ -1456,39 +1312,23 @@ const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = '
     p = Math.sqrt(a * b);
     x = 500 / p;
     y = 500;
-
-    //console.log(`Initial composition: x=${x.toFixed(5)} y=${y.toFixed(2)} for P=${p.toFixed(2)}`);
-
     let sp = Math.sqrt(p);
     let sa = Math.sqrt(a);
     let sb = Math.sqrt(b);
-
     let sp1 = Math.sqrt(p0);
     let L = get_liquidity(x, y, sp, sa, sb);
 
     let x1 = calculate_x(L, sp1, sa, sb);
     let y1 = calculate_y(L, sp1, sa, sb);
-    //  console.log(`Amount of ETH x=${x1.toFixed(5)} amount of USDC y=${y1.toFixed(2)} for P1=${p1.toFixed(2)}`);
-
     let p1 = p0;
-
     let LatP1 = x1 * p1 + y1;
-    //  console.log(`Total liquidity ${LatP1.toFixed(2)}`);
-
     // Let's get the percentage of x1 and y1 with respect to the total liquidity
     let xPercentage = 100 * x1 * p1 / LatP1;
     let yPercentage = 100 - xPercentage;
-
     x0Pct = xPercentage;
     y0Pct = yPercentage;
-
-    //console.log(`xPercentage: ${xPercentage} - yPercentage: ${yPercentage}`);
-
     let yy1 = yPercentage * 1000 / 100;
     let xx1 = (1000 - yy1) / p1;
-
-    //console.log(`xx1: ${xx1} - yy1: ${yy1}`);
-
     x = xx1;
     y = yy1;
     p = p0;
@@ -1508,17 +1348,12 @@ const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = '
 
   let xHoldInitial = 1000 * x0Pct / (p0 * 100);
   let yHoldInitial = 1000 * y0Pct / 100;
-
-  //console.log(`xHoldInitial: ${xHoldInitial} - yHoldInitial: ${yHoldInitial}`);
-
   let sp = Math.sqrt(p);
   let sa = Math.sqrt(a);
   let sb = Math.sqrt(b);
 
   // Calculate initial liquidity
   let L = get_liquidity(x, y, sp, sa, sb);
-  //console.log(`Amount of L x=${L.toFixed(2)}`);
-
   xHold = xHold * actualLiquidity / 1000;
   yHold = yHold * actualLiquidity / 1000;
 
@@ -1542,8 +1377,6 @@ const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = '
 
       let x1 = calculate_x(L, sp1, sa, sb);
       let y1 = calculate_y(L, sp1, sa, sb);
-      //  console.log(`Amount of ETH x=${x1.toFixed(5)} amount of USDC y=${y1.toFixed(2)} for P1=${p1.toFixed(2)}`);
-
       // Let's get the actual x1 and y1 values
       // related to myLiquidty
 
@@ -1551,23 +1384,11 @@ const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = '
       y1 = y1 * actualLiquidity / 1000;
 
       let LatP1 = x1 * p1 + y1;
-      //  console.log(`Total liquidity ${LatP1.toFixed(2)}`);
-
       // Let's get the percentage of x1 and y1 with respect to the total liquidity
       let xPercentage = 100 * x1 * p1 / LatP1;
       let yPercentage = 100 - xPercentage;
-
-      //  console.log(`xPercentage: ${xPercentage} - yPercentage: ${yPercentage}`);
-
       let LiquidityHold = xHold * p1 + yHold;
       let LiquidityHoldInitial = xHoldInitial * p1 + yHoldInitial;
-
-      // Use only the int part of LatP1
-
-      // If we have an estimated APR from the backtester
-      // and the number of days to be used is greater than 0
-      // we will calculate the liquidity at each price point plus fees
-      // as a new property for the array
 
       let atPeriodFee = 0;
 
@@ -1600,9 +1421,6 @@ const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = '
         "yQty": y1
       };
 
-      //  console.log(element);
-      //quantity.push(element);
-
       if (which !== 'current') {
         liquidityArrayFuture.value.push(element);
       } else {
@@ -1613,13 +1431,8 @@ const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = '
 
     showLiquidityChart(which);
     showTokensDistributionChart(which);
-
-    // console.log(JSON.stringify(this.liquidityArray));
-
   } else {
-
     // We are only interested in a single point
-
     let p1 = pTarget;
     let sp1 = Math.sqrt(pTarget);
 
@@ -1628,22 +1441,10 @@ const calculateAssetBalances = (a, b, p0, pTarget = 0, single = false, which = '
 
     x1 = x1 * actualLiquidity / 1000;
     y1 = y1 * actualLiquidity / 1000;
-
-    //console.log(`<<<<<`);
-    //console.log(`Amount of ETH x=${x1} amount of USDC y=${y1} for P1=${p1}`);
-    //console.log(`>>>>>`);
-
     let LatP1 = x1 * p1 + y1;
-    //  console.log(`Total liquidity ${LatP1.toFixed(2)}`);
-
     // Let's get the percentage of x1 and y1 with respect to the total liquidity
     let xPercentage = 100 * x1 * p1 / LatP1;
     let yPercentage = 100 - xPercentage;
-
-    //console.log(`Single Calculation----`);
-    //console.log(`xPercentage: ${xPercentage} - yPercentage: ${yPercentage}`);
-    //console.log(`A: ${a} - B: ${b} - P0: ${p0} - P1: ${pTarget} - X: ${x1} - Y: ${y1} - L: ${LatP1}`);
-
     // Let's return the values
     return {
       xQty: x1,
@@ -1663,7 +1464,6 @@ const showLiquidityChart = (type = 'current') => {
   let chartLiquidityFees = [];
   let ix = 0;
   const array = type === 'current' ? liquidityArray.value : liquidityArrayFuture.value
-  console.log('liquidity array-----------------', array)
   array.forEach((element) => {
     ix++;
     if (ix % 1 == 0) {
@@ -1694,7 +1494,6 @@ const showLiquidityChart = (type = 'current') => {
 
     liquididtyChartLabels.value = chartLabels
     liquidityChartRender.value++
-    console.log("liquidity chart data", liquidityDatasets.value, liquididtyChartLabels.value)
   }
   else {
     liquidityDatasetsFuture.value = [
@@ -1714,7 +1513,6 @@ const showLiquidityChart = (type = 'current') => {
 
     liquididtyChartLabelsFuture.value = chartLabels
     liquidityChartRenderFuture.value++
-    console.log("liquidity chart data", liquidityDatasetsFuture.value, liquididtyChartLabelsFuture.value)
   }
 
 }
@@ -1763,7 +1561,6 @@ const showTokensDistributionChart = (type = 'current') => {
 
     tokenDistributionChartLabels.value = chartLabels
     tokenDistributionChartRender.value++
-    console.log(" tokenDistribution chart labels new", tokenDistributionDatasets.value, tokenDistributionChartLabels.value)
   }
   else {
     tokenDistributionDatasetsFuture.value = [
@@ -1787,7 +1584,6 @@ const showTokensDistributionChart = (type = 'current') => {
 
     tokenDistributionChartLabelsFuture.value = chartLabels
     tokenDistributionChartRenderFuture.value++
-    console.log(" tokenDistribution chart labels new", tokenDistributionDatasetsFuture.value, tokenDistributionChartLabelsFuture.value)
   }
 }
 
@@ -1797,10 +1593,6 @@ const showBackTestChart = () => {
   let dailyLiquidity = [];
   let totalLiquidity = [];
   let holdLiquidityData = [];
-  let ix = 0;
-
-  //console.log(`Records to skip is: ${this.recordsToSkipChart}`);
-
   backTesterLiquidityArray.value.forEach(element => {
 
     chartLabels.push(element.dateTime.substring(0, 8));
@@ -1825,8 +1617,6 @@ const showBackTestChart = () => {
 
   backTesterChartLabels.value = chartLabels
   backTesterChartRender.value++
-  console.log(" Back Testing Results chart labels new", backTesterDatasets.value, backTesterChartLabels.value)
-
 }
 
 
@@ -2044,6 +1834,31 @@ onMounted(fetchData);
 </script>
 
 <style scoped>
+.container-item-mobile {
+  display: flex !important;
+}
+
+@media (max-width: 1024px) {
+  .container-item-mobile {
+    width: calc(50% - 10px);
+    display: flex !important;
+    flex: 0 0 calc(50% - 10px);
+    box-sizing: border-box;
+    padding: 10px;
+    word-wrap: break-word;
+  }
+
+  .container-item-text-mobile {
+    font-size: 18px !important;
+  }
+
+  .container-item-img-mobile {
+    height: 20px !important;
+    width: 20px !important
+  }
+}
+
+
 .select-box-light {
   width: 150px !important;
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);

@@ -33,7 +33,6 @@ export default {
     axisTitles: {
       type: Object,
       required: false,
-      // default: () => { return { xaxis: '', yaxis: '', y2axis: '' } }
     },
     axisTypes: {
       type: Object,
@@ -45,13 +44,6 @@ export default {
       required: false,
       default: true
     }
-  },
-  mounted() {
-    // Logging props to the console
-    console.log("Labels:", this.labels);
-    console.log("Data Values spline chart:", this.dataValues);
-    console.log("Series Name:", this.seriesName);
-    console.log("Dark Mode:", this.darkMode);
   },
   computed: {
     computedOptions() {
@@ -69,7 +61,6 @@ export default {
           }),
         };
       })
-      console.log(temp)
       return temp
     }
   },
@@ -138,8 +129,8 @@ export default {
 
           categories: this.labels.map(item => parseFloat(item) * 1e6),
 
-          forceNiceScale: true,
-          tickAmount: 7,
+          // forceNiceScale: true,
+          // tickAmount: 7,
           title: {
             text: this.axisTitles?.xaxis || '',
             style: {

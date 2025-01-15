@@ -177,7 +177,7 @@
       <v-col cols="12" lg="6">
 
         <!-- Range Slider -->
-        <div class="d-flex flex-column justify-center">
+        <div class="d-flex flex-column justify-center fees-slider-mobile">
           <div class="calc-other-text mt-2">Days to include for fees: <span class="highlight">{{
             feeSelectedDays
           }}</span></div>
@@ -189,7 +189,7 @@
       </v-col>
 
       <!-- Second Column: Run Back Test Button -->
-      <v-col cols="12" lg="6" class="d-flex justify-end">
+      <v-col cols="12" lg="6" class="d-flex justify-end back-test-btn-mobile">
         <v-btn class="text-none ml-4 run-text" color="medium-emphasis" min-width="92" rounded
           @click="emit('handleRunBackTest', 'current')">
           Run Back Test
@@ -326,6 +326,17 @@ watch(myFuturePrice, (nextState, prevState) => {
 
 
 <style scoped>
+@media (max-width: 1024px) {
+  .back-test-btn-mobile {
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  .fees-slider-mobile {
+    margin-left: 70px !important;
+  }
+}
+
 .calculator-ui {
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.17);

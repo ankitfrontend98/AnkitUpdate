@@ -13,7 +13,7 @@
             <v-menu v-model="menu" :close-on-content-click="false" location="end">
               <template v-slot:activator="{ props }">
                 <v-avatar class="ml-6 cursor-pointer" v-bind="props">
-                  <v-img :src="user?.picture" alt="Profile Picture"></v-img>
+                  <v-img :src="user?.picture" alt="Profile Picture" style="border-radius: 50%;"></v-img>
                 </v-avatar>
               </template>
               <v-card min-width="300">

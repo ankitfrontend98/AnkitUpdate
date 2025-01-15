@@ -48,7 +48,6 @@ export function convertToTimestamp(datetimeString) {
   const second = datetimeString.slice(12, 14);
 
   const date = new Date(year, month, day, hour, minute, second);
-  console.log(date)
 
   // Format the date using Moment.js
   return date;

@@ -1,16 +1,21 @@
 <script setup>
 import { useTheme } from 'vuetify';
-import { ref, onMounted, computed, watch } from 'vue';
-import apiClient, { customAuthApiCall } from '../utils/axios.js';
+import { ref, onMounted, computed, watch, onUnmounted } from 'vue';
+import apiClient from '../utils/axios.js';
 import { formatMoney } from '@/utils/formatMoney.js';
 import { ALL_CHAINS, ALL_PROTOCOL, MAIN_TABLE_HEADER, ALL_CATEGORIES, DATA_PERIOD } from '@/constant/index.js'
 import { useAppStore } from '@/stores/app'
 import { useAuth0 } from '@auth0/auth0-vue';
 import StarCheckbox from './StarCheckbox.vue';
+import { VNavigationDrawer } from 'vuetify/components/VNavigationDrawer';
 
 const theme = useTheme();
 const store = useAppStore();
 const { user } = useAuth0()
+
+
+const drawer = ref(false)
+const isSmallScreen = ref(window.matchMedia("(max-width: 1024px)").matches || false)
 
 
 const dataPeriod = DATA_PERIOD;
@@ -223,26 +228,9 @@ const filterArrayData = computed(() => {
     });
     filterData = [...fav];
   }
-  console.log('Filtered Data:', filterData);
   return filterData;
 });
 
-
-// Function to get the best correlation value from 7d, 30d, 90d, 180d fields
-const getBestCorrelation = (item) => {
-  const correlations = [
-    item.Correlation7d,
-    item.Correlation30d,
-    item.Correlation90d,
-    item.Correlation180d
-  ];
-
-  // Find the first non-null, non-undefined correlation value
-  const bestCorrelation = correlations.find(correlation => correlation !== null && correlation !== undefined);
-
-  // Return the formatted correlation or 'N/A' if none is found
-  return bestCorrelation !== undefined ? formatCorrelation(bestCorrelation) : 'N/A';
-};
 const formatCorrelation = (correlation) => {
   return Math.round(Math.abs(correlation) * 100);
 };
@@ -377,18 +365,13 @@ const protocolIcon = (value) => {
 
 
 
-const updateSort = (value) => {
-  console.log('update value', value);
+const updateSort = () => {
+  // update
 }
 
 watch(items, () => {
-  filterDataByPeriod();  // Automatically apply period filter once items are fetched
+  filterDataByPeriod();
 });
-
-// Watch for changes in selected duration or other filters
-// watch(seletedDuration, () => {
-//   filterArrayData.value; // Recalculate when duration or filters change
-// });
 
 const saveFav = async (data) => {
   const userId = user.value?.sub
@@ -403,7 +386,22 @@ const saveFav = async (data) => {
   }
 }
 
+
+
+async function handleSelectCheckbox(val, toggleSelect, internalItem) {
+  toggleSelect(internalItem)
+  if (val)
+    selected.value.push(internalItem.value)
+  else selected.value = selected.value.filter(item => item !== internalItem.value)
+
+  const uniqueArray = [...new Set(selected.value)];
+  selected.value = [...uniqueArray]
+  store.favPoolList = selected.value
+  await saveFav(selected.value);
+}
+
 onMounted(async () => {
+  window.addEventListener("resize", checkScreenSize);
   if (store.favPoolList.length > 0) {
     selected.value = [...store.favPoolList]
   }
@@ -423,37 +421,29 @@ onMounted(async () => {
 
 });
 
+onUnmounted(() => {
+  window.removeEventListener("resize", checkScreenSize);
+})
 
-async function handleSelectCheckbox(val, toggleSelect, internalItem) {
-  toggleSelect(internalItem)
-  if (val)
-    selected.value.push(internalItem.value)
-  else selected.value = selected.value.filter(item => item !== internalItem.value)
-
-  const uniqueArray = [...new Set(selected.value)];
-  selected.value = [...uniqueArray]
-  store.favPoolList = selected.value
-  await saveFav(selected.value);
+function checkScreenSize() {
+  isSmallScreen.value = window.matchMedia("(max-width: 1024px)").matches;
 }
-
-// async function handleSelectAll(val, selectAll, allSelected) {
-//   selectAll(!allSelected)
-//   if (val) {
-//     selected.value = filterArrayData.value.map(item => item.pairAddress)
-//   }
-//   else {
-//     selected.value = []
-//   }
-//   store.favPoolList = selected.value
-//   await saveFav(selected.value)
-// }
 
 </script>
 
 
 <template>
-  <v-container class="mt-7 mb-10">
-    <div class="d-flex filters-items">
+  <v-container class="mt-7">
+    <v-btn v-if="isSmallScreen" @click="drawer = !drawer" density="default" icon="mdi-filter" size="small"
+      style="float: right; margin-bottom: 5px;"></v-btn>
+    <component :is="isSmallScreen ? VNavigationDrawer : 'div'" v-model="drawer" location="right" temporary
+      :class="!isSmallScreen ? 'd-flex filter-common' : 'd-flex flex-column filter-common mobile-filter-padding'"
+      style="z-index: 1000; top: 0px !important; height: 100% !important;">
+      <div v-if="isSmallScreen" class="d-flex mr-3 mb-5 justify-space-between align-center">
+        <div>Filters</div>
+        <v-btn @click="drawer = !drawer" density="default" icon="mdi-close" size="small" variant="text" />
+      </div>
+      <hr v-if="isSmallScreen" class="mr-3 mb-5" style="border: none; border-top: 1px solid #5b5a77 !important; " />
       <div class="d-flex flex-column mr-3 mb-5">
         <div class="text-customText">Chain</div>
         <div>
@@ -482,7 +472,7 @@ async function handleSelectCheckbox(val, toggleSelect, internalItem) {
         </div>
       </div>
 
-      <div class="d-flex flex-column mr-3">
+      <div class="d-flex flex-column mr-3 mb-5">
         <div class="text-customText">Protocol</div>
         <div>
           <v-select v-model="selectedProtocol" label="All Protocol" :items="allProtocolItems"
@@ -510,7 +500,7 @@ async function handleSelectCheckbox(val, toggleSelect, internalItem) {
         </div>
       </div>
 
-      <div class="d-flex flex-column mr-3">
+      <div class="d-flex flex-column mr-3 mb-5">
         <div class="text-customText">Category</div>
         <div>
           <v-select v-model="selectedCategories" label="All Category" :items="allCategorieItems"
@@ -538,7 +528,7 @@ async function handleSelectCheckbox(val, toggleSelect, internalItem) {
         </div>
       </div>
 
-      <div class="d-flex flex-column mr-3">
+      <div class="d-flex flex-column mr-3 mb-5">
         <div class="text-customText">Period</div>
         <div>
           <v-select v-model="seletedDuration" class="select-box2 width-adjust"
@@ -553,7 +543,7 @@ async function handleSelectCheckbox(val, toggleSelect, internalItem) {
         </div>
       </div>
 
-      <div class="d-flex flex-column mr-3">
+      <div class="d-flex flex-column mr-3 mb-5">
         <div class="text-customText">Token 1</div>
         <div>
           <v-select v-model="selectedToken1" class="select-box2 width-adjust"
@@ -578,7 +568,7 @@ async function handleSelectCheckbox(val, toggleSelect, internalItem) {
         </div>
       </div>
 
-      <div class="d-flex flex-column mr-3">
+      <div class="d-flex flex-column mr-3 mb-5">
         <div class="text-customText">Token 2</div>
         <div>
           <v-select v-model="selectedToken2" label="Select Token 2" class="select-box2 width-adjust"
@@ -604,7 +594,7 @@ async function handleSelectCheckbox(val, toggleSelect, internalItem) {
         </div>
       </div>
 
-      <div class="d-flex flex-column mr-4">
+      <div class="d-flex flex-column mr-4 mb-5">
         <div class="text-customText">APR</div>
         <v-menu v-model="menu1" :close-on-content-click="false" location="bottom">
           <template v-slot:activator="{ props }">
@@ -630,7 +620,7 @@ async function handleSelectCheckbox(val, toggleSelect, internalItem) {
         </v-menu>
       </div>
 
-      <div class="d-flex flex-column mr-4">
+      <div class="d-flex flex-column mr-4 mb-5">
         <div class="text-customText">TVL</div>
         <v-menu v-model="menu" :close-on-content-click="false" location="bottom">
           <template v-slot:activator="{ props }">
@@ -656,34 +646,30 @@ async function handleSelectCheckbox(val, toggleSelect, internalItem) {
         </v-menu>
       </div>
 
-      <div class="mt-6 mr-4">
-
-
-
-
+      <div class="mt-6 mr-4 mb-5 d-flex">
         <v-btn class="text-customText reset-filters" :class="[darkMode ? 'reset-filters-dark' : 'reset-filters-light']"
-          @click="showFavourites = !showFavourites">
+          @click="showFavourites = !showFavourites" style="flex: 1 0 auto;">
           <span v-if="showFavourites" :class="{ 'custom-star-light': !darkMode, 'custom-star-dark': darkMode }">⭐</span>
           <span v-else
             :class="{ 'custom-star-not-selected-light': !darkMode, 'custom-star-not-selected-dark': darkMode }">⭐</span>
-
+          <span v-if="isSmallScreen">&nbsp; {{ showFavourites ? 'Hide' : 'Show' }} Favorites</span>
           <v-tooltip activator="parent" location="bottom">{{ showFavourites ? 'Hide' : 'Show' }} Favorites</v-tooltip>
         </v-btn>
 
       </div>
 
-      <div class="mt-6">
+      <div class="mt-6 mb-5 d-flex justify-center">
         <v-btn class="text-customText reset-filters" :class="[darkMode ? 'reset-filters-dark' : 'reset-filters-light']"
           @click="resetFilter">
           Reset
         </v-btn>
       </div>
+    </component>
 
-    </div>
     <v-data-table v-model="selected" :headers="headers" :items="filterArrayData" item-value="pairAddress"
       items-per-page="10" :loading="loading" show-select
       :class="[darkMode ? 'custom-dark-table-background' : 'custom-light-table-background']"
-      @update:sort-by="updateSort">
+      style="max-height: 80vh !important;" @update:sort-by="updateSort">
       <template v-slot:header.data-table-select>
         <!-- <v-checkbox-btn :indeterminate="someSelected && !allSelected" :model-value="allSelected" color="primary"
           @update:model-value="(val) => handleSelectAll(val, selectAll, allSelected)"></v-checkbox-btn> -->
@@ -742,6 +728,17 @@ async function handleSelectCheckbox(val, toggleSelect, internalItem) {
   </v-container>
 </template>
 <style scoped>
+.filter-common {
+  flex-wrap: wrap !important;
+}
+
+.mobile-filter-padding {
+  padding: 10px 0px 10px 10px
+}
+
+
+
+
 .custom-star-not-selected-light {
   color: transparent;
   text-shadow: 0 0 0 #bbbcc3;

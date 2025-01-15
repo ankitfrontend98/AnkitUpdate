@@ -47,9 +47,6 @@ export default {
       required: false
     }
   },
-  mounted() {
-    console.log(this.labels, "satetime")
-  },
   computed: {
     computedOptions() {
       return this.options && Object.keys(this.options).length > 0 ? { ...this.chartOptions, ...this.options } : this.chartOptions
