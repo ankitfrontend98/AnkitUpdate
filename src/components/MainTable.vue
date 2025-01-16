@@ -672,7 +672,7 @@ function checkScreenSize() {
     <v-data-table v-model="selected" :headers="headers" :items="filterArrayData" item-value="pairAddress"
       :items-per-page="isHeightSmallScreen ? 5 : 10" :loading="loading" show-select
       :class="[darkMode ? 'custom-dark-table-background' : 'custom-light-table-background']"
-      style="max-height: 80vh !important;" @update:sort-by="updateSort">
+      @update:sort-by="updateSort">
       <template v-slot:header.data-table-select>
         <!-- <v-checkbox-btn :indeterminate="someSelected && !allSelected" :model-value="allSelected" color="primary"
           @update:model-value="(val) => handleSelectAll(val, selectAll, allSelected)"></v-checkbox-btn> -->
@@ -731,10 +731,6 @@ function checkScreenSize() {
   </v-container>
 </template>
 <style scoped>
-.filter-common {
-  flex-wrap: wrap !important;
-}
-
 .mobile-filter-padding {
   padding: 10px 0px 10px 10px
 }
@@ -973,4 +969,10 @@ function checkScreenSize() {
     min-width: 160px !important;
   }
 }
+
+/* @media (min-width: 1024px) {
+  .filter-common {
+    flex-wrap: wrap !important;
+  }
+} */
 </style>
