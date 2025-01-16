@@ -15,7 +15,8 @@ const { user } = useAuth0()
 
 
 const drawer = ref(false)
-const isSmallScreen = ref(window.matchMedia("(max-width: 1024px)").matches || false)
+const isWidthSmallScreen = ref(window.matchMedia("(max-width: 1024px)").matches || false)
+const isHeightSmallScreen = ref(window.matchMedia("(max-height: 700px)").matches || false)
 
 
 const dataPeriod = DATA_PERIOD;
@@ -426,7 +427,8 @@ onUnmounted(() => {
 })
 
 function checkScreenSize() {
-  isSmallScreen.value = window.matchMedia("(max-width: 1024px)").matches;
+  isWidthSmallScreen.value = window.matchMedia("(max-width: 1024px)").matches;
+  isHeightSmallScreen.value = window.matchMedia("(max-height: 700px)").matches
 }
 
 </script>
@@ -434,16 +436,17 @@ function checkScreenSize() {
 
 <template>
   <v-container class="mt-7">
-    <v-btn v-if="isSmallScreen" @click="drawer = !drawer" density="default" icon="mdi-filter" size="small"
+    <v-btn v-if="isWidthSmallScreen" @click="drawer = !drawer" density="default" icon="mdi-filter" size="small"
       style="float: right; margin-bottom: 5px;"></v-btn>
-    <component :is="isSmallScreen ? VNavigationDrawer : 'div'" v-model="drawer" location="right" temporary
-      :class="!isSmallScreen ? 'd-flex filter-common' : 'd-flex flex-column filter-common mobile-filter-padding'"
+    <component :is="isWidthSmallScreen ? VNavigationDrawer : 'div'" v-model="drawer" location="right" temporary
+      :class="!isWidthSmallScreen ? 'd-flex filter-common' : 'd-flex flex-column filter-common mobile-filter-padding'"
       style="z-index: 1000; top: 0px !important; height: 100% !important;">
-      <div v-if="isSmallScreen" class="d-flex mr-3 mb-5 justify-space-between align-center">
+      <div v-if="isWidthSmallScreen" class="d-flex mr-3 mb-5 justify-space-between align-center">
         <div>Filters</div>
         <v-btn @click="drawer = !drawer" density="default" icon="mdi-close" size="small" variant="text" />
       </div>
-      <hr v-if="isSmallScreen" class="mr-3 mb-5" style="border: none; border-top: 1px solid #5b5a77 !important; " />
+      <hr v-if="isWidthSmallScreen" class="mr-3 mb-5"
+        style="border: none; border-top: 1px solid #5b5a77 !important; " />
       <div class="d-flex flex-column mr-3 mb-5">
         <div class="text-customText">Chain</div>
         <div>
@@ -652,13 +655,13 @@ function checkScreenSize() {
           <span v-if="showFavourites" :class="{ 'custom-star-light': !darkMode, 'custom-star-dark': darkMode }">⭐</span>
           <span v-else
             :class="{ 'custom-star-not-selected-light': !darkMode, 'custom-star-not-selected-dark': darkMode }">⭐</span>
-          <span v-if="isSmallScreen">&nbsp; {{ showFavourites ? 'Hide' : 'Show' }} Favorites</span>
+          <span v-if="isWidthSmallScreen">&nbsp; {{ showFavourites ? 'Hide' : 'Show' }} Favorites</span>
           <v-tooltip activator="parent" location="bottom">{{ showFavourites ? 'Hide' : 'Show' }} Favorites</v-tooltip>
         </v-btn>
 
       </div>
 
-      <div class="mt-6 mb-5 d-flex justify-center">
+      <div class="mt-6 d-flex justify-center mb-5" :class="isHeightSmallScreen ? 'mb-10' : 'mb-5'">
         <v-btn class="text-customText reset-filters" :class="[darkMode ? 'reset-filters-dark' : 'reset-filters-light']"
           @click="resetFilter">
           Reset
@@ -667,7 +670,7 @@ function checkScreenSize() {
     </component>
 
     <v-data-table v-model="selected" :headers="headers" :items="filterArrayData" item-value="pairAddress"
-      items-per-page="10" :loading="loading" show-select
+      :items-per-page="isHeightSmallScreen ? 5 : 10" :loading="loading" show-select
       :class="[darkMode ? 'custom-dark-table-background' : 'custom-light-table-background']"
       style="max-height: 80vh !important;" @update:sort-by="updateSort">
       <template v-slot:header.data-table-select>
