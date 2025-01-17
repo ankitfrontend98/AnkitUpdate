@@ -12,6 +12,16 @@ export function setAuthToken(token) {
   authToken = token;
 }
 
+apiClient.interceptors.request.use(
+  (config) => {
+    if (authToken) {
+      config.headers.Authorization = `Bearer ${authToken}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 
 
 export const customAuthApiCall = (url, options = {}, baseURLOverride) => {

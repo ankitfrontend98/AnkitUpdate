@@ -825,7 +825,7 @@ const correlationEstimator = async (data, days) => {
 const fetchData = async () => {
   loading.value = true;
   try {
-    const { data } = await apiClient.get(`api/message/${id}`);
+    const { data } = await apiClient.get(`api/pooldata/${id}`);
     poolDetailsPeriods.value = data.output.periodData;
     poolDetailsPrice.value = data.output.price;
     correlationEstimatorState.value = await correlationEstimator(poolDetailsPeriods.value.slice(0, seletedDuration.value * 3), seletedDuration.value);

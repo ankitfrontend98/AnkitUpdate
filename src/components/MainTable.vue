@@ -265,7 +265,7 @@ const fetchData = async () => {
   loading.value = true;
   try {
     if (store.poolList.length === 0) {
-      const { data } = await apiClient.get('api/message/0');
+      const { data } = await apiClient.get('api/pooldata/0');
       store.poolList = data;
     }
     const data = store.poolList;
