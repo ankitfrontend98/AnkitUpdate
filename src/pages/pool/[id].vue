@@ -4,7 +4,7 @@
       <div>
         <v-icon color="#FFF" v-if="darkMode">mdi-arrow-left</v-icon>
         <v-icon v-if="!darkMode">mdi-arrow-left</v-icon>
-        <router-link to="/" class="router-link">Back to all pools</router-link>
+        <span @click="handleNavigate" class="router-link" style="cursor: pointer;">Back to all pools</span>
       </div>
       <div>
         <v-select v-model="seletedDuration" :items="dataPeriod" item-title="label" item-value="value"
@@ -547,9 +547,11 @@ import { DATA_PERIOD_GRAPH } from '@/constant/index.js';
 import millify from "millify";
 import moment from 'moment';
 import SharedCalculator from '@/components/SharedCalculator.vue';
+import { useRouter } from 'vue-router';
 
 
 const theme = useTheme();
+const router = useRouter()
 const activeTab = ref('0')
 const liquidityValue = ref(1000);
 const myFutureLiquidity = ref(0);
@@ -1043,6 +1045,10 @@ function findClosestTik(which) {
 
   return closestTik;
 
+}
+
+const handleNavigate = () => {
+  router.push({ path: "/", query: route.query })
 }
 
 

@@ -8,11 +8,14 @@ import { useAppStore } from '@/stores/app'
 import { useAuth0 } from '@auth0/auth0-vue';
 import StarCheckbox from './StarCheckbox.vue';
 import { VNavigationDrawer } from 'vuetify/components/VNavigationDrawer';
+import { useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 
 const theme = useTheme();
 const store = useAppStore();
 const { user } = useAuth0()
-
+const router = useRouter();
+const route = useRoute();
 
 const drawer = ref(false)
 const isWidthSmallScreen = ref(window.matchMedia("(max-width: 1024px)").matches || false)
@@ -45,6 +48,9 @@ const tempTvlMaxPrice = ref(0);
 
 const searchToken1 = ref('');
 const searchToken2 = ref('');
+const finalSearchToken1 = ref('');
+const finalSearchToken2 = ref('');
+
 
 const aprMinPrice = ref(0);
 const aprMaxPrice = ref(0);
@@ -58,6 +64,10 @@ const headers = ref(MAIN_TABLE_HEADER);
 const allChainItems = ALL_CHAINS;
 const allProtocolItems = ALL_PROTOCOL;
 const allCategorieItems = ALL_CATEGORIES;
+
+
+
+
 
 const darkMode = computed(() => {
   return theme.global.current.value.dark;
@@ -129,12 +139,23 @@ const filterArrayData = computed(() => {
 
   // Apply token filters
   if (selectedToken1.value.length > 0) {
-    const selectedValues = [...selectedToken1.value];
-    filterData = filterData.filter((item) => selectedValues.includes(item.BaseToken));
+    if (finalSearchToken1.value) {
+      filterData = filterData.filter(item => item.BaseToken.toLowerCase().includes(finalSearchToken1.value.toLowerCase()));
+    }
+    else {
+      const selectedValues = [...selectedToken1.value];
+      filterData = filterData.filter((item) => selectedValues.includes(item.BaseToken));
+    }
   }
   if (selectedToken2.value.length > 0) {
-    const selectedValues = [...selectedToken2.value];
-    filterData = filterData.filter((item) => selectedValues.includes(item.QuoteToken));
+
+    if (finalSearchToken2.value) {
+      filterData = filterData.filter(item => item.QuoteToken.toLowerCase().includes(finalSearchToken2.value.toLowerCase()));
+    }
+    else {
+      const selectedValues = [...selectedToken2.value];
+      filterData = filterData.filter((item) => selectedValues.includes(item.QuoteToken));
+    }
   }
 
   // Apply TVL and APR filters
@@ -258,6 +279,61 @@ const likesAllCategories = computed(() => {
 const likesSomeCategories = computed(() => {
   return selectedCategories.value.length > 0
 });
+
+
+
+
+
+
+function createQueryFilter() {
+  const query = {
+    ...(seletedChains.value.length ? { chains: seletedChains.value.join(',') } : {}),
+    ...(selectedProtocol.value.length ? { protocol: selectedProtocol.value.join(',') } : {}),
+    ...(selectedCategories.value.length ? { categories: selectedCategories.value.join(',') } : {}),
+    duration: seletedDuration.value,
+    ...(selectedToken1.value.length ? { token1: selectedToken1.value.join(',') } : {}),
+    ...(selectedToken2.value.length ? { token2: selectedToken2.value.join(',') } : {}),
+    ...(finalSearchToken1.value ? { searchToken1: finalSearchToken1.value } : {}),
+    ...(finalSearchToken2.value ? { searchToken2: finalSearchToken2.value } : {}),
+    tvlMin: tvlMinPrice.value || undefined,
+    tvlMax: tvlMaxPrice.value || undefined,
+    aprMin: aprMinPrice.value || undefined,
+    aprMax: aprMaxPrice.value || undefined,
+    favourites: showFavourites.value ? 1 : undefined,
+  };
+  return query;
+}
+
+watch(
+  [seletedChains, selectedProtocol, selectedToken1, selectedToken2, selectedCategories, seletedDuration, tvlMinPrice, tvlMaxPrice, aprMinPrice, aprMaxPrice, showFavourites],
+  () => {
+    const query = createQueryFilter()
+    router.push({ query });
+  },
+  { deep: true }
+);
+
+
+
+function initDataFiltersFromQuery() {
+  const query = route.query;
+  seletedChains.value = query.chains ? query.chains.split(',') : [];
+  selectedProtocol.value = query.protocols ? query.protocols.split(',') : [];
+  selectedCategories.value = query.categories ? query.categories.split(',') : [];
+  seletedDuration.value = query.duration || "1";
+  selectedToken1.value = query.token1 ? query.token1.split(',') : [];
+  selectedToken2.value = query.token2 ? query.token2.split(',') : [];
+  finalSearchToken1.value = query.searchToken1 || "";
+  finalSearchToken2.value = query.searchToken2 || "";
+  tvlMinPrice.value = query.tvlMin ? Number(query.tvlMin) : 0;
+  tvlMaxPrice.value = query.tvlMax ? Number(query.tvlMax) : 0;
+  aprMinPrice.value = query.aprMin ? Number(query.aprMin) : 0;
+  aprMaxPrice.value = query.aprMax ? Number(query.aprMax) : 0;
+  showFavourites.value = query.favourites === '1';
+}
+
+
+
 
 
 const fetchData = async () => {
@@ -402,6 +478,7 @@ async function handleSelectCheckbox(val, toggleSelect, internalItem) {
 }
 
 onMounted(async () => {
+  initDataFiltersFromQuery();
   window.addEventListener("resize", checkScreenSize);
   if (store.favPoolList.length > 0) {
     selected.value = [...store.favPoolList]
@@ -420,6 +497,7 @@ onMounted(async () => {
   }
   fetchData();
 
+
 });
 
 onUnmounted(() => {
@@ -429,6 +507,22 @@ onUnmounted(() => {
 function checkScreenSize() {
   isWidthSmallScreen.value = window.matchMedia("(max-width: 1024px)").matches;
   isHeightSmallScreen.value = window.matchMedia("(max-height: 700px)").matches
+}
+
+function handleSearchWithToken(type) {
+  if (type === 'token1') {
+    selectedToken1.value = [searchToken1.value];
+    finalSearchToken1.value = searchToken1.value;
+  }
+  else {
+    selectedToken2.value = [searchToken2.value];
+    finalSearchToken2.value = searchToken2.value
+  }
+}
+
+function handlePoolRoute(id) {
+  const dataQuery = createQueryFilter()
+  router.push({ path: `/pool/${id}`, query: dataQuery })
 }
 
 </script>
@@ -551,11 +645,12 @@ function checkScreenSize() {
         <div>
           <v-select v-model="selectedToken1" class="select-box2 width-adjust"
             :class="[darkMode ? 'select-box2-dark' : 'select-box2-light']" label="Select Token 1" :items="sortedToken1"
-            variant="plain" density="compact" item-title="text" :hide-details="true" multiple clearable center-affix>
+            variant="plain" density="compact" item-title="text" :hide-details="true" multiple clearable center-affix
+            @update:model-value="finalSearchToken1 = ''">
             <template v-slot:prepend-item>
               <div class="d-flex justify-space-between">
                 <v-text-field v-model="searchToken1" label="Search" variant="outlined" class="pt-2 px-2"
-                  :hide-details="true" density="compact" />
+                  :hide-details="true" density="compact" @keydown.enter="handleSearchWithToken('token1')" />
               </div>
               <v-divider class="mt-2"></v-divider>
             </template>
@@ -576,11 +671,12 @@ function checkScreenSize() {
         <div>
           <v-select v-model="selectedToken2" label="Select Token 2" class="select-box2 width-adjust"
             :class="[darkMode ? 'select-box2-dark' : 'select-box2-light']" :items="sortedToken2" variant="plain"
-            density="compact" item-title="text" :hide-details="true" multiple clearable center-affix>
+            density="compact" item-title="text" :hide-details="true" multiple clearable center-affix
+            @update:model-value="finalSearchToken2 = ''">
             <template v-slot:prepend-item>
               <div class="d-flex justify-space-between">
                 <v-text-field v-model="searchToken2" label="Search" variant="outlined" class="pt-2 px-2"
-                  :hide-details="true" density="compact" />
+                  :hide-details="true" density="compact" @keydown.enter="handleSearchWithToken('token2')" />
                 <!-- <a href="#" class="pt-2 px-2 mt-2 clear-link" @click.prevent="clearTokenFilter">Clear</a> -->
               </div>
               <v-divider class="mt-2"></v-divider>
@@ -682,10 +778,10 @@ function checkScreenSize() {
           @update:model-value="(val) => handleSelectCheckbox(val, toggleSelect, internalItem)" />
       </template>
       <template v-slot:item.BaseToken="{ item }">
-        <router-link class="router-link text-customText" :to="`/pool/${item.pairAddress}`">
+        <span class="router-link text-customText" style="cursor: pointer;" @click="handlePoolRoute(item.pairAddress)">
           {{ item.BaseToken.substring(0, 10) }}
           / {{ item.QuoteToken.substring(0, 10) }} {{ item.feeTier != 0 ? (item.feeTier / 10000) + '%' : '' }}
-        </router-link>
+        </span>
       </template>
       <template v-slot:item.ChainId="{ item }">
         <div class="text-capitalize">
