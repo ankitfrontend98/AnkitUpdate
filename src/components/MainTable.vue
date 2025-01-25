@@ -290,7 +290,7 @@ function createQueryFilter() {
     ...(seletedChains.value.length ? { chains: seletedChains.value.join(',') } : {}),
     ...(selectedProtocol.value.length ? { protocol: selectedProtocol.value.join(',') } : {}),
     ...(selectedCategories.value.length ? { categories: selectedCategories.value.join(',') } : {}),
-    duration: seletedDuration.value,
+    ...(seletedDuration.value !== "1" ? { duration: seletedDuration.value } : {}),
     ...(selectedToken1.value.length ? { token1: selectedToken1.value.join(',') } : {}),
     ...(selectedToken2.value.length ? { token2: selectedToken2.value.join(',') } : {}),
     ...(finalSearchToken1.value ? { searchToken1: finalSearchToken1.value } : {}),
@@ -318,7 +318,7 @@ watch(
 function initDataFiltersFromQuery() {
   const query = route.query;
   seletedChains.value = query.chains ? query.chains.split(',') : [];
-  selectedProtocol.value = query.protocols ? query.protocols.split(',') : [];
+  selectedProtocol.value = query.protocol ? query.protocol.split(',') : [];
   selectedCategories.value = query.categories ? query.categories.split(',') : [];
   seletedDuration.value = query.duration || "1";
   selectedToken1.value = query.token1 ? query.token1.split(',') : [];
@@ -327,8 +327,12 @@ function initDataFiltersFromQuery() {
   finalSearchToken2.value = query.searchToken2 || "";
   tvlMinPrice.value = query.tvlMin ? Number(query.tvlMin) : 0;
   tvlMaxPrice.value = query.tvlMax ? Number(query.tvlMax) : 0;
+  tempTvlMinPrice.value = query.tvlMin ? Number(query.tvlMin) : 0;
+  tempTvlMaxPrice.value = query.tvlMax ? Number(query.tvlMax) : 0;
   aprMinPrice.value = query.aprMin ? Number(query.aprMin) : 0;
   aprMaxPrice.value = query.aprMax ? Number(query.aprMax) : 0;
+  tempAprMaxPrice.value = query.aprMax ? Number(query.aprMax) : 0;
+  tempAprMinPrice.value = query.aprMin ? Number(query.aprMin) : 0;
   showFavourites.value = query.favourites === '1';
 }
 
@@ -511,12 +515,24 @@ function checkScreenSize() {
 
 function handleSearchWithToken(type) {
   if (type === 'token1') {
-    selectedToken1.value = [searchToken1.value];
-    finalSearchToken1.value = searchToken1.value;
+    if (searchToken1.value) {
+      selectedToken1.value = [searchToken1.value];
+      finalSearchToken1.value = searchToken1.value;
+    }
+    else {
+      selectedToken1.value = [];
+      finalSearchToken1.value = '';
+    }
   }
   else {
-    selectedToken2.value = [searchToken2.value];
-    finalSearchToken2.value = searchToken2.value
+    if (searchToken2.value) {
+      selectedToken2.value = [searchToken2.value];
+      finalSearchToken2.value = searchToken2.value
+    }
+    else {
+      selectedToken2.value = [];
+      finalSearchToken2.value = "";
+    }
   }
 }
 
@@ -644,13 +660,15 @@ function handlePoolRoute(id) {
         <div class="text-customText">Token 1</div>
         <div>
           <v-select v-model="selectedToken1" class="select-box2 width-adjust"
-            :class="[darkMode ? 'select-box2-dark' : 'select-box2-light']" label="Select Token 1" :items="sortedToken1"
+            :class="[darkMode ? 'select-box2-dark' : 'select-box2-light']" label="Search Token 1" :items="sortedToken1"
             variant="plain" density="compact" item-title="text" :hide-details="true" multiple clearable center-affix
             @update:model-value="finalSearchToken1 = ''">
             <template v-slot:prepend-item>
               <div class="d-flex justify-space-between">
-                <v-text-field v-model="searchToken1" label="Search" variant="outlined" class="pt-2 px-2"
-                  :hide-details="true" density="compact" @keydown.enter="handleSearchWithToken('token1')" />
+                <v-text-field v-model="searchToken1" label="Search or Select" append-inner-icon="mdi-magnify"
+                  variant="outlined" class="pt-2 px-2" :hide-details="true" density="compact"
+                  @click:append-inner="handleSearchWithToken('token1')"
+                  @keydown.enter="handleSearchWithToken('token1')" />
               </div>
               <v-divider class="mt-2"></v-divider>
             </template>
@@ -669,14 +687,16 @@ function handlePoolRoute(id) {
       <div class="d-flex flex-column mr-3 mb-5">
         <div class="text-customText">Token 2</div>
         <div>
-          <v-select v-model="selectedToken2" label="Select Token 2" class="select-box2 width-adjust"
+          <v-select v-model="selectedToken2" label="Search Token 2" class="select-box2 width-adjust"
             :class="[darkMode ? 'select-box2-dark' : 'select-box2-light']" :items="sortedToken2" variant="plain"
             density="compact" item-title="text" :hide-details="true" multiple clearable center-affix
             @update:model-value="finalSearchToken2 = ''">
             <template v-slot:prepend-item>
               <div class="d-flex justify-space-between">
-                <v-text-field v-model="searchToken2" label="Search" variant="outlined" class="pt-2 px-2"
-                  :hide-details="true" density="compact" @keydown.enter="handleSearchWithToken('token2')" />
+                <v-text-field v-model="searchToken2" label="Search or Select" append-inner-icon="mdi-magnify"
+                  variant="outlined" class="pt-2 px-2" :hide-details="true" density="compact"
+                  @keydown.enter="handleSearchWithToken('token2')"
+                  @click:append-inner="handleSearchWithToken('token2')" />
                 <!-- <a href="#" class="pt-2 px-2 mt-2 clear-link" @click.prevent="clearTokenFilter">Clear</a> -->
               </div>
               <v-divider class="mt-2"></v-divider>
