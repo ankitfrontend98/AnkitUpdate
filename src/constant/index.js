@@ -92,6 +92,10 @@ export const ALL_CHAINS = [
     value: 'solana'
   },
   {
+    text: 'Sonic',
+    value: 'sonic'
+  },
+  {
     text: 'Sui',
     value: 'sui'
   },
@@ -110,6 +114,7 @@ export const ALL_PROTOCOL = [
   { text: 'Quickswap', value: 'quickswap' },
   { text: 'Ramses', value: 'ramses' },
   { text: 'Raydium', value: 'raydium' },
+  { text: 'Shadow Exchage', value: 'shadow-exchange' },
   { text: 'Traderjoe', value: 'traderjoe' },
   { text: 'Uniswap', value: 'uniswap' },
   { text: 'Velodrome', value: 'velodrome' },
