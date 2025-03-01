@@ -158,21 +158,7 @@ const filterArrayData = computed(() => {
     }
   }
 
-  // Apply TVL and APR filters
-  if (tvlMinPrice.value !== 0) {
-    filterData = filterData.filter((item) => item.Liquidity >= tvlMinPrice.value);
-  }
-  if (tvlMaxPrice.value !== 0) {
-    filterData = filterData.filter((item) => item.Liquidity <= tvlMaxPrice.value);
-  }
-  if (aprMinPrice.value !== 0 || aprMaxPrice.value !== 0) {
-    filterData = filterData.filter((item) => {
-      return (
-        (aprMinPrice.value === 0 || item.apr >= aprMinPrice.value) &&
-        (aprMaxPrice.value === 0 || item.apr <= aprMaxPrice.value)
-      );
-    });
-  }
+
 
   // Apply period filter
   if (seletedDuration.value) {
@@ -235,6 +221,31 @@ const filterArrayData = computed(() => {
         item.Liquidity !== null && item.Liquidity !== undefined &&
         item.fees !== null && item.fees !== undefined &&
         item.apr !== null && item.apr !== undefined;
+    });
+  }
+
+
+  if (tvlMinPrice.value !== 0) {
+    filterData = filterData.filter((item) => {
+      const tempTvl = item.Liquidity != 0 ? ((item.Volume / item.Liquidity).toFixed(2)) : 0
+      return tempTvl >= Number(tvlMinPrice.value)
+    });
+  }
+  if (tvlMaxPrice.value !== 0) {
+    filterData = filterData.filter((item) => {
+      const tempTvl = item.Liquidity != 0 ? ((item.Volume / item.Liquidity).toFixed(2)) : 0
+      return tempTvl <= Number(tvlMaxPrice.value)
+    });
+  }
+
+   // Apply TVL and APR filters
+
+   if (aprMinPrice.value !== 0 || aprMaxPrice.value !== 0) {
+    filterData = filterData.filter((item) => {
+      return (
+        (aprMinPrice.value === 0 || item.apr >= aprMinPrice.value) &&
+        (aprMaxPrice.value === 0 || item.apr <= aprMaxPrice.value)
+      );
     });
   }
 
@@ -820,7 +831,7 @@ function handlePoolRoute(id) {
         </div>
       </template>
       <template v-slot:item.apr="{ item }">
-        <span class="text-customText">{{ (item.apr != null ? item.apr.toFixed(2) : 0.00) + '%' }}</span>
+        <span class="text-customText">{{ (item.apr != null ? parseFloat(item.apr).toFixed(2) : 0.00) + '%' }}</span>
       </template>
 
       <!-- <template v-slot:item.corr="{ item }">
