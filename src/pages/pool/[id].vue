@@ -976,7 +976,8 @@ const initializeRanges = (which, mode) => {
     });
     const promise3 = new Promise((resolve) => {
       if (myFutureMaxRange.value !== 0) {
-        const liqObjFuture = calculateAssetBalances(myFutureMinRange.value, myFutureMaxRange.value, myFuturePrice.value, myFuturePrice.value, true);
+        const liqObjFuture = calculateAssetBalances(Number.parseFloat(myFutureMinRange.value), Number.parseFloat(myFutureMaxRange.value),
+        Number.parseFloat(myFuturePrice.value), Number.parseFloat(myFuturePrice.value), true);
         xtokensFuture.value = Number.parseFloat(liqObjFuture.xQty);
         ytokensFuture.value = Number.parseFloat(liqObjFuture.yQty);
         xPercentageFuture.value = Number.parseFloat(liqObjFuture.XPct);
@@ -1153,18 +1154,18 @@ const backTester = (which) => {
   // }
 
   if (which === 'current') {
-    actualMinRange = myMinRange.value;
-    actualMaxRange = myMaxRange.value;
+    actualMinRange = Number.parseFloat(myMinRange.value);
+    actualMaxRange = Number.parseFloat(myMaxRange.value);
     if (invertedPrices.value) {
-      actualMinRange = 1 / myMaxRange.value;
-      actualMaxRange = 1 / myMinRange.value;
+      actualMinRange = Number.parseFloat(1 / myMaxRange.value);
+      actualMaxRange = Number.parseFloat(1 / myMinRange.value);
     }
   } else if (which === 'future') {
-    actualMinRange = myFutureMinRange.value;
-    actualMaxRange = myFutureMaxRange.value;
+    actualMinRange = Number.parseFloat(myFutureMinRange.value);
+    actualMaxRange = Number.parseFloat(myFutureMaxRange.value);
     if (invertedPrices.value) {
-      actualMinRange = 1 / myFutureMaxRange.value;
-      actualMaxRange = 1 / myFutureMinRange.value;
+      actualMinRange = Number.parseFloat(1 / myFutureMaxRange.value);
+      actualMaxRange = Number.parseFloat(1 / myFutureMinRange.value);
     }
   }
 
@@ -1233,13 +1234,14 @@ const backTester = (which) => {
 const megaTest = () => {
   backTester('current');
   testClicked.value = true
-  calculateAssetBalances(myMinRange.value, myMaxRange.value, poolDetailsPrice.value.priceNative);
+  calculateAssetBalances(Number.parseFloat(myMinRange.value), Number.parseFloat(myMaxRange.value), Number.parseFloat(poolDetailsPrice.value.priceNative));
 }
 
 const megaTestFuture = () => {
   backTester('future');
   testClickedFuture.value = true
-  calculateAssetBalances(myFutureMinRange.value, myFutureMaxRange.value, myFuturePrice.value, 0, false, 'future');
+  calculateAssetBalances(Number.parseFloat(myFutureMinRange.value), Number.parseFloat(myFutureMaxRange.value),
+  Number.parseFloat(myFuturePrice.value), 0, false, 'future');
 
 }
 
