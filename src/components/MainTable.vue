@@ -212,7 +212,9 @@ const filterArrayData = computed(() => {
         Liquidity: item[liquidityFieldMapping[selectedPeriod]],
         fees: item[feesFieldMapping[selectedPeriod]],
         apr: item[aprFieldMapping[selectedPeriod]],
-        corr: formatCorrelation(item[corrFieldMapping[selectedPeriod]])
+        corr: formatCorrelation(item[corrFieldMapping[selectedPeriod]]),
+        vol_tvl_new: Number(item[liquidityFieldMapping[selectedPeriod]]) != 0 ?
+        ((parseFloat(item[periodFieldMapping[selectedPeriod]]) / parseFloat(item[liquidityFieldMapping[selectedPeriod]])).toFixed(2)) : 0.00
       };
     });
     // Remove items where mapped fields are null or undefined
@@ -227,14 +229,12 @@ const filterArrayData = computed(() => {
 
   if (tvlMinPrice.value !== 0) {
     filterData = filterData.filter((item) => {
-      const tempTvl = item.Liquidity != 0 ? ((item.Volume / item.Liquidity).toFixed(2)) : 0
-      return tempTvl >= Number(tvlMinPrice.value)
+      return Number(item.Liquidity) >= Number(tvlMinPrice.value)
     });
   }
   if (tvlMaxPrice.value !== 0) {
     filterData = filterData.filter((item) => {
-      const tempTvl = item.Liquidity != 0 ? ((item.Volume / item.Liquidity).toFixed(2)) : 0
-      return tempTvl <= Number(tvlMaxPrice.value)
+      return Number(item.Liquidity) <= Number(tvlMaxPrice.value)
     });
   }
 
@@ -248,6 +248,8 @@ const filterArrayData = computed(() => {
       );
     });
   }
+
+  console.log(filterData)
 
   if (showFavourites.value) {
     const fav = [];
@@ -850,8 +852,8 @@ function handlePoolRoute(id) {
       <template v-slot:item.fees="{ item }">
         <span class="text-customText">{{ formatMoney(item.fees) }}</span>
       </template>
-      <template v-slot:item.vol_tvl="{ item }">
-        <span class="text-customText">{{ item.Liquidity != 0 ? ((item.Volume / item.Liquidity).toFixed(2)) : 0.00
+      <template v-slot:item.vol_tvl_new="{ item }">
+        <span class="text-customText">{{ item.vol_tvl_new
           }}</span>
       </template>
     </v-data-table>

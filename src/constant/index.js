@@ -132,7 +132,7 @@ export const MAIN_TABLE_HEADER = [
     { title: 'Liquidity', key: 'Liquidity' },
     { title: 'Volume', key: 'Volume' },
     { title: 'Fees', key: 'fees' },
-    { title: 'Vol/TVL', key: 'vol_tvl' },
+    { title: 'Vol/TVL', key: 'vol_tvl_new' },
 ];
 
 export const DETAIL_TABLE_HEADER = [
