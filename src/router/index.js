@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router/auto';
 import { setupLayouts } from 'virtual:generated-layouts';
 import { useAuth0 } from '@auth0/auth0-vue';
+import { CLAIMS_NAMESPACE_URL, ROLE_ADMIN } from '@/constant';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,7 +9,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  const { isAuthenticated, isLoading, loginWithRedirect, logout } = useAuth0();
+  const { isAuthenticated, isLoading, loginWithRedirect, logout, idTokenClaims } = useAuth0();
   while (isLoading.value) {
     await new Promise(resolve => setTimeout(resolve, 10));
   }
@@ -22,7 +23,9 @@ router.beforeEach(async (to, from, next) => {
     });
   }
   else {
-      next();
+    const claimsRoles = idTokenClaims.value[`${CLAIMS_NAMESPACE_URL}/roles`]
+    if(!claimsRoles.includes(ROLE_ADMIN) && to.path === "/admin") next("/");
+    else next();
   }
 });
 

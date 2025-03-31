@@ -135,6 +135,35 @@ export const MAIN_TABLE_HEADER = [
     { title: 'Vol/TVL', key: 'vol_tvl_new' },
 ];
 
+export const ADMIN_TABLE_HEADER = [
+  { title: 'Pool',key: 'PoolAddress', sortable: false},
+  { title: 'Chain', key: 'Chain', sortable: false },
+  { title: 'Protocol', key: 'Dex',sortable: false },
+  { title: 'Tokens', key: 'Tokens',sortable: false },
+  { title: 'Fee Tier', key: 'FeeTier', sortable: false },
+  { title: 'Category', key: 'PoolCategory', sortable: false },
+];
+
+export const ADD_POOL_HEADER_DATA = [
+  { title: 'Token Name',key: 'PoolAddress', sortable: false},
+  { title: 'Token Symbol', key: 'Chain', sortable: false },
+  { title: 'Gecko Score', key: 'Dex',sortable: false },
+  { title: 'Description', key: 'Tokens',sortable: false },
+]
+
+
+export const ADD_POOL_HEADER_DETAILS = [
+  { title: 'Already Listed', key: 'AlreadyListed', sortable: false },
+  { title: 'Requires Update', key: 'RequiresUpdate', sortable: false },
+  { title: 'Pool Address', key: 'PoolAddress', sortable: false },
+  { title: 'Base Token', key: 'BaseToken', sortable: false },
+  { title: 'Other Token', key: 'OtherToken', sortable: false },
+  { title: 'Fee Tier', key: 'FeeTier', sortable: false },
+  { title: 'Dex', key: 'Dex', sortable: false },
+  { title: 'Liquidity', key: 'Liquidity', sortable: false },
+  { title: 'Volume', key: 'Volume', sortable: false },
+]
+
 export const DETAIL_TABLE_HEADER = [
     {
     title: 'Date',
@@ -211,3 +240,10 @@ export const ALL_CATEGORIES = [
   if (a.text.toLowerCase() > b.text.toLowerCase()) return 1;
   return 0;
 });
+
+
+
+export const CLAIMS_NAMESPACE_URL = "https://app.apyatlas.com";
+export const ROLE_ADMIN = "Admin";
+export const ROLE_USER = "User";
+export const CATEGORY_GENERAL= ['BlueChip', 'Meme', 'Stable', 'Volatile', 'Ignored']

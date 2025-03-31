@@ -977,7 +977,7 @@ const initializeRanges = (which, mode) => {
     const promise3 = new Promise((resolve) => {
       if (myFutureMaxRange.value !== 0) {
         const liqObjFuture = calculateAssetBalances(Number.parseFloat(myFutureMinRange.value), Number.parseFloat(myFutureMaxRange.value),
-        Number.parseFloat(myFuturePrice.value), Number.parseFloat(myFuturePrice.value), true);
+          Number.parseFloat(myFuturePrice.value), Number.parseFloat(myFuturePrice.value), true);
         xtokensFuture.value = Number.parseFloat(liqObjFuture.xQty);
         ytokensFuture.value = Number.parseFloat(liqObjFuture.yQty);
         xPercentageFuture.value = Number.parseFloat(liqObjFuture.XPct);
@@ -1049,7 +1049,7 @@ function findClosestTik(which) {
 }
 
 const handleNavigate = () => {
-  router.push({ path: "/", query: route.query })
+  router.back();
 }
 
 
@@ -1241,7 +1241,7 @@ const megaTestFuture = () => {
   backTester('future');
   testClickedFuture.value = true
   calculateAssetBalances(Number.parseFloat(myFutureMinRange.value), Number.parseFloat(myFutureMaxRange.value),
-  Number.parseFloat(myFuturePrice.value), 0, false, 'future');
+    Number.parseFloat(myFuturePrice.value), 0, false, 'future');
 
 }
 

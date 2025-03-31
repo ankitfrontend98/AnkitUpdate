@@ -1,4 +1,6 @@
 import axios from 'axios';
+import apis from "./api-resorces.json";
+
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
@@ -14,51 +16,49 @@ export function setAuthToken(token) {
 
 apiClient.interceptors.request.use(
   (config) => {
-    if (authToken) {
+    //TODO: to be removed
+    let attachToken = true;
+    if (config.url in apis.resources) {
+      const { baseUrl, url } = extractBaseURL(apis.resources[config.url]);
+      attachToken =  apis.baseURL[baseUrl] === apis.baseURL.ADMIN_BASE_URL?false:true;
+      config.baseURL = apis.baseURL[baseUrl];
+      const routeParams = config.routeParams || {};
+      config.url = injectRouteParams(url, routeParams);
+    }
+    if (config.queryParams) {
+      const query = new URLSearchParams(config.queryParams).toString();
+      config.url += (config.url.includes('?') ? '&' : '?') + query;
+    }
+    if (authToken && attachToken) {
       config.headers.Authorization = `Bearer ${authToken}`;
     }
+
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-
-
-export const customAuthApiCall = (url, options = {}, baseURLOverride) => {
-  const config = {
-    ...options,
-    baseURL: baseURLOverride || authApiClient.defaults.baseURL,
-    url,
-  };
-  return authApiClient(config);
-};
-
-
-export const authApiClient = axios.create({
-  baseURL: 'https://apyatlas.us.auth0.com/api/v2',
-  headers: {
-    'Content-Type': 'application/json'
+function extractBaseURL(input) {
+  const match = input.match(/\{([^}]*)\}/);
+  if (match && match.index !== undefined) {
+    const baseUrl = match[1];
+    const url = input.slice(match.index + match[0].length);
+    return {
+      baseUrl,
+      url
+    };
   }
-});
-authApiClient.interceptors.request.use(
-  (config) => {
-    if (authToken) {
-      config.headers.Authorization = `Bearer ${authToken}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+  return {
+    baseUrl: null,
+    url: input
+  };
+}
 
+function injectRouteParams(url, routeParams = {}) {
+  return url.replace(/\{([^}]+)\}/g, (_, key) => {
+    return routeParams[key] || `{${key}}`;
+  });
+}
 
-// apiClient.interceptors.request.use(
-//   (config) => {
-//     if (authToken) {
-//       config.headers.Authorization = `Bearer ${authToken}`;
-//     }
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
-// );
 
 export default apiClient;

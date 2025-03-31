@@ -1,0 +1,10 @@
+{
+  "baseURL":{
+    "ADMIN_BASE_URL": "http://localhost:7071",
+    "BASE_URL":"https://apy-atlas-api-backend-dev.azurewebsites.net"
+  },
+  "resources":{
+    "adminPools": "{ADMIN_BASE_URL}/api/batch/{id}",
+    "addPools": "{ADMIN_BASE_URL}/api/discover/{searchId}"
+  }
+}

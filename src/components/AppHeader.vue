@@ -2,7 +2,7 @@
   <v-app-bar :class="[isDarkMode ? 'dark-active' : '', 'my-custom-margin']" :elevation="0">
     <!-- <div class="container width-full"> -->
     <v-container>
-      <div class="d-flex justify-space-between align-center">
+      <div class="d-flex justify-space-between align-center mt-3">
         <!-- <h2 class="my-custom">Logo</h2> -->
         <div class="mt-4">
           <img v-if="isDarkMode" src="../assets/logo-dark.png" width="180" />
@@ -13,12 +13,14 @@
             <v-menu v-model="menu" :close-on-content-click="false" location="end">
               <template v-slot:activator="{ props }">
                 <v-avatar class="ml-6 cursor-pointer" v-bind="props">
-                  <v-img :src="user?.picture" alt="Profile Picture" style="border-radius: 50%;"></v-img>
+                  <v-img :src="imageSrc" alt="Profile Picture" style="border-radius: 50%;"
+                    @error="onImageError"></v-img>
                 </v-avatar>
+
               </template>
               <v-card min-width="300">
                 <v-list>
-                  <v-list-item :prepend-avatar="user?.picture" :subtitle="user?.email" :title="user?.name">
+                  <v-list-item :prepend-avatar="imageSrc" :subtitle="user?.email" :title="user?.name">
                   </v-list-item>
                 </v-list>
                 <v-divider></v-divider>
@@ -35,6 +37,15 @@
                         <v-icon>mdi-brightness-7</v-icon>
                         <span class="ball"></span>
                       </label>
+                    </div>
+                  </v-list-item>
+                  <v-list-item v-if="claimsRoles.includes(ROLE_ADMIN)" @click="handleNav">
+                    <div class="d-flex justify-space-between align-center">
+                      <div class="d-flex">
+                        <span v-if="route.path !== adminPath">Manage Pools</span>
+                        <span v-else>View Pools</span>
+                      </div>
+                      <!-- <v-icon size="large">{{ route.path !== adminPath ? 'mdi-cog' : 'mdi-home-outline' }}</v-icon> -->
                     </div>
                   </v-list-item>
                 </v-list>
@@ -59,12 +70,24 @@
 import { useTheme } from 'vuetify';
 import { ref, watch } from 'vue';
 import { useAuth0 } from '@auth0/auth0-vue';
-const { logout, user } = useAuth0();
+import fallbackAvatar from '@/assets/user.png'
+import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
+import { CLAIMS_NAMESPACE_URL, ROLE_ADMIN } from '@/constant';
+
+
+
+const route = useRoute();
+const router = useRouter();
+const adminPath = "/admin";
+const { logout, user, idTokenClaims } = useAuth0();
 const theme = useTheme();
-// const emit = defineEmits(['updateTheme'])
+const imageSrc = ref(user?.picture || fallbackAvatar)
 let isDarkMode = ref(false);
 const menu = ref(false);
 isDarkMode.value = localStorage.getItem('theme') === 'dark';
+const claimsRoles = idTokenClaims.value[`${CLAIMS_NAMESPACE_URL}/roles`]
+
 
 watch(isDarkMode, (newVal) => {
   theme.global.name.value = newVal ? 'dark' : 'light';
@@ -76,10 +99,24 @@ watch(isDarkMode, (newVal) => {
   // emit('updateTheme', newVal);
 }, { immediate: true });
 
+watch(
+  () => user?.picture,
+  (newVal) => {
+    imageSrc.value = newVal || fallbackAvatar
+  }
+)
+
+const onImageError = () => {
+  imageSrc.value = fallbackAvatar
+}
 
 function handleLogout() {
   logout({ logoutParams: { returnTo: `${window.location.origin}/login` } });
 }
+function handleNav() {
+  router.push(route.path === adminPath ? '/' : '/admin')
+}
+
 </script>
 
 <style scoped>
