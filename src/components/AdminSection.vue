@@ -51,11 +51,11 @@ const route = useRoute();
 onMounted(() => {
   const query = route.query;
   if (query) {
-    searchData.value.Contract = query.Contract;
-    searchData.value.Chain = query.Chain;
-    searchData.value.BaseToken = query.BaseToken;
-    searchData.value.QuoteToken = query.QuoteToken;
-    searchData.value.Protocol = query.Protocol;
+    searchData.value.Contract = query.Contract || "";
+    searchData.value.Chain = query.Chain || "all";
+    searchData.value.BaseToken = query.BaseToken || "";
+    searchData.value.QuoteToken = query.QuoteToken || "";
+    searchData.value.Protocol = query.Protocol || "all";
     searchData.value.ZeroFees = query.ZeroFees === 'true' ? true : false;
     searchData.value.TotalResults = parseInt(query.TotalResults) || 10;
     searchData.value.IgnoredPools = query.IgnoredPools === 'true' ? true : false;
@@ -70,6 +70,7 @@ onMounted(() => {
 async function fetchData(initialLoad = false) {
   loading.value = true;
   console.log(initialLoad, "mayank")
+  console.log(searchData.value)
   try {
     searchData.value.Contract = searchData.value.Contract.trim();
     searchData.value.Chain = searchData.value.Chain ?? 'all';
