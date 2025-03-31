@@ -1,6 +1,6 @@
 {
   "baseURL":{
-    "ADMIN_BASE_URL": "http://localhost:7071",
+    "ADMIN_BASE_URL": "https://devbox.apyatlas.com",
     "BASE_URL":"https://apy-atlas-api-backend-dev.azurewebsites.net"
   },
   "resources":{
