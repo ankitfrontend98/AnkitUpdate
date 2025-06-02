@@ -23,13 +23,13 @@
       </v-card-text>
 
       <!-- Footer -->
-      <div class="dialog-footer">
+      <!-- <div class="dialog-footer">
         <v-spacer />
         <v-btn :color="darkMode ? '#262A3F' : 'var(--Base-White, #FFF)'" @click="editDialog = false">Cancel</v-btn>
         &nbsp;
         &nbsp;
         <v-btn :color="darkMode ? '#BFAC62' : '#0F2357'" @click="saveEdit" :loading="loading">Save</v-btn>
-      </div>
+      </div> -->
     </v-card>
   </v-dialog>
 </template>

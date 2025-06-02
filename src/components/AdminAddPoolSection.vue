@@ -2,10 +2,13 @@
 import { useTheme } from 'vuetify';
 
 import apiClient from '@/utils/axios';
-import { computed, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { ADD_POOL_HEADER_DATA, ADD_POOL_HEADER_DETAILS, ALL_CHAINS } from '@/constant';
 
 const theme = useTheme();
+const details = ref([]);
+const poolList = ref([]);
+const notify = inject('notify');
 
 const darkMode = computed(() => {
   return theme.global.current.value.dark;
@@ -24,12 +27,24 @@ const routeParams = ref({
 })
 
 async function searchPools() {
+  if (!queryParams.value.id) {
+    notify('Please add Token or Pool Address.', { color: 'error', timeout: 5000 });
+    return;
+  }
+  if (routeParams.value.searchId === "all") {
+    notify('Please select a chain', { color: 'error', timeout: 5000 });
+    return;
+  }
   loading.value = true;
   try {
-    await apiClient.get('addPools', { routeParams: routeParams.value, queryParams: queryParams.value });
+    const res = await apiClient.get('addPools', { routeParams: routeParams.value, queryParams: queryParams.value });
+    const data = res.data.tokenInformation;
+    details.value = [{ name: data.name, symbol: data.symbol, description: data.description, score: data.score }];
+    poolList.value = data.poolsDetails;
     loading.value = false;
   }
   catch (err) {
+    loading.value = false;
     console.log(err)
   }
 }
@@ -94,12 +109,19 @@ function resetData() {
       </div>
     </div>
 
-    <v-data-table :headers="ADD_POOL_HEADER_DATA" :items="[]" item-value="id" :loading="loading" hide-default-footer
-      :class="[darkMode ? 'custom-dark-table-background' : 'custom-light-table-background']">
+    <v-data-table :headers="ADD_POOL_HEADER_DATA" :items="details" item-value="id" :loading="loading"
+      hide-default-footer :class="[darkMode ? 'custom-dark-table-background' : 'custom-light-table-background']">
     </v-data-table>
     <br />
-    <v-data-table :headers="ADD_POOL_HEADER_DETAILS" :items="[]" item-value="id-1" :loading="loading"
+    <v-data-table :headers="ADD_POOL_HEADER_DETAILS" :items="poolList" item-value="id-1" :loading="loading"
       hide-default-footer :class="[darkMode ? 'custom-dark-table-background' : 'custom-light-table-background']">
+      <template #item.InitialLiquidity="{ item }">
+        ${{ Number(item.InitialLiquidity).toFixed(2) }}
+      </template>
+
+      <template #item.InitialVolume="{ item }">
+        ${{ Number(item.InitialVolume).toFixed(2) }}
+      </template>
     </v-data-table>
 
 

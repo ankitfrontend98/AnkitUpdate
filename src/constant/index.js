@@ -145,23 +145,23 @@ export const ADMIN_TABLE_HEADER = [
 ];
 
 export const ADD_POOL_HEADER_DATA = [
-  { title: 'Token Name',key: 'PoolAddress', sortable: false},
-  { title: 'Token Symbol', key: 'Chain', sortable: false },
-  { title: 'Gecko Score', key: 'Dex',sortable: false },
-  { title: 'Description', key: 'Tokens',sortable: false },
+  { title: 'Token Name',key: 'name', sortable: false},
+  { title: 'Token Symbol', key: 'symbol', sortable: false },
+  { title: 'Gecko Score', key: 'score',sortable: false },
+  { title: 'Description', key: 'description',sortable: false },
 ]
 
 
 export const ADD_POOL_HEADER_DETAILS = [
-  { title: 'Already Listed', key: 'AlreadyListed', sortable: false },
-  { title: 'Requires Update', key: 'RequiresUpdate', sortable: false },
+  { title: 'Already Listed', key: 'ExistingPool', sortable: false },
+  { title: 'Requires Update', key: 'RequiresFeeUpdate', sortable: false },
   { title: 'Pool Address', key: 'PoolAddress', sortable: false },
   { title: 'Base Token', key: 'BaseToken', sortable: false },
   { title: 'Other Token', key: 'OtherToken', sortable: false },
   { title: 'Fee Tier', key: 'FeeTier', sortable: false },
   { title: 'Dex', key: 'Dex', sortable: false },
-  { title: 'Liquidity', key: 'Liquidity', sortable: false },
-  { title: 'Volume', key: 'Volume', sortable: false },
+  { title: 'Liquidity', key: 'InitialLiquidity', sortable: false },
+  { title: 'Volume', key: 'InitialVolume', sortable: false },
 ]
 
 export const DETAIL_TABLE_HEADER = [
